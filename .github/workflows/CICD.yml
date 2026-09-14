@@ -2,9 +2,12 @@ name: CI
 
 
 on:
+    push:
+        branches:
+            - main
     pull_request:
         branches:
-            -main
+            - main
 
 env:
     MIRROR_URL : "git@github.com:EpitechPGE3-2026/G-WEB-500-PAR-5-1-dashboard-12.git"
