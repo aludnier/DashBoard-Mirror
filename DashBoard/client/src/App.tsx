@@ -7,8 +7,7 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    api
-      .get('/')
+    api.get('/')
       .then((response) => {
         setData(response.data)
       })
