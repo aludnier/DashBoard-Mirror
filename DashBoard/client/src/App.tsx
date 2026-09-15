@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api } from './../../server/client'
+import { api } from './client'
 import './App.css'
 
 function App() {
