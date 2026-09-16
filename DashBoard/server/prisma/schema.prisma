@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,107 @@ generator client {
 
 datasource db {
   provider = "mysql"
+}
+
+enum ParamType {
+  STRING
+  INTEGER
+}
+
+model User {
+  id                       String    @id @default(cuid())
+  email                    String    @unique
+  passwordHash             String
+  name                     String?
+  emailVerified            Boolean   @default(false)
+  verificationToken        String?   @unique
+  verificationTokenExpires DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  subscriptions   Subscription[]
+  widgetInstances WidgetInstance[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  widgetDefinitions WidgetDefinition[]
+  subscriptions     Subscription[]
+}
+
+model WidgetDefinition {
+  id                 String   @id @default(cuid())
+  serviceId          String
+  name               String
+  slug               String
+  description        String?
+  defaultRefreshRate Int      @default(300)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  service   Service          @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  params    WidgetParam[]
+  instances WidgetInstance[]
+
+  @@unique([serviceId, slug])
+}
+
+model WidgetParam {
+  id                 String    @id @default(cuid())
+  widgetDefinitionId String
+  key                String
+  label              String
+  type               ParamType
+  required           Boolean   @default(false)
+  defaultValue       String?
+
+  widgetDefinition WidgetDefinition @relation(fields: [widgetDefinitionId], references: [id], onDelete: Cascade)
+
+  @@unique([widgetDefinitionId, key])
+}
+
+model Subscription {
+  id             String    @id @default(cuid())
+  userId         String
+  serviceId      String
+  // OAuth/credential storage is optional — a subscription can exist before the user connects an account
+  accessToken    String?   @db.Text
+  refreshToken   String?   @db.Text
+  tokenExpiresAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service         Service          @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  widgetInstances WidgetInstance[]
+
+  @@unique([userId, serviceId])
+}
+
+// One row per widget placed on a dashboard, so identical widget types can carry independent config/position/refresh rate.
+model WidgetInstance {
+  id                 String   @id @default(cuid())
+  userId             String
+  subscriptionId     String
+  widgetDefinitionId String
+  config             Json
+  refreshRateSeconds Int      @default(300)
+  positionX          Int
+  positionY          Int
+  width              Int      @default(1)
+  height             Int      @default(1)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription     Subscription     @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  widgetDefinition WidgetDefinition @relation(fields: [widgetDefinitionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
