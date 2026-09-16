@@ -1,5 +1,5 @@
 import { useState } from "react"
-import "./Inscription.css"
+import "./authStyle.css"
 
 function Inscription() {
   const [name, setName] = useState<string>("")
