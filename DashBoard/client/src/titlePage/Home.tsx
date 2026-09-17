@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom'
+import './titleStyle.css'
 
 function Home() {
   return (
     <div className="title-page">
-      <h1>Dashboard</h1>
-      <nav>
-        <Link to="/Inscription"><button>Inscription</button></Link>
-        <Link to="/Connection"><button>Connection</button></Link>
-      </nav>
+      <header className="title-header">
+        <h1 className="brand">Dashboard</h1>
+        <nav className="nav-buttons">
+          <Link to="/Inscription"><button>Inscription</button></Link>
+          <Link to="/Connection"><button>Connection</button></Link>
+        </nav>
+      </header>
     </div>
   )
 }
