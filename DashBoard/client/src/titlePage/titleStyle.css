@@ -14,8 +14,14 @@
 .title-header .brand {
   color: #2d2d2d;
   font-size: 1.75rem;
-  margin: 0;
   white-space: nowrap;
+  text-decoration: none;
+}
+
+.title-header .brand h1 {
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
 }
 
 .title-header .nav-buttons {
@@ -48,6 +54,10 @@
 
   .title-header .brand {
     font-size: 1.3rem;
+  }
+
+  .title-header .brand h1 {
+    font-size: inherit;
   }
 
   .title-header .nav-buttons {
