@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Routes, Route, BrowserRouter} from 'react-router-dom'
 import { api } from './client'
 import './App.css'
+import Inscription from './authPages/Inscription'
+import Connection from './authPages/Connexion'
 
 function App() {
   const [data, setData] = useState<any>(null)
@@ -17,17 +20,14 @@ function App() {
   }, [])
 
   return (
-    <>
-      <h1>Hi!</h1>
-
-      {error ? (
-        <h1>Error: {error}</h1>
-      ) : data ? (
-        <h1>{JSON.stringify(data)}</h1>
-      ) : (
-        <h1>Loading...</h1>
-      )}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Connection/>}/>
+        <Route path='/Inscription' element={<Inscription/>}/>
+        <Route path='/Connection' element={<Connection/>}/>
+        <Route path=''/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
