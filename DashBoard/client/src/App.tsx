@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import {HashRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom'
+import { Routes, Route, BrowserRouter} from 'react-router-dom'
 import { api } from './client'
 import './App.css'
 import Inscription from './authPages/Inscription'
