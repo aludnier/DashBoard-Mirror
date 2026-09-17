@@ -1,32 +1,24 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import "./authStyle.css"
 
 function Connection() {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const [isPasswordValid, setPasswordValid] = useState<boolean>(false)
 
 
-  function SubmitConnection(e) {
+  function SubmitConnection(e : React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
+    console.log("Try to connect : \n" + email + "\n" + password)
   }
 
-  function HandleEmail(e) {
+  function HandleEmail(e : React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value)
   }
 
 
-  function HandlePassword(e) {
+  function HandlePassword(e : React.ChangeEvent<HTMLInputElement>) {
     const tmp : string = e.target.value
 
-    if (!tmp || tmp.length < 8 || !/([A-Z]+)/.test(tmp)) {
-        setPasswordValid(false)
-        console.log("Bad password " + isPasswordValid.toString())
-        if (password) setPassword(null)
-        return
-    }
-    setPasswordValid(true)
-    console.log("Good password "+ isPasswordValid.toString() )
     setPassword(tmp)
   }
 
