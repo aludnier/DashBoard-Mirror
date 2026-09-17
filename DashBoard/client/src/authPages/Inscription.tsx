@@ -1,27 +1,27 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import "./authStyle.css"
 
 function Inscription() {
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+  const [password, setPassword] = useState<string | null>("")
   const [isPasswordValid, setPasswordValid] = useState<boolean>(false)
 
 
-  function SubmitInscription(e) {
+  function SubmitInscription(e : React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     console.log("form submited\n" + name + "\n" + email + "\n" + password)
   }
 
-  function HandleEmail(e) {
+  function HandleEmail(e : React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value)
   }
 
-  function HandleName(e) {
+  function HandleName(e : React.ChangeEvent<HTMLInputElement>) {
     setName(e.target.value)
   }
 
-  function HandlePassword(e) {
+  function HandlePassword(e : React.ChangeEvent<HTMLInputElement>) {
     const tmp : string = e.target.value
 
     if (!tmp || tmp.length < 8 || !/([A-Z]+)/.test(tmp)) {
