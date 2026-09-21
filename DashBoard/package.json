@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "npm run start --workspace server/",
+    "dev:server": "npm run start:dev --workspace server/",
     "dev:client": "npm run dev --workspace client/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,11 +18,19 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "prisma": "^8.0.0-rc.15"
   },
   "dependencies": {
     "axios": "^1.20.0",
     "react-router": "^8.4.0",
     "react-router-dom": "^7.18.4"
+  },
+  "overrides": {
+    "mariadb": "3.5.4",
+    "@prisma/adapter-mariadb": {
+      "mariadb": "3.5.4"
+    },
+    "deepmerge-ts": "8.0.2"
   }
 }
