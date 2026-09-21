@@ -1,0 +1,71 @@
+.title-page {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.title-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.title-header .brand {
+  color: #2d2d2d;
+  font-size: 1.75rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.title-header .brand h1 {
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.title-header .nav-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.title-header button {
+  padding: 0.6rem 1.25rem;
+  background: #6a11cb;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.title-header button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  .title-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .title-header .brand {
+    font-size: 1.3rem;
+  }
+
+  .title-header .brand h1 {
+    font-size: inherit;
+  }
+
+  .title-header .nav-buttons {
+    gap: 0.5rem;
+  }
+
+  .title-header button {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+  }
+}
