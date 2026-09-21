@@ -4,6 +4,7 @@ import { api } from './client'
 import './App.css'
 import Inscription from './authPages/Inscription'
 import Connection from './authPages/Connexion'
+import Home from './titlePage/Home'
 
 function App() {
   const [data, setData] = useState<any>(null)
@@ -22,7 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Connection/>}/>
+        <Route path='/' element={<Home/>}/>
         <Route path='/Inscription' element={<Inscription/>}/>
         <Route path='/Connection' element={<Connection/>}/>
         <Route path=''/>
