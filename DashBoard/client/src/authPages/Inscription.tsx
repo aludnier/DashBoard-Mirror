@@ -1,18 +1,34 @@
 import React, { useState } from "react"
 import "./authStyle.css"
+import { api } from "../client"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 function Inscription() {
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string | null>("")
   const [isPasswordValid, setPasswordValid] = useState<boolean>(false)
+  const [error, setError] = useState<String>("")
+  const navigate = useNavigate()
 
 
-  function SubmitInscription(e : React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function SubmitInscription(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+
     console.log("form submited\n" + name + "\n" + email + "\n" + password)
+    try {
+      const { data } = await api.post("/auth/signup", { email, password });
+      console.log(data);
+      navigate('/')
+    } catch (e) {
+      const message = axios.isAxiosError(e)
+        ? e.response?.data?.message ?? e.message
+        : "Something went wrong";
+      setError(message);
+    }
   }
-
   function HandleEmail(e : React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value)
   }
@@ -39,7 +55,7 @@ function Inscription() {
     <div className="inscription-container">
       <form className="inscription-form" onSubmit={SubmitInscription}>
         <h1>Inscription</h1>
-
+        {error ?  <h2> { error } </h2> : null}
         <label>
           Name
           <input type="text" placeholder="Entré un valeur" onChange={HandleName} required/>
