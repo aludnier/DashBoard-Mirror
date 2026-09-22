@@ -1,19 +1,22 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { User, USER_REPOSITORY, type UserRepositoryPort } from '../port/user.repository.js';
+import { USER_REPOSITORY, type UserRepositoryPort, type CreateUserData } from '../port/user.repository.js';
 
 @Injectable()
 export class AuthUseCase {
   constructor(@Inject(USER_REPOSITORY) private readonly users: UserRepositoryPort) {}
 
-  async signUp(data : User) {
-    if (await this.users.findByEmail(data.email)) {
+  async signUp(email: string, password: string, name?: string) {
+    if (await this.users.findByEmail(email)) {
       throw new ConflictException('Email already in use');
     }
-    const passwordHash = await bcrypt.hash(data.passwordHash, 10);
-    data.passwordHash = passwordHash
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const data: CreateUserData = { email, passwordHash, name };
     const user = await this.users.create(data);
-    return data;
+
+    return { id: user.id, email: user.email };
   }
 
   async logIn(email: string, password: string) {

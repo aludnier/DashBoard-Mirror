@@ -1,17 +1,19 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+// auth.controller.ts
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthUseCase } from '../../domain/useCases/auth.use-case.js';
+import { LoginDto, SignupDto } from '../../dto/auth.dto.js';
 
 @Controller('auth')
 export class AuthController {
-    constructor (private readonly authService : AuthUseCase) {}
+  constructor(private readonly authService: AuthUseCase) {}
 
-    @Post('signup')
-    createUser(@Body() user : {id : string, email : string, passwordHash: string}) {
-        return this.authService.signUp(user)
-    }
+  @Post('signup')
+  createUser(@Body() dto: SignupDto) {
+    return this.authService.signUp(dto.email, dto.password);
+  }
 
-    @Post('login')
-    logInUser(@Body() userData : {}) {
-        return userData 
-    }
+  @Post('login')
+  logInUser(@Body() dto: LoginDto) {
+    return this.authService.logIn(dto.email, dto.password);
+  }
 }
