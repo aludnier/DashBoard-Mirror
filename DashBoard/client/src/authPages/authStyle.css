@@ -65,10 +65,31 @@
   opacity: 0.9;
 }
 
-.error {
-    border-color: red;
+.inscription-form li {
+  list-style: none;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
 }
 
-.valid {
-    border-color: green;
+.inscription-form li.error {
+  color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.inscription-form li.valid {
+  color: #16a34a;
+  background-color: #f0fdf4;
+}
+
+.inscription-form li.error::before {
+  content: "✕";
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.inscription-form li.valid::before {
+  content: "✓";
+  margin-right: 0.5rem;
+  font-weight: bold;
 }
