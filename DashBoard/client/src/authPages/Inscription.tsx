@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import "./authStyle.css"
-import { api } from "../client"
+import { api, setUserSession } from "../client"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
@@ -21,6 +21,7 @@ function Inscription() {
     try {
       const { data } = await api.post("/auth/signup", { email, password });
       console.log(data);
+      setUserSession(data);
       navigate('/')
     } catch (e) {
       const message = axios.isAxiosError(e)
