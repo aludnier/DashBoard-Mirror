@@ -19,7 +19,7 @@ function Inscription() {
 
     console.log("form submited\n" + name + "\n" + email + "\n" + password)
     try {
-      const { data } = await api.post("/auth/signup", { email, password });
+      const { data } = await api.post("/auth/signup", { email, password, name });
       console.log(data);
       setUserSession(data);
       navigate('/')

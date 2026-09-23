@@ -6,7 +6,7 @@ import { USER_REPOSITORY, type UserRepositoryPort, type CreateUserData } from '.
 export class AuthUseCase {
   constructor(@Inject(USER_REPOSITORY) private readonly users: UserRepositoryPort) {}
 
-  async signUp(email: string, password: string, name?: string) {
+  async signUp(email: string, password: string, name: string) {
     if (await this.users.findByEmail(email)) {
       throw new ConflictException('Email already in use');
     }
@@ -14,6 +14,7 @@ export class AuthUseCase {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const data: CreateUserData = { email, passwordHash, name };
+    console.log(data)
     const user = await this.users.create(data);
 
     return { id: user.id, email: user.email };

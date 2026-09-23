@@ -6,7 +6,7 @@ export interface User {
 export interface CreateUserData {
   email: string;
   passwordHash: string;
-  name?: string;
+  name: string;
 }
 
 export interface UserRepositoryPort {
