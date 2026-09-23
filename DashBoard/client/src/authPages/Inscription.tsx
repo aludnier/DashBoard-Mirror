@@ -11,12 +11,15 @@ function Inscription() {
   const [isPasswordValid, setPasswordValid] = useState<boolean>(false)
   const [error, setError] = useState<String>("")
   const navigate = useNavigate()
-
+  const specialChar = /[\s`!@#$%^&*()_+\-=\[\]{};:"|,./<>?~]/
 
   async function SubmitInscription(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 
+    if (!isPasswordValid) {
+      return
+    }
     console.log("form submited\n" + name + "\n" + email + "\n" + password)
     try {
       const { data } = await api.post("/auth/signup", { email, password, name });
@@ -41,14 +44,12 @@ function Inscription() {
   function HandlePassword(e : React.ChangeEvent<HTMLInputElement>) {
     const tmp : string = e.target.value
 
-    if (!tmp || tmp.length < 8 || !/([A-Z]+)/.test(tmp)) {
+    if (!tmp || tmp.length < 8 || !/([A-Z]+)/.test(tmp) || !specialChar.test(tmp)) {
         setPasswordValid(false)
-        console.log("Bad password " + isPasswordValid.toString())
         if (password) setPassword(null)
         return
     }
     setPasswordValid(true)
-    console.log("Good password "+ isPasswordValid.toString() )
     setPassword(tmp)
   }
 
@@ -70,7 +71,14 @@ function Inscription() {
         <label>
           Password
           <input className={isPasswordValid ? "valid" : "red"} type="password" placeholder="••••••••" onChange={HandlePassword} required/>
-          {isPasswordValid ? null : <p>test - {isPasswordValid.toString()}</p>}
+          {isPasswordValid ? null : <>
+            <p>password should contain :</p>
+            <ul>
+              <li>8 characters</li>
+              <li>1 Uppercase</li>
+              <li>1 special character</li>
+            </ul>
+            </>}
         </label>
 
         <button type="submit">S'inscrire</button>
