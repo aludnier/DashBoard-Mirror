@@ -1,0 +1,123 @@
+.dashboard-page {
+  min-height: 100vh;
+  padding: 1.5rem 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f5f5f7;
+  box-sizing: border-box;
+}
+
+.dashboard-grid {
+  min-height: 60vh;
+}
+
+.widget-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e2e2e6;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.widget-card-header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #faf9fc;
+  border-bottom: 1px solid #e2e2e6;
+  cursor: grab;
+}
+
+.widget-card-header:active {
+  cursor: grabbing;
+}
+
+.widget-card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d2d2d;
+}
+
+.widget-card-body {
+  flex: 1;
+  padding: 1rem;
+  color: #6b6b6f;
+  font-size: 0.9rem;
+  overflow: auto;
+}
+
+.dashboard-status {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #6b6b6f;
+}
+
+.dashboard-status-error {
+  color: #c0392b;
+}
+
+.dashboard-empty-state {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.dashboard-empty-state h2 {
+  margin: 0;
+  color: #2d2d2d;
+}
+
+.dashboard-empty-state p {
+  margin: 0 0 1rem;
+  color: #6b6b6f;
+}
+
+.dashboard-empty-state button {
+  padding: 0.6rem 1.25rem;
+  background: #6a11cb;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dashboard-empty-state button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-page {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* Widgets can't be dragged on phones, so don't show a grab cursor/affordance. */
+.dashboard-page-phone .widget-card-header {
+  cursor: default;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: #6a11cb;  /* whatever colour you want */
+  opacity: 0.15;
+  border-radius: 8px;   /* optional: match your card corners */
+}
