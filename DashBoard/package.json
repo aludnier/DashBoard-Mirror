@@ -11,7 +11,8 @@
     "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "npm run start:dev --workspace server/",
     "dev:client": "npm run dev --workspace client/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server:migrate" : "npx prisma migrate dev && npx prisma generate --workspace server/"
   },
   "keywords": [],
   "author": "",
