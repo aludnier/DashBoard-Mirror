@@ -1,32 +1,33 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, BrowserRouter} from 'react-router-dom'
-import { api } from './client'
+import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { clearUserSession, getUserSession, type UserSession } from './client'
 import './App.css'
 import Inscription from './authPages/Inscription'
 import Connection from './authPages/Connexion'
 import Home from './titlePage/Home'
 
 function App() {
-  const [data, setData] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [user, setUser] = useState<UserSession | null>(null)
 
   useEffect(() => {
-    api.get('/')
-      .then((response) => {
-        setData(response.data)
-      })
-      .catch((error) => {
-        setError(error.message)
-      })
+    const storedUser = getUserSession()
+    if (storedUser) {
+      setUser(storedUser)
+    }
   }, [])
+
+  const handleLogout = () => {
+    clearUserSession()
+    setUser(null)
+  }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/Inscription' element={<Inscription/>}/>
-        <Route path='/Connection' element={<Connection/>}/>
-        <Route path=''/>
+        <Route path='/' element={<Home user={user} onLogout={handleLogout} />} />
+        <Route path='/Inscription' element={<Inscription />} />
+        <Route path='/Connection' element={<Connection />} />
+        <Route path='' />
       </Routes>
     </BrowserRouter>
   )
