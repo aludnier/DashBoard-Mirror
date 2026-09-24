@@ -17,7 +17,7 @@ export class AuthUseCase {
     console.log(data)
     const user = await this.users.create(data);
 
-    return { id: user.id, email: user.email };
+    return user;
   }
 
   async logIn(email: string, password: string) {
@@ -25,6 +25,6 @@ export class AuthUseCase {
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    return { id: user.id, email: user.email };
+    return user;
   }
 }
