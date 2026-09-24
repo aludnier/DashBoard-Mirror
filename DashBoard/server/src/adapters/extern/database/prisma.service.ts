@@ -1,4 +1,4 @@
-import 'dotenv/config'; // makes sure env vars are loaded before the constructor runs
+import 'dotenv/config';
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient } from '../../../generated/prisma/client.js';
