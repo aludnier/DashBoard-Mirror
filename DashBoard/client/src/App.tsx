@@ -5,6 +5,7 @@ import './App.css'
 import Inscription from './authPages/Inscription'
 import Connection from './authPages/Connexion'
 import Home from './titlePage/Home'
+import Dashboard from './dashboard/Dashboard'
 
 function App() {
   const [user, setUser] = useState<UserSession | null>(null)
@@ -27,6 +28,7 @@ function App() {
         <Route path='/' element={<Home user={user} onLogout={handleLogout} />} />
         <Route path='/Inscription' element={<Inscription />} />
         <Route path='/Connection' element={<Connection />} />
+        <Route path='/dashboard' element={<Dashboard />} />
         <Route path='' />
       </Routes>
     </BrowserRouter>
