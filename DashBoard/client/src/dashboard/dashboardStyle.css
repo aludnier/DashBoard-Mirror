@@ -1,8 +1,16 @@
-.dashboard-page {
+/* Nav bar on top, page content fills the rest of the screen. */
+.dashboard-layout {
   min-height: 100vh;
-  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
   font-family: system-ui, -apple-system, sans-serif;
   background: #f5f5f7;
+}
+
+/* No top padding: the nav bar's bottom padding already spaces it out. */
+.dashboard-page {
+  flex: 1;
+  padding: 0 2rem 1.5rem;
   box-sizing: border-box;
 }
 
@@ -101,18 +109,18 @@
 
 @media (max-width: 768px) {
   .dashboard-page {
-    padding: 1rem;
+    padding: 0 1rem 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-page {
-    padding: 0.75rem 0.5rem;
+    padding: 0 0.5rem 0.75rem;
   }
 }
 
 /* Widgets can't be dragged on phones, so don't show a grab cursor/affordance. */
-.dashboard-page-phone .widget-card-header {
+.dashboard-grid-phone .widget-card-header {
   cursor: default;
 }
 
