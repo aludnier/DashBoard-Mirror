@@ -112,6 +112,53 @@ async function main() {
     ],
   })
 
+  const google = await prisma.service.upsert({
+    where: { slug: 'google' },
+    update: { name: 'Google', description: 'Google account integration (Calendar, Gmail...)' },
+    create: { slug: 'google', name: 'Google', description: 'Google account integration (Calendar, Gmail...)' },
+  })
+
+  await upsertWidgetDefinition(google.id, {
+    slug: 'calendar-today',
+    name: "Today's Agenda",
+    description: "Today's events from your Google Calendar",
+    params: [
+      { key: 'daysAhead', label: 'Days to show', type: 'INTEGER', defaultValue: '1' },
+    ],
+  })
+
+  await upsertWidgetDefinition(google.id, {
+    slug: 'latest-emails',
+    name: 'Latest Emails',
+    description: 'Most recent emails from your inbox',
+    params: [
+      { key: 'limit', label: 'Max results', type: 'INTEGER', defaultValue: '5' },
+      { key: 'label', label: 'Gmail label filter', type: 'STRING', defaultValue: 'INBOX' },
+    ],
+  })
+
+  const steam = await prisma.service.upsert({
+    where: { slug: 'steam' },
+    update: { name: 'Steam', description: 'Steam account integration' },
+    create: { slug: 'steam', name: 'Steam', description: 'Steam account integration' },
+  })
+
+  await upsertWidgetDefinition(steam.id, {
+    slug: 'recent-games',
+    name: 'Recently Played',
+    description: 'Games played in the last two weeks',
+    params: [
+      { key: 'limit', label: 'Max results', type: 'INTEGER', defaultValue: '5' },
+    ],
+  })
+
+  await upsertWidgetDefinition(steam.id, {
+    slug: 'player-status',
+    name: 'Player Status',
+    description: 'Online status and currently played game',
+    params: [],
+  })
+
   console.log('Seed complete.')
 }
 
