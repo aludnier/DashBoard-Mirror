@@ -4,6 +4,11 @@ export class Identity {
   constructor(
     public readonly provider: string,
     public readonly externalId: string,
+    public readonly email?: string,
+    public readonly displayName?: string,
+    public readonly accessToken?: string,
+    public readonly refreshToken?: string,
+    public readonly tokenExpiresAt?: Date,
   ) {}
 }
 
