@@ -6,10 +6,11 @@ import { ProviderDto, ProviderEnum } from '../../dto/oauth.dto.js';
 export class OauthController {
     constructor(private readonly providerService : ProviderService) {}
 
-    @Post(':provider')
-    registerServiceOauth(@Param('provider') provider : ProviderEnum, @Body() body : Record<string, string>) {
-        const dto : ProviderDto = {ProviderName : provider, data : body }
-        return this.providerService.authentificate(dto)
+    @Post(':provider/:id')
+    registerServiceOauth(@Param('provider') provider : ProviderEnum, @Param('id') userId : string, @Body() body : Record<string, string>) {
+        console.log(body)
+        const dto : ProviderDto = { ProviderName : provider, data : body }
+        return this.providerService.authentificate(userId, dto)
     }
 
 }
