@@ -21,7 +21,7 @@ function OAuthCallback() {
       provider = params.provider
     } else {
       console.error("Impossible d'identifier le provider")
-      navigate("/login")
+      navigate("/Connection")
       return
     }
 
