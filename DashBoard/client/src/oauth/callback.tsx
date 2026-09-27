@@ -1,17 +1,19 @@
-import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
-import { api } from "../client"
+import { api, getUserSession } from "../client"
 
 function OAuthCallback() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const hasRun = useRef(false)
 
   useEffect(() => {
+    if (hasRun.current) return
+    hasRun.current = true
+
     const params = Object.fromEntries(searchParams.entries())
 
     let provider: string
-    console.log(params)
 
     if (params.code) {
       provider = 'google'
@@ -23,7 +25,12 @@ function OAuthCallback() {
       return
     }
 
-    api.post(`/oauth/${provider}`, params)
+    const currUser = getUserSession()
+    if (!currUser) {
+      return;
+    }
+
+    api.post(`/oauth/${provider}/${currUser.id}`, params)
       .then(() => navigate("/dashboard"))
       .catch(console.error)
   }, [searchParams])

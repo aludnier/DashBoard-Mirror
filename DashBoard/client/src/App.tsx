@@ -29,7 +29,7 @@ function App() {
         <Route path='/' element={<Home user={user} onLogout={handleLogout} />} />
         <Route path='/Inscription' element={<Inscription />} />
         <Route path='/Connection' element={<Connection />} />
-        <Route path='/oauth/*' element={<OauthRouter/>} />
+        <Route path='/oauth/*' element={<OauthRouter />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='' />
       </Routes>
