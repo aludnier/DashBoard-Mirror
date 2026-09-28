@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import './titleStyle.css'
 import type { UserSession } from '../client'
-import { use } from 'react'
 
 type Props = {
   user: UserSession | null

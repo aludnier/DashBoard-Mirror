@@ -1,3 +1,20 @@
+.dashboard-page {
+  flex: 1;
+  padding: 0 2rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.dashboard-grid {
+  min-height: 60vh;
+  display: grid;
+  /* As many 260px+ columns as fit, stretched to fill the row: 4 on a wide
+     screen, 2 on a tablet, 1 on a phone, with no breakpoints to maintain.
+     min(260px, 100%) stops a very narrow phone from overflowing. */
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  grid-auto-rows: 240px;
+  gap: 16px;
+}
+
 /* Nav bar on top, page content fills the rest of the screen. */
 .dashboard-layout {
   min-height: 100vh;
@@ -7,46 +24,61 @@
   background: #f5f5f7;
 }
 
-/* No top padding: the nav bar's bottom padding already spaces it out. */
-.dashboard-page {
-  flex: 1;
-  padding: 0 2rem 1.5rem;
-  box-sizing: border-box;
-}
-
-.dashboard-grid {
-  min-height: 60vh;
-}
-
 .widget-card {
   height: 100%;
   display: flex;
   flex-direction: column;
   background: #fff;
-  border: 1px solid #e2e2e6;
+  /* Darker than the old #e2e2e6 so each card's edge is clearly visible
+     against the #f5f5f7 page background. */
+  border: 1.5px solid #cfcad8;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.widget-card-title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d2d2d;
+}
+
+.dashboard-grid-item.is-dragging {
+  z-index: 1;
+}
+
+.dashboard-grid-item.is-dragging .widget-card {
+  box-shadow: 0 8px 24px rgba(106, 17, 203, 0.25);
 }
 
 .widget-card-header {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.75rem 1rem;
   background: #faf9fc;
   border-bottom: 1px solid #e2e2e6;
-  cursor: grab;
-}
-
-.widget-card-header:active {
-  cursor: grabbing;
 }
 
 .widget-card-title {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #2d2d2d;
+  flex: 1;
 }
+
+.widget-card-handle {
+  border: none;
+  background: transparent;
+  color: #6b6b6f;
+  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.85rem;
+}
+
+.widget-card-handle {
+  cursor: grab;
+  touch-action: manipulation;
+}
+.widget-card-handle:active { cursor: grabbing; }
 
 .widget-card-body {
   flex: 1;
@@ -117,15 +149,4 @@
   .dashboard-page {
     padding: 0 0.5rem 0.75rem;
   }
-}
-
-/* Widgets can't be dragged on phones, so don't show a grab cursor/affordance. */
-.dashboard-grid-phone .widget-card-header {
-  cursor: default;
-}
-
-.react-grid-item.react-grid-placeholder {
-  background: #6a11cb;  /* whatever colour you want */
-  opacity: 0.15;
-  border-radius: 8px;   /* optional: match your card corners */
 }

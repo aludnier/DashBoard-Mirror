@@ -2,7 +2,6 @@ import type { WidgetInstance } from './types'
 
 // Fake data for trying the dashboard before GET /widget-instances exists.
 // Only used when the app is started with VITE_MOCK_WIDGETS=true (see api.ts).
-// Positions are in grid units on the 12-column "lg" layout.
 export const mockWidgetInstances: WidgetInstance[] = [
   {
     id: 'mock-weather-paris',
@@ -10,9 +9,8 @@ export const mockWidgetInstances: WidgetInstance[] = [
     widgetDefinition: { id: 'def-weather', name: 'Weather', slug: 'weather' },
     config: { city: 'Paris' },
     refreshRateSeconds: 600,
-    positionX: 0,
-    positionY: 0,
-    width: 4,
+    position: 0,
+    width: 1,
     height: 2,
   },
   {
@@ -22,9 +20,8 @@ export const mockWidgetInstances: WidgetInstance[] = [
     widgetDefinition: { id: 'def-weather', name: 'Weather', slug: 'weather' },
     config: { city: 'Tokyo' },
     refreshRateSeconds: 600,
-    positionX: 4,
-    positionY: 0,
-    width: 4,
+    position: 1,
+    width: 1,
     height: 2,
   },
   {
@@ -33,9 +30,8 @@ export const mockWidgetInstances: WidgetInstance[] = [
     widgetDefinition: { id: 'def-github-repos', name: 'GitHub Repositories', slug: 'github-repos' },
     config: { username: 'octocat' },
     refreshRateSeconds: 300,
-    positionX: 8,
-    positionY: 0,
-    width: 4,
+    position: 2,
+    width: 2,
     height: 4,
   },
   {
@@ -44,9 +40,8 @@ export const mockWidgetInstances: WidgetInstance[] = [
     widgetDefinition: { id: 'def-clock', name: 'Clock', slug: 'clock' },
     config: { timezone: 'Europe/Paris' },
     refreshRateSeconds: 60,
-    positionX: 0,
-    positionY: 2,
-    width: 8,
+    position: 3,
+    width: 2,
     height: 2,
   },
 ]

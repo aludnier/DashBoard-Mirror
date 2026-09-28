@@ -74,7 +74,7 @@ model Subscription {
   id             String    @id @default(cuid())
   userId         String
   serviceId      String
-  // OAuth/credential storage is optional — a subscription can exist before the user connects an account
+  // OAuth/credential storage is optional, a subscription can exist before the user connects an account
   accessToken    String?   @db.Text
   refreshToken   String?   @db.Text
   tokenExpiresAt DateTime?
@@ -96,8 +96,7 @@ model WidgetInstance {
   widgetDefinitionId String
   config             Json
   refreshRateSeconds Int      @default(300)
-  positionX          Int
-  positionY          Int
+  position          Int      @default(0)
   width              Int      @default(1)
   height             Int      @default(1)
   createdAt          DateTime @default(now())
