@@ -1,4 +1,4 @@
-import type { WidgetInstance } from './types'
+import type { WidgetData, WidgetInstance } from './types'
 
 // Fake data for trying the dashboard before GET /widget-instances exists.
 // Only used when the app is started with VITE_MOCK_WIDGETS=true (see api.ts).
@@ -45,3 +45,12 @@ export const mockWidgetInstances: WidgetInstance[] = [
     height: 2,
   },
 ]
+
+// Same content for every mock widget: enough to see how a list card looks.
+export const mockWidgetData: WidgetData = {
+  items: [
+    { id: '1', title: 'Fix login redirect', subtitle: '#42 by octocat', url: 'https://github.com' },
+    { id: '2', title: 'Add weather widget', subtitle: '#41 by monalisa', url: 'https://github.com' },
+    { id: '3', title: 'Update README', subtitle: '#40 by octocat' },
+  ],
+}

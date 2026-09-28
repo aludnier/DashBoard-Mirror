@@ -1,0 +1,158 @@
+/* The panel is positioned against this wrapper, so it opens right under the icon. */
+.github-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* `.nav-bar button` gives every navbar button the purple pill style; these
+   selectors are one class more specific so they override it. */
+.nav-bar .github-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  color: #2d2d2d;
+  border-radius: 50%;
+}
+
+.nav-bar .github-menu-trigger:hover,
+.nav-bar .github-menu-trigger[aria-expanded='true'] {
+  background: #ebe7f3;
+  opacity: 1;
+}
+
+.github-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  width: 300px;
+  /* Never wider than the screen minus the navbar's side padding. */
+  max-width: calc(100vw - 2.5rem);
+  padding: 1rem;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1.5px solid #cfcad8;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.nav-bar .github-menu-connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: #24292f;
+}
+
+.nav-bar .github-menu-connect svg {
+  width: 18px;
+  height: 18px;
+}
+
+.github-menu-heading {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b6b76;
+}
+
+.github-menu-widgets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.github-menu-widget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid #eeeaf3;
+}
+
+.github-menu-widget-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2d2d2d;
+}
+
+.github-menu-widget-description {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: #6b6b76;
+}
+
+.nav-bar .github-menu-add {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.github-menu-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b6b76;
+}
+
+.add-widget-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.add-widget-form-title {
+  margin: 0;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.add-widget-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #2d2d2d;
+}
+
+.add-widget-form-field input {
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  border: 1.5px solid #cfcad8;
+  border-radius: 6px;
+}
+
+.add-widget-form-field input:focus {
+  outline: 2px solid #6a11cb;
+  outline-offset: -1px;
+}
+
+.add-widget-form-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #c0392b;
+}
+
+.add-widget-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.nav-bar .add-widget-form-cancel {
+  background: transparent;
+  color: #2d2d2d;
+}
+
+.nav-bar .add-widget-form button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

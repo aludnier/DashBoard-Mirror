@@ -10,10 +10,12 @@ import {
 } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
-import { fetchWidgetInstances } from './api'
-import type { WidgetInstance } from './types'
+import GithubMenu from '../components/GithubMenu'
+import { getUserSession } from '../client'
+import { createWidgetInstance, fetchWidgetInstances } from './api'
+import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
 import './dashboardStyle.css'
@@ -61,11 +63,17 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  // The dashboard route isn't protected yet, so check the session here to only
+  // show account-specific controls to logged-in users.
+  // Only the id, not the whole session object: getUserSession() returns a new
+  // object on every render, which would re-run the effect below every time.
+  const userId = getUserSession()?.id
 
   useEffect(() => {
+    if (!userId) return
     let cancelled = false
 
-    fetchWidgetInstances()
+    fetchWidgetInstances(userId)
       .then((data) => {
         if (!cancelled)
           setInstances([...data].sort((a, b) => a.position - b.position))
@@ -83,7 +91,7 @@ function Dashboard() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [userId])
 
   function handleReorder(activeId: string, overId: string) {
     const oldIndex = instances.findIndex((instance) => instance.id === activeId)
@@ -99,6 +107,18 @@ function Dashboard() {
     // `replace` swaps the dashboard out of the history stack, so the browser's
     // back button doesn't lead straight back into it after logging out.
     navigate('/', { replace: true })
+  }
+
+  if (!userId) {
+    return <Navigate to="/Connection" replace />
+  }
+
+  // A const arrow function after the check above, so TypeScript knows userId
+  // is a string here (a hoisted `function` would lose that).
+  const handleAddWidget = async (definition: WidgetDefinition, config: Record<string, string | number>) => {
+    const created = await createWidgetInstance(userId, definition.id, config)
+    // The server returns the full instance, so the card appears without refetching.
+    setInstances((current) => [...current, created])
   }
 
   function renderContent() {
@@ -125,6 +145,7 @@ function Dashboard() {
   return (
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
+        <GithubMenu onAddWidget={handleAddWidget} />
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
       <main className="dashboard-page">{renderContent()}</main>
