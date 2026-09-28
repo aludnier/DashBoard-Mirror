@@ -1,12 +1,13 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { redirectToGithubOauth } from '../oauth/github'
-import { githubWidgetDefinitions, type GithubWidgetDefinition } from './githubWidgets'
+import { fetchWidgetDefinitions } from '../dashboard/api'
+import type { WidgetDefinition } from '../dashboard/types'
 import './githubMenu.css'
 
 interface GithubMenuProps {
   // Leave undefined until adding a widget is wired to the server: the list is
   // then shown as a preview with no "Add" buttons.
-  onAddWidget?: (definition: GithubWidgetDefinition) => void
+  onAddWidget?: (definition: WidgetDefinition) => void
 }
 
 function GithubMark() {
@@ -22,6 +23,9 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const panelId = useId()
+  const [definitions, setDefinitions] = useState<WidgetDefinition[] | null>(null)
+  const [loadError, setLoadError] = useState(false)
+  const [isLoadingDefinitions, setIsLoadingDefinitions] = useState(false)
 
   // Only listen while open: close on a click outside the menu or on Escape.
   useEffect(() => {
@@ -45,6 +49,62 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
     }
   }, [isOpen])
 
+  function loadDefinitions() {
+    setIsLoadingDefinitions(true)
+    setLoadError(false)
+    fetchWidgetDefinitions('github')
+      .then(setDefinitions)
+      .catch(() => setLoadError(true))
+      .finally(() => setIsLoadingDefinitions(false))
+  }
+
+  function handleToggle() {
+    const willOpen = !isOpen
+    setIsOpen(willOpen)
+    // Fetch on the first open (or retry after an error), from the click
+    // handler rather than an effect: the click is what causes the request.
+    if (willOpen && definitions === null && !isLoadingDefinitions)
+      loadDefinitions()
+  }
+
+  function renderWidgets() {
+    if (isLoadingDefinitions)
+      return <p className="github-menu-status">Loading widgets...</p>
+
+    if (loadError)
+      return <p className="github-menu-status">Could not load widgets. Close and reopen to retry.</p>
+
+    if (!definitions || definitions.length === 0)
+      return <p className="github-menu-status">No GitHub widgets available yet.</p>
+
+    return (
+      <ul className="github-menu-widgets">
+        {definitions.map((definition) => (
+          <li key={definition.id} className="github-menu-widget">
+            <div>
+              <p className="github-menu-widget-name">{definition.name}</p>
+              {definition.description && (
+                <p className="github-menu-widget-description">{definition.description}</p>
+              )}
+            </div>
+            {onAddWidget && (
+              <button
+                type="button"
+                className="github-menu-add"
+                onClick={() => {
+                  onAddWidget(definition)
+                  setIsOpen(false)
+                }}
+              >
+                Add
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
   return (
     <div className="github-menu" ref={containerRef}>
       <button
@@ -53,7 +113,7 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
         aria-label="GitHub integration"
         aria-expanded={isOpen}
         aria-controls={panelId}
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={handleToggle}
       >
         <GithubMark />
       </button>
@@ -66,28 +126,7 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
           </button>
 
           <h3 className="github-menu-heading">Available widgets</h3>
-          <ul className="github-menu-widgets">
-            {githubWidgetDefinitions.map((definition) => (
-              <li key={definition.id} className="github-menu-widget">
-                <div>
-                  <p className="github-menu-widget-name">{definition.name}</p>
-                  <p className="github-menu-widget-description">{definition.description}</p>
-                </div>
-                {onAddWidget && (
-                  <button
-                    type="button"
-                    className="github-menu-add"
-                    onClick={() => {
-                      onAddWidget(definition)
-                      setIsOpen(false)
-                    }}
-                  >
-                    Add
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
+          {renderWidgets()}
         </div>
       )}
     </div>

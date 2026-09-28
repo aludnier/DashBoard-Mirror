@@ -96,3 +96,9 @@
   padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
 }
+
+.github-menu-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b6b76;
+}
