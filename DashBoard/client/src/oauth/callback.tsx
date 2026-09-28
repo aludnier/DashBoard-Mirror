@@ -13,26 +13,42 @@ function OAuthCallback() {
 
     const params = Object.fromEntries(searchParams.entries())
 
-    let provider: string
+    const savedState = sessionStorage.getItem("oauth_state")
+    sessionStorage.removeItem("oauth_state")
 
-    if (params.code) {
-      provider = 'google'
-    } else if (params.provider) {
-      provider = params.provider
-    } else {
-      console.error("Impossible d'identifier le provider")
-      navigate("/login")
+    if (!params.state || params.state !== savedState) {
+      console.error("Missing or invalid OAuth state")
+      navigate("/")
+      return
+    }
+
+    if (params.error) {
+      console.error("Connection refused: ", params.error)
+      navigate("/")
+      return
+    }
+
+    let provider: string
+    try {
+      provider = JSON.parse(atob(params.state)).provider
+    } catch {
+      console.error("Impossible to identify the provider")
+      navigate("/Connection")
       return
     }
 
     const currUser = getUserSession()
     if (!currUser) {
+      navigate("/Connection")
       return;
     }
 
     api.post(`/oauth/${provider}/${currUser.id}`, params)
       .then(() => navigate("/dashboard"))
-      .catch(console.error)
+      .catch((e) => {
+        console.error(e)
+        navigate("/")
+      })
   }, [searchParams])
 
   return <p>Connexion en cours...</p>
