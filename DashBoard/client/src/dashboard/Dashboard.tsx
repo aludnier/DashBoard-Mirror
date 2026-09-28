@@ -12,6 +12,8 @@ import type { DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
+import GithubMenu from '../components/GithubMenu'
+import { getUserSession } from '../client'
 import { fetchWidgetInstances } from './api'
 import type { WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
@@ -61,6 +63,9 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  // The dashboard route isn't protected yet, so check the session here to only
+  // show account-specific controls to logged-in users.
+  const isLoggedIn = getUserSession() !== null
 
   useEffect(() => {
     let cancelled = false
@@ -125,6 +130,7 @@ function Dashboard() {
   return (
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
+        {isLoggedIn && <GithubMenu />}
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
       <main className="dashboard-page">{renderContent()}</main>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import NavBar from '../components/NavBar'
+import GithubMenu from '../components/GithubMenu'
 import './titleStyle.css'
 import type { UserSession } from '../client'
 
@@ -15,6 +16,7 @@ function Home({ user, onLogout }: Props) {
         {user ? (
           <>
             <p>Welcome {user.email}</p>
+            <GithubMenu />
             <button onClick={onLogout}>Disconnect</button>
           </>
         ) : (
