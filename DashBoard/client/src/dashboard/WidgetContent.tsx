@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { getUserSession } from '../client'
+import { apiErrorMessage, getUserSession } from '../client'
 import { fetchWidgetData } from './api'
 import type { WidgetData, WidgetInstance } from './types'
 
 interface WidgetContentProps {
   instance: WidgetInstance
-}
-
-// The server answers errors as { statusCode, message }; show its message
-// ("Connect your github account first", ...) when there is one.
-function errorMessage(error: unknown): string {
-  if (axios.isAxiosError(error) && typeof error.response?.data?.message === 'string')
-    return error.response.data.message
-  return 'Could not load this widget.'
 }
 
 function WidgetContent({ instance }: WidgetContentProps) {
@@ -37,7 +28,7 @@ function WidgetContent({ instance }: WidgetContentProps) {
           setError(null)
         })
         .catch((err) => {
-          if (!cancelled) setError(errorMessage(err))
+          if (!cancelled) setError(apiErrorMessage(err, 'Could not load this widget.'))
         })
     }
 

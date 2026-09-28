@@ -2,12 +2,13 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { redirectToGithubOauth } from '../oauth/github'
 import { fetchWidgetDefinitions } from '../dashboard/api'
 import type { WidgetDefinition } from '../dashboard/types'
+import AddWidgetForm from './AddWidgetForm'
 import './githubMenu.css'
 
 interface GithubMenuProps {
-  // Leave undefined until adding a widget is wired to the server: the list is
-  // then shown as a preview with no "Add" buttons.
-  onAddWidget?: (definition: WidgetDefinition) => void
+  // Without it, the list is a preview with no "Add" buttons. Should reject
+  // with the server's error so the form can show it.
+  onAddWidget?: (definition: WidgetDefinition, config: Record<string, string | number>) => Promise<void>
 }
 
 function GithubMark() {
@@ -26,6 +27,8 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
   const [definitions, setDefinitions] = useState<WidgetDefinition[] | null>(null)
   const [loadError, setLoadError] = useState(false)
   const [isLoadingDefinitions, setIsLoadingDefinitions] = useState(false)
+  // The widget whose settings form is showing; null shows the list.
+  const [selectedDefinition, setSelectedDefinition] = useState<WidgetDefinition | null>(null)
 
   // Only listen while open: close on a click outside the menu or on Escape.
   useEffect(() => {
@@ -61,6 +64,8 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
   function handleToggle() {
     const willOpen = !isOpen
     setIsOpen(willOpen)
+    // Reopening always starts from the list, not a half-filled form.
+    setSelectedDefinition(null)
     // Fetch on the first open (or retry after an error), from the click
     // handler rather than an effect: the click is what causes the request.
     if (willOpen && definitions === null && !isLoadingDefinitions)
@@ -68,6 +73,22 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
   }
 
   function renderWidgets() {
+    if (selectedDefinition && onAddWidget) {
+      return (
+        <AddWidgetForm
+          // A new key per widget type resets the form's state when switching.
+          key={selectedDefinition.id}
+          definition={selectedDefinition}
+          onSubmit={async (config) => {
+            await onAddWidget(selectedDefinition, config)
+            setSelectedDefinition(null)
+            setIsOpen(false)
+          }}
+          onCancel={() => setSelectedDefinition(null)}
+        />
+      )
+    }
+
     if (isLoadingDefinitions)
       return <p className="github-menu-status">Loading widgets...</p>
 
@@ -91,10 +112,7 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
               <button
                 type="button"
                 className="github-menu-add"
-                onClick={() => {
-                  onAddWidget(definition)
-                  setIsOpen(false)
-                }}
+                onClick={() => setSelectedDefinition(definition)}
               >
                 Add
               </button>
@@ -125,7 +143,7 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
             Connect with Github
           </button>
 
-          <h3 className="github-menu-heading">Available widgets</h3>
+          {!selectedDefinition && <h3 className="github-menu-heading">Available widgets</h3>}
           {renderWidgets()}
         </div>
       )}

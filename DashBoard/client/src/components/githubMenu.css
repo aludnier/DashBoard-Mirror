@@ -102,3 +102,57 @@
   font-size: 0.85rem;
   color: #6b6b76;
 }
+
+.add-widget-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.add-widget-form-title {
+  margin: 0;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.add-widget-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #2d2d2d;
+}
+
+.add-widget-form-field input {
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  border: 1.5px solid #cfcad8;
+  border-radius: 6px;
+}
+
+.add-widget-form-field input:focus {
+  outline: 2px solid #6a11cb;
+  outline-offset: -1px;
+}
+
+.add-widget-form-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #c0392b;
+}
+
+.add-widget-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.nav-bar .add-widget-form-cancel {
+  background: transparent;
+  color: #2d2d2d;
+}
+
+.nav-bar .add-widget-form button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

@@ -19,6 +19,33 @@ export async function fetchWidgetInstances(userId: string): Promise<WidgetInstan
   return response.data
 }
 
+// Adds a widget to the user's dashboard. The server validates config against
+// the definition's params and answers with the created instance.
+export async function createWidgetInstance(
+  userId: string,
+  widgetDefinitionId: string,
+  config: Record<string, string | number>,
+): Promise<WidgetInstance> {
+  if (USE_MOCK_WIDGETS) {
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    return {
+      id: `mock-${crypto.randomUUID()}`,
+      widgetDefinitionId,
+      config,
+      refreshRateSeconds: 300,
+      position: 0,
+      width: 1,
+      height: 1,
+    }
+  }
+
+  const response = await api.post<WidgetInstance>(`/users/${userId}/widget-instances`, {
+    widgetDefinitionId,
+    config,
+  })
+  return response.data
+}
+
 // The widgets a service offers (e.g. 'github'). Not user-specific: it's the
 // same catalog for everyone, read from the WidgetDefinition table.
 export async function fetchWidgetDefinitions(serviceSlug: string): Promise<WidgetDefinition[]> {

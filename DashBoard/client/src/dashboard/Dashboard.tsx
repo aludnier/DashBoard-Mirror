@@ -14,8 +14,8 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import { getUserSession } from '../client'
-import { fetchWidgetInstances } from './api'
-import type { WidgetInstance } from './types'
+import { createWidgetInstance, fetchWidgetInstances } from './api'
+import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
 import './dashboardStyle.css'
@@ -113,6 +113,14 @@ function Dashboard() {
     return <Navigate to="/Connection" replace />
   }
 
+  // A const arrow function after the check above, so TypeScript knows userId
+  // is a string here (a hoisted `function` would lose that).
+  const handleAddWidget = async (definition: WidgetDefinition, config: Record<string, string | number>) => {
+    const created = await createWidgetInstance(userId, definition.id, config)
+    // The server returns the full instance, so the card appears without refetching.
+    setInstances((current) => [...current, created])
+  }
+
   function renderContent() {
     if (isLoading) {
       return <div className="dashboard-status">Loading your dashboard...</div>
@@ -137,7 +145,7 @@ function Dashboard() {
   return (
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
-        <GithubMenu />
+        <GithubMenu onAddWidget={handleAddWidget} />
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
       <main className="dashboard-page">{renderContent()}</main>
