@@ -1,3 +1,5 @@
+import type { WidgetDefinitionParams } from './catalog.repository.js'
+
 export interface Widget {
     id : string
 }
@@ -27,10 +29,37 @@ export interface WidgetDataSource {
   accessToken: string | null
 }
 
+// A widget's settings after validation: every value is a string or a number.
+export type WidgetConfig = Record<string, string | number>
+
+// What the domain needs to know before creating a widget instance.
+export interface WidgetCreationContext {
+  serviceSlug: string
+  // null when the user hasn't connected this service yet.
+  subscriptionId: string | null
+  defaultRefreshRate: number
+  params: WidgetDefinitionParams[]
+  // One past the user's current last widget, so the new one goes at the end.
+  nextPosition: number
+}
+
+export interface NewWidgetInstance {
+  userId: string
+  subscriptionId: string
+  widgetDefinitionId: string
+  config: WidgetConfig
+  refreshRateSeconds: number
+  position: number
+}
+
 export interface WidgetRepositoryPort {
   findByUserId(userId: string): Promise<WidgetInstanceInfo[]>
   // null when the instance doesn't exist or belongs to another user.
   findDataSource(userId: string, instanceId: string): Promise<WidgetDataSource | null>
+  // null when no widget definition has this id.
+  findCreationContext(userId: string, widgetDefinitionId: string): Promise<WidgetCreationContext | null>
+  create(data: NewWidgetInstance): Promise<WidgetInstanceInfo>
+
 }
 
 export const WIDGET_REPOSITORY = Symbol('WIDGET_REPOSITORY')
