@@ -30,4 +30,16 @@ export class PrismaSubscriptionRepository implements SubscriptionRepositoryPort 
       },
     })
   }
+
+  async getToken(userId : string, providerSlug :string) : Promise<string | null> {
+    const service = await this.prisma.service.findUniqueOrThrow({
+      where: { slug: providerSlug },
+    })
+
+    const response =  await this.prisma.subscription.findFirst({
+      where : { serviceId : service.id, userId : userId },
+    })
+    // need to refresh if expired
+    return response?.accessToken ?? null
+  }
 }

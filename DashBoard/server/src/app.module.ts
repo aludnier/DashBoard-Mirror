@@ -10,9 +10,10 @@ import { OauthModule } from './adapters/entry/oauth.module.js';
 import { ServicesController } from './adapters/entry/services.controller.js';
 import { WidgetCatalogService } from './domain/useCases/widget-catalog.service.js';
 import { WidgetModule } from './adapters/entry/widget.module.js';
+import { ProviderModule } from './adapters/entry/provider.module.js';
 
 @Module({
-  imports: [AuthModule, OauthModule, WidgetModule],
+  imports: [AuthModule, OauthModule, WidgetModule, ProviderModule],
   controllers: [AppController, ServicesController],
   providers: [
     AppService,

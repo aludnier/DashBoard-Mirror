@@ -1,0 +1,32 @@
+.youtube-widget {
+    padding: 20px;
+}
+
+.playlists {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.playlist {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.playlist img {
+    width: 120px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.playlist h3 {
+    margin: 0 0 5px;
+}
+
+.playlist p {
+    margin: 0 0 5px;
+}
