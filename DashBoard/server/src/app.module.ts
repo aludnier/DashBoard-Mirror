@@ -9,9 +9,10 @@ import { PrismaCatalogRepository } from './adapters/extern/database/catalog.repo
 import { OauthModule } from './adapters/entry/oauth.module.js';
 import { ServicesController } from './adapters/entry/services.controller.js';
 import { WidgetCatalogService } from './domain/useCases/widget-catalog.service.js';
+import { WidgetModule } from './adapters/entry/widget.module.js';
 
 @Module({
-  imports: [AuthModule, OauthModule],
+  imports: [AuthModule, OauthModule, WidgetModule],
   controllers: [AppController, ServicesController],
   providers: [
     AppService,
