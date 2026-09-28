@@ -6,16 +6,15 @@ export interface WidgetDefinitionSummary {
 }
 
 // Mirrors server/prisma/schema.prisma -> WidgetInstance.
-// positionX/positionY/width/height are grid units, not pixels, and are what
-// react-grid-layout persists back through onDragStop / onResizeStop.
+// position is the index in the dashboard's reading order; width/height are
+// grid spans (width out of 4 desktop columns, height in 120px rows).
 export interface WidgetInstance {
   id: string
   widgetDefinitionId: string
   widgetDefinition?: WidgetDefinitionSummary
   config: Record<string, unknown>
   refreshRateSeconds: number
-  positionX: number
-  positionY: number
+  position: number
   width: number
   height: number
 }
