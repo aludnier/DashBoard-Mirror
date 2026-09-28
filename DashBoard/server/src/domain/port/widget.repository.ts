@@ -19,8 +19,18 @@ export interface WidgetInstanceInfo {
   height: number
 }
 
+// Everything needed to fetch one widget's data from its service.
+export interface WidgetDataSource {
+  widgetSlug: string
+  serviceSlug: string
+  config: Record<string, unknown>
+  accessToken: string | null
+}
+
 export interface WidgetRepositoryPort {
   findByUserId(userId: string): Promise<WidgetInstanceInfo[]>
+  // null when the instance doesn't exist or belongs to another user.
+  findDataSource(userId: string, instanceId: string): Promise<WidgetDataSource | null>
 }
 
 export const WIDGET_REPOSITORY = Symbol('WIDGET_REPOSITORY')
