@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { AuthProviderPort } from "../../../domain/port/provider.repository.js";
+import { ProviderPort, WidgetData } from "../../../domain/port/provider.repository.js";
 import { Identity } from "../../../dto/oauth.dto.js";
 import axios from 'axios';
 
 @Injectable()
-export class GithubOauthAdapter implements AuthProviderPort {
+export class GithubOauthAdapter implements ProviderPort {
   async authenticate(params: Record<string, string>): Promise<Identity> {
 
     const { code } = params;
@@ -43,4 +43,8 @@ export class GithubOauthAdapter implements AuthProviderPort {
       throw error;
     }
   }
+
+    async fetchWidgetData(userId: String, widgetSlug: string, token : string | null): Promise<WidgetData | null> {
+      return Promise.resolve({ slug : 'Youtube', data : {id : '1', name : "test"}});
+    }
 }
