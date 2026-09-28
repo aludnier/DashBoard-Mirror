@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { AuthProviderPort } from "../../../domain/port/provider.repository.js";
+import { ProviderPort, WidgetData, YtPlaylistsWidgetData } from "../../../domain/port/provider.repository.js";
 import { Identity } from "../../../dto/oauth.dto.js";
 import axios from 'axios';
+import { response } from "express";
 
 @Injectable()
-export class GoogleOauthAdapter implements AuthProviderPort {
+export class GoogleOauthAdapter implements ProviderPort {
   async authenticate(params: Record<string, string>): Promise<Identity> {
     const callId = Math.random().toString(36).slice(2, 8);
     console.log(`[${callId}] params:`, params);
@@ -48,5 +49,21 @@ export class GoogleOauthAdapter implements AuthProviderPort {
     }
     throw error;
   }
+  }
+
+
+  async fetchWidgetData(userId: String, widgetSlug: string, token : string | null): Promise<WidgetData | null> {
+    console.log('[ADAPTER] ' + token)
+
+    const { data } = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
+      headers: { Authorization: `Bearer ${token}` },
+      params: {
+    part: 'snippet,contentDetails',
+    mine: true,
+    maxResults: 25,
+  },
+    })
+    console.log("[GOOGLE] : ", data)
+    return new YtPlaylistsWidgetData(data)
   }
 }
