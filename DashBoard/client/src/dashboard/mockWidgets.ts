@@ -2,7 +2,6 @@ import type { WidgetInstance } from './types'
 
 // Fake data for trying the dashboard before GET /widget-instances exists.
 // Only used when the app is started with VITE_MOCK_WIDGETS=true (see api.ts).
-// Positions are in grid units on the 12-column "lg" layout.
 export const mockWidgetInstances: WidgetInstance[] = [
   {
     id: 'mock-weather-paris',
