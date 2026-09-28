@@ -20,18 +20,17 @@ export async function fetchWidgetInstances(): Promise<WidgetInstance[]> {
   return response.data
 }
 
-export interface WidgetPositionUpdate {
-  positionX: number
-  positionY: number
+// One request for the whole dashboard: moving one widget shifts the position of
+// every widget between its old and new index, so per-widget PATCHes would be N requests.
+export async function saveWidgetOrder(orderedIds: string[]): Promise<void> {
+  await api.put('/widget-instances/order', { orderedIds })
+}
+
+export interface WidgetSizeUpdate {
   width: number
   height: number
 }
 
-// Persistence of dragged/resized positions is tracked separately (issue #11).
-// This is the call site that issue will wire up.
-export async function updateWidgetInstancePosition(
-  id: string,
-  position: WidgetPositionUpdate,
-): Promise<void> {
-  await api.patch(`/widget-instances/${id}`, position)
+export async function updateWidgetInstanceSize(id: string, size: WidgetSizeUpdate): Promise<void> {
+  await api.patch(`/widget-instances/${id}`, size)
 }
