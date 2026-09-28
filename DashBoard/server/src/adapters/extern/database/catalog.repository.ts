@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import type { CatalogParam, CatalogRepository, CatalogService, CatalogWidget } from '../../../domain/port/catalog.repository.js'
+import type { CatalogParam, CatalogRepository, CatalogService, CatalogWidget, WidgetDefinitionInfo } from '../../../domain/port/catalog.repository.js'
 import { PrismaService } from './prisma.service.js'
 
 @Injectable()
@@ -32,4 +32,36 @@ export class PrismaCatalogRepository implements CatalogRepository {
       }),
     )
   }
+
+  async getWidgetDefinitions(serviceSlug: string): Promise<WidgetDefinitionInfo[] | null> {
+    const service = await this.prisma.service.findUnique({
+      where: { slug: serviceSlug },
+      include: {
+        widgetDefinitions: {
+          include: { params: true },
+          orderBy: { name: 'asc' },
+        },
+      },
+    })
+
+    if (!service) return null
+
+    return service.widgetDefinitions.map(
+      (definition): WidgetDefinitionInfo => ({
+        id: definition.id,
+        slug: definition.slug,
+        name: definition.name,
+        description: definition.description,
+        defaultRefreshRate: definition.defaultRefreshRate,
+        params: definition.params.map((param) => ({
+          key: param.key,
+          label: param.label,
+          type: param.type,
+          required: param.required,
+          defaultValue: param.defaultValue,
+        })),
+      }),
+    )
+  }
+
 }

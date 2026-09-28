@@ -26,7 +26,8 @@ export type WidgetDefinitionInfo = {
   slug: string
   name: string
   description: string | null
-  defaultValue: WidgetDefinitionParams[]
+  defaultRefreshRate: number
+  params: WidgetDefinitionParams[]
 }
 
 export const CATALOG_REPOSITORY = Symbol('CATALOG_REPOSITORY')
