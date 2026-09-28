@@ -7,9 +7,10 @@ import { CATALOG_REPOSITORY } from './domain/port/catalog.repository.js';
 import { PrismaService } from './adapters/extern/database/prisma.service.js';
 import { PrismaCatalogRepository } from './adapters/extern/database/catalog.repository.js';
 import { OauthModule } from './adapters/entry/oauth.module.js';
+import { ProviderModule } from './adapters/entry/provider.module.js';
 
 @Module({
-  imports: [AuthModule, OauthModule],
+  imports: [AuthModule, OauthModule, ProviderModule],
   controllers: [AppController],
   providers: [
     AppService,
