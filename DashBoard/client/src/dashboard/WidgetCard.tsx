@@ -6,15 +6,22 @@ type Sortable = ReturnType<typeof useSortable>
 
 interface WidgetCardProps {
   instance: WidgetInstance
-  dragHandle?: {
-    ref: Sortable['setActivatorNodeRef']
-    attributes: Sortable['attributes']
-    listeners: Sortable['listeners']
-  }
+  // Passed as separate props rather than one { ref, attributes, listeners }
+  // object: the react-hooks/refs lint rule treats an object holding a ref as a
+  // ref itself, so reading .attributes from it during render gets flagged.
+  handleRef?: Sortable['setActivatorNodeRef']
+  handleAttributes?: Sortable['attributes']
+  handleListeners?: Sortable['listeners']
   onCycleSize?: () => void
 }
 
-function WidgetCard({ instance, dragHandle, onCycleSize }: WidgetCardProps) {
+function WidgetCard({
+  instance,
+  handleRef,
+  handleAttributes,
+  handleListeners,
+  onCycleSize,
+}: WidgetCardProps) {
   return (
     <div className="widget-card">
       <div className="widget-card-header">
@@ -26,14 +33,14 @@ function WidgetCard({ instance, dragHandle, onCycleSize }: WidgetCardProps) {
             {sizeLabel(instance)}
           </button>
         )}
-        {dragHandle && (
+        {handleAttributes && (
           <button
             type="button"
             className="widget-card-handle"
             aria-label="Drag to reorder"
-            ref={dragHandle.ref}
-            {...dragHandle.attributes}
-            {...dragHandle.listeners}
+            ref={handleRef}
+            {...handleAttributes}
+            {...handleListeners}
           >
             ⠿
           </button>

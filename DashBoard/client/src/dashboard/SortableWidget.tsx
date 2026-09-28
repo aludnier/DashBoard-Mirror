@@ -33,7 +33,9 @@ function SortableWidget({ instance, onCycleSize }: SortableWidgetProps) {
     >
       <WidgetCard
         instance={instance}
-        dragHandle={{ ref: setActivatorNodeRef, attributes, listeners }}
+        handleRef={setActivatorNodeRef}
+        handleAttributes={attributes}
+        handleListeners={listeners}
         onCycleSize={onCycleSize}
       />
     </div>
