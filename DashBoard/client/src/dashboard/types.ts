@@ -16,3 +16,17 @@ export interface WidgetInstance {
   width: number
   height: number
 }
+
+export interface WidgetParamDefinition {
+  key: string
+  label: string
+  type: 'STRING' | 'INTEGER'
+  required: boolean
+  defaultValue: string | null
+}
+
+export interface WidgetDefinition extends WidgetDefinitionSummary {
+  description: string | null
+  defaultRefreshRate: number
+  params: WidgetParamDefinition[]
+}

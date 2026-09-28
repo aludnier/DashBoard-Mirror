@@ -10,7 +10,7 @@ import {
 } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import { getUserSession } from '../client'
@@ -65,12 +65,15 @@ function Dashboard() {
   const navigate = useNavigate()
   // The dashboard route isn't protected yet, so check the session here to only
   // show account-specific controls to logged-in users.
-  const isLoggedIn = getUserSession() !== null
+  // Only the id, not the whole session object: getUserSession() returns a new
+  // object on every render, which would re-run the effect below every time.
+  const userId = getUserSession()?.id
 
   useEffect(() => {
+    if (!userId) return
     let cancelled = false
 
-    fetchWidgetInstances()
+    fetchWidgetInstances(userId)
       .then((data) => {
         if (!cancelled)
           setInstances([...data].sort((a, b) => a.position - b.position))
@@ -88,7 +91,7 @@ function Dashboard() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [userId])
 
   function handleReorder(activeId: string, overId: string) {
     const oldIndex = instances.findIndex((instance) => instance.id === activeId)
@@ -104,6 +107,10 @@ function Dashboard() {
     // `replace` swaps the dashboard out of the history stack, so the browser's
     // back button doesn't lead straight back into it after logging out.
     navigate('/', { replace: true })
+  }
+
+  if (!userId) {
+    return <Navigate to="/Connection" replace />
   }
 
   function renderContent() {
@@ -130,7 +137,7 @@ function Dashboard() {
   return (
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
-        {isLoggedIn && <GithubMenu />}
+        <GithubMenu />
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
       <main className="dashboard-page">{renderContent()}</main>
