@@ -30,3 +30,15 @@ export interface WidgetDefinition extends WidgetDefinitionSummary {
   defaultRefreshRate: number
   params: WidgetParamDefinition[]
 }
+
+// Mirrors GET /users/:id/widget-instances/:instanceId/data (server: WidgetData).
+export interface WidgetListItem {
+  id: string
+  title: string
+  subtitle?: string
+  url?: string
+}
+
+export interface WidgetData {
+  items: WidgetListItem[]
+}
