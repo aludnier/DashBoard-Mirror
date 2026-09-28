@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import { fetchWidgetInstances } from './api'
 import type { WidgetInstance } from './types'
-import { nextSize } from './sizes'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
 import './dashboardStyle.css'
@@ -22,10 +21,9 @@ import './dashboardStyle.css'
 type DashboardGridProps = {
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
-  onCycleSize: (id: string) => void
 }
 
-function DashboardGrid({ instances, onReorder, onCycleSize }: DashboardGridProps) {
+function DashboardGrid({ instances, onReorder }: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -49,7 +47,6 @@ function DashboardGrid({ instances, onReorder, onCycleSize }: DashboardGridProps
             <SortableWidget
               key={instance.id}
               instance={instance}
-              onCycleSize={() => onCycleSize(instance.id)}
             />
           ))}
         </div>
@@ -97,17 +94,6 @@ function Dashboard() {
     // TODO(#11): saveWidgetOrder(reordered.map((instance) => instance.id))
   }
 
-  function handleCycleSize(id: string) {
-    const target = instances.find((instance) => instance.id === id)
-    if (!target)
-      return
-    const size = nextSize(target)
-    setInstances((prev) =>
-      prev.map((instance) => (instance.id === id ? { ...instance, ...size } : instance)),
-    )
-    // TODO(#11): updateWidgetInstanceSize(id, size)
-  }
-
   function handleLogout() {
     // TODO: clear the session (token, user) once auth is wired up.
     // `replace` swaps the dashboard out of the history stack, so the browser's
@@ -132,7 +118,6 @@ function Dashboard() {
       <DashboardGrid
         instances={instances}
         onReorder={handleReorder}
-        onCycleSize={handleCycleSize}
       />
     )
   }

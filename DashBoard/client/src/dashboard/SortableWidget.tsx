@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { WidgetInstance } from './types'
@@ -6,24 +5,16 @@ import WidgetCard from './WidgetCard'
 
 interface SortableWidgetProps {
   instance: WidgetInstance
-  onCycleSize: () => void
 }
 
-function SortableWidget({ instance, onCycleSize }: SortableWidgetProps) {
+function SortableWidget({ instance }: SortableWidgetProps) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
     useSortable({ id: instance.id })
 
   const style = {
-    // Spans are read by the CSS. --w-md is precomputed because a 4-wide widget
-    // must not span 4 columns once the tablet grid only has 2.
-    '--w': instance.width,
-    '--w-md': Math.min(instance.width, 2),
-    '--h': instance.height,
-    // Translate, not Transform: with mixed widget sizes, CSS.Transform also
-    // scales the item to match the one it's swapping with, which stretches the card.
     transform: CSS.Translate.toString(transform),
     transition,
-  } as CSSProperties
+  }
 
   return (
     <div
@@ -36,7 +27,6 @@ function SortableWidget({ instance, onCycleSize }: SortableWidgetProps) {
         handleRef={setActivatorNodeRef}
         handleAttributes={attributes}
         handleListeners={listeners}
-        onCycleSize={onCycleSize}
       />
     </div>
   )

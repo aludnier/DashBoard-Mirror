@@ -25,12 +25,3 @@ export async function fetchWidgetInstances(): Promise<WidgetInstance[]> {
 export async function saveWidgetOrder(orderedIds: string[]): Promise<void> {
   await api.put('/widget-instances/order', { orderedIds })
 }
-
-export interface WidgetSizeUpdate {
-  width: number
-  height: number
-}
-
-export async function updateWidgetInstanceSize(id: string, size: WidgetSizeUpdate): Promise<void> {
-  await api.patch(`/widget-instances/${id}`, size)
-}

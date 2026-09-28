@@ -1,6 +1,5 @@
 import type { useSortable } from '@dnd-kit/sortable'
 import type { WidgetInstance } from './types'
-import { sizeLabel } from './sizes'
 
 type Sortable = ReturnType<typeof useSortable>
 
@@ -12,7 +11,6 @@ interface WidgetCardProps {
   handleRef?: Sortable['setActivatorNodeRef']
   handleAttributes?: Sortable['attributes']
   handleListeners?: Sortable['listeners']
-  onCycleSize?: () => void
 }
 
 function WidgetCard({
@@ -20,7 +18,6 @@ function WidgetCard({
   handleRef,
   handleAttributes,
   handleListeners,
-  onCycleSize,
 }: WidgetCardProps) {
   return (
     <div className="widget-card">
@@ -28,11 +25,6 @@ function WidgetCard({
         <span className="widget-card-title">
           {instance.widgetDefinition?.name ?? 'Widget'}
         </span>
-        {onCycleSize && (
-          <button type="button" className="widget-card-size" onClick={onCycleSize} title="Change size">
-            {sizeLabel(instance)}
-          </button>
-        )}
         {handleAttributes && (
           <button
             type="button"
