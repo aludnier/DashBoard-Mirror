@@ -1,5 +1,6 @@
 import type { useSortable } from '@dnd-kit/sortable'
 import type { WidgetInstance } from './types'
+import WidgetContent from './WidgetContent'
 
 type Sortable = ReturnType<typeof useSortable>
 
@@ -39,7 +40,7 @@ function WidgetCard({
         )}
       </div>
       <div className="widget-card-body">
-        <p>Widget content coming soon.</p>
+        <WidgetContent instance={instance} />
       </div>
     </div>
   )

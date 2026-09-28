@@ -16,3 +16,29 @@ export interface WidgetInstance {
   width: number
   height: number
 }
+
+export interface WidgetParamDefinition {
+  key: string
+  label: string
+  type: 'STRING' | 'INTEGER'
+  required: boolean
+  defaultValue: string | null
+}
+
+export interface WidgetDefinition extends WidgetDefinitionSummary {
+  description: string | null
+  defaultRefreshRate: number
+  params: WidgetParamDefinition[]
+}
+
+// Mirrors GET /users/:id/widget-instances/:instanceId/data (server: WidgetData).
+export interface WidgetListItem {
+  id: string
+  title: string
+  subtitle?: string
+  url?: string
+}
+
+export interface WidgetData {
+  items: WidgetListItem[]
+}
