@@ -1,32 +1,18 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useNavigation } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import './titleStyle.css'
-import type { UserSession } from '../client'
+import { getUserSession, type UserSession } from '../client'
 
 type Props = {
   user: UserSession | null
   onLogout: () => void
 }
 
-function Home({ user, onLogout }: Props) {
+function Home({ user }: Props) {
+
   return (
-    <div className="title-page">
-      <NavBar>
-        {user ? (
-          <>
-            <p>Welcome {user.email}</p>
-            <GithubMenu />
-            <button onClick={onLogout}>Disconnect</button>
-          </>
-        ) : (
-          <>
-            <Link to="/Inscription"><button>Inscription</button></Link>
-            <Link to="/Connection"><button>Connection</button></Link>
-          </>
-        )}
-      </NavBar>
-    </div>
+    <Navigate to={user ? '/dashboard' : '/connexion'}/>
   )
 }
 

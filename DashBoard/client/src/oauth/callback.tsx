@@ -23,7 +23,7 @@ function OAuthCallback() {
     }
 
     if (params.error) {
-      console.error("Connection refused: ", params.error)
+      console.error("Connexion refused: ", params.error)
       navigate("/")
       return
     }
@@ -33,13 +33,13 @@ function OAuthCallback() {
       provider = JSON.parse(atob(params.state)).provider
     } catch {
       console.error("Impossible to identify the provider")
-      navigate("/Connection")
+      navigate("/Connexion")
       return
     }
 
     const currUser = getUserSession()
     if (!currUser) {
-      navigate("/Connection")
+      navigate("/Connexion")
       return;
     }
 

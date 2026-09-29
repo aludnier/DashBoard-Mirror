@@ -1,3 +1,5 @@
+@import '../colors.css';
+
 .dashboard-page {
   flex: 1;
   padding: 0 2rem 1.5rem;
@@ -21,27 +23,27 @@
   display: flex;
   flex-direction: column;
   font-family: system-ui, -apple-system, sans-serif;
-  background: #f5f5f7;
+  background: var(--bg-page);
 }
 
 .widget-card {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--bg-white);
   /* Darker than the old #e2e2e6 so each card's edge is clearly visible
-     against the #f5f5f7 page background. */
-  border: 1.5px solid #cfcad8;
+     against the page background. */
+  border: 1.5px solid var(--border-light);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .widget-card-title {
   flex: 1;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #2d2d2d;
+  color: var(--text-primary);
 }
 
 .dashboard-grid-item.is-dragging {
@@ -49,7 +51,7 @@
 }
 
 .dashboard-grid-item.is-dragging .widget-card {
-  box-shadow: 0 8px 24px rgba(106, 17, 203, 0.25);
+  box-shadow: var(--shadow-purple);
 }
 
 .widget-card-header {
@@ -57,8 +59,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: #faf9fc;
-  border-bottom: 1px solid #e2e2e6;
+  background: var(--bg-light-gray);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .widget-card-title {
@@ -68,7 +70,7 @@
 .widget-card-handle {
   border: none;
   background: transparent;
-  color: #6b6b6f;
+  color: var(--text-subtle);
   border-radius: 6px;
   padding: 0.15rem 0.45rem;
   font-size: 0.85rem;
@@ -83,7 +85,7 @@
 .widget-card-body {
   flex: 1;
   padding: 1rem;
-  color: #6b6b6f;
+  color: var(--text-subtle);
   font-size: 0.9rem;
   overflow: auto;
 }
@@ -94,11 +96,11 @@
   align-items: center;
   justify-content: center;
   font-family: system-ui, -apple-system, sans-serif;
-  color: #6b6b6f;
+  color: var(--text-subtle);
 }
 
 .dashboard-status-error {
-  color: #c0392b;
+  color: var(--error-dark);
 }
 
 .dashboard-empty-state {
@@ -115,24 +117,24 @@
 
 .dashboard-empty-state h2 {
   margin: 0;
-  color: #2d2d2d;
+  color: var(--text-primary);
 }
 
 .dashboard-empty-state p {
   margin: 0 0 1rem;
-  color: #6b6b6f;
+  color: var(--text-subtle);
 }
 
 .dashboard-empty-state button {
   padding: 0.6rem 1.25rem;
-  background: #6a11cb;
-  color: white;
+  background: var(--primary-purple);
+  color: var(--text-white);
   font-weight: 600;
   font-size: 0.95rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity var(--transition-fast);
 }
 
 .dashboard-empty-state button:hover {
@@ -162,7 +164,7 @@
   flex-direction: column;
   gap: 0.15rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #eeeaf3;
+  border-bottom: 1px solid var(--border-extralight);
 }
 
 .widget-list-item:last-child {
@@ -170,21 +172,21 @@
 }
 
 .widget-list-item a {
-  color: #2d2d2d;
+  color: var(--text-primary);
   font-weight: 500;
   text-decoration: none;
 }
 
 .widget-list-item a:hover {
-  color: #6a11cb;
+  color: var(--primary-purple);
   text-decoration: underline;
 }
 
 .widget-list-subtitle {
   font-size: 0.8rem;
-  color: #6b6b6f;
+  color: var(--text-subtle);
 }
 
 .widget-content-error {
-  color: #c0392b;
+  color: var(--error-dark);
 }

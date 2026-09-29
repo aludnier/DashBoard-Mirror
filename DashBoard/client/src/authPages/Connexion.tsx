@@ -2,15 +2,15 @@ import React, { useState } from "react"
 import "./authStyle.css"
 import { api, setUserSession } from "../client"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Link, replace, useNavigate } from "react-router-dom"
 
-function Connection() {
+function Connexion() {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string>("")
   const navigate = useNavigate()
 
-  async function SubmitConnection(e: React.FormEvent<HTMLFormElement>) {
+  async function SubmitConnexion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError("")
 
@@ -20,7 +20,7 @@ function Connection() {
       const { data } = await api.post("/auth/login", { email, password })
       setUserSession(data)
       console.log(data)
-      navigate('/')
+      navigate('/dashboard', {replace : true})
     } catch (e) {
       const message = axios.isAxiosError(e)
         ? e.response?.data?.message ?? e.message
@@ -39,8 +39,8 @@ function Connection() {
 
   return (
     <div className="inscription-container">
-      <form className="inscription-form" onSubmit={SubmitConnection}>
-        <h1>Connection</h1>
+      <form className="inscription-form" onSubmit={SubmitConnexion}>
+        <h1>Connexion</h1>
         {error ? <h2>{error}</h2> : null}
 
         <label>
@@ -54,9 +54,11 @@ function Connection() {
         </label>
 
         <button type="submit">Connect</button>
+        <Link to={"/inscription"}>Don't have an account?</Link>
+
       </form>
     </div>
   )
 }
 
-export default Connection
+export default Connexion
