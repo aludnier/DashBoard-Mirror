@@ -1,4 +1,4 @@
-import { Link, useNavigate, useNavigation } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useNavigation } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import './titleStyle.css'
@@ -9,32 +9,10 @@ type Props = {
   onLogout: () => void
 }
 
-function Home({ user, onLogout }: Props) {
-  const userSession =  getUserSession()
-  const navigate = useNavigate()
-  if (userSession) {
-    navigate('/dashBoard')
-  } else {
-    navigate('/connexion')
-  }
+function Home({ user }: Props) {
 
   return (
-    <div className="title-page">
-      <NavBar>
-        {user ? (
-          <>
-            <p>Welcome {user.email}</p>
-            <GithubMenu />
-            <button onClick={onLogout}>Disconnect</button>
-          </>
-        ) : (
-          <>
-            <Link to="/Inscription"><button>Inscription</button></Link>
-            <Link to="/Connexion"><button>Connexion</button></Link>
-          </>
-        )}
-      </NavBar>
-    </div>
+    <Navigate to={user ? '/dashboard' : '/connexion'}/>
   )
 }
 

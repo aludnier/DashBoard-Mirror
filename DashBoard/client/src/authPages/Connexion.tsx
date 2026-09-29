@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./authStyle.css"
 import { api, setUserSession } from "../client"
 import axios from "axios"
-import { replace, useNavigate } from "react-router-dom"
+import { Link, replace, useNavigate } from "react-router-dom"
 
 function Connexion() {
   const [email, setEmail] = useState<string>("")
@@ -54,6 +54,8 @@ function Connexion() {
         </label>
 
         <button type="submit">Connect</button>
+        <Link to={"/inscription"}>Don't have an account?</Link>
+
       </form>
     </div>
   )

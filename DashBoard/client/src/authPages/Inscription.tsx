@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./authStyle.css"
 import { api, setUserSession } from "../client"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function Inscription() {
   const [name, setName] = useState<string>("")
@@ -68,6 +68,7 @@ function Inscription() {
       <form className="inscription-form" onSubmit={SubmitInscription}>
         <h1>Inscription</h1>
         {error ?  <h2> { error } </h2> : null}
+        <Link to={"/connexion"}>already have an account?</Link>
         <label>
           Name
           <input type="text" placeholder="Entré un valeur" onChange={HandleName} required/>
