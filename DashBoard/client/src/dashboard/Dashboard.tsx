@@ -10,7 +10,7 @@ import {
 } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, replace, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import { getUserSession } from '../client'
@@ -58,7 +58,11 @@ function DashboardGrid({ instances, onReorder }: DashboardGridProps) {
 }
 
 
-function Dashboard() {
+type DashboardProps = {
+  onLogout : () => void
+}
+
+function Dashboard({onLogout} : DashboardProps) {
   const [instances, setInstances] = useState<WidgetInstance[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -102,13 +106,6 @@ function Dashboard() {
     // TODO(#11): saveWidgetOrder(reordered.map((instance) => instance.id))
   }
 
-  function handleLogout() {
-    // TODO: clear the session (token, user) once auth is wired up.
-    // `replace` swaps the dashboard out of the history stack, so the browser's
-    // back button doesn't lead straight back into it after logging out.
-    navigate('/', { replace: true })
-  }
-
   if (!userId) {
     return <Navigate to="/Connexion" replace />
   }
@@ -140,6 +137,11 @@ function Dashboard() {
         onReorder={handleReorder}
       />
     )
+  }
+
+  function handleLogout() {
+    onLogout()
+    navigate('/connexion', {replace : true})
   }
 
   return (
