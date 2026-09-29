@@ -19,6 +19,7 @@ import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
 import './dashboardStyle.css'
+import ThemeButton from '../components/darkThemeButton'
 
 type DashboardGridProps = {
   instances: WidgetInstance[]
@@ -148,6 +149,7 @@ function Dashboard({onLogout} : DashboardProps) {
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
         <GithubMenu onAddWidget={handleAddWidget} />
+        <ThemeButton/>
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
       <main className="dashboard-page">{renderContent()}</main>
