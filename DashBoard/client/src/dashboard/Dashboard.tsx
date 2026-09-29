@@ -110,7 +110,7 @@ function Dashboard() {
   }
 
   if (!userId) {
-    return <Navigate to="/Connection" replace />
+    return <Navigate to="/Connexion" replace />
   }
 
   // A const arrow function after the check above, so TypeScript knows userId

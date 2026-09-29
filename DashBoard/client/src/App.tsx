@@ -3,10 +3,11 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { clearUserSession, getUserSession, type UserSession } from './client'
 import './App.css'
 import Inscription from './authPages/Inscription'
-import Connection from './authPages/Connexion'
+import Connexion from './authPages/Connexion'
 import Home from './titlePage/Home'
 import OauthRouter from './oauthRouter'
 import Dashboard from './dashboard/Dashboard'
+import ProtectedRoute from './components/protectedRoutes'
 
 function App() {
   const [user, setUser] = useState<UserSession | null>(null)
@@ -28,9 +29,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Home user={user} onLogout={handleLogout} />} />
         <Route path='/Inscription' element={<Inscription />} />
-        <Route path='/Connection' element={<Connection />} />
-        <Route path='/oauth/*' element={<OauthRouter />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/Connexion' element={<Connexion />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path='/oauth/*' element={<OauthRouter />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Route>
         <Route path='' />
       </Routes>
     </BrowserRouter>

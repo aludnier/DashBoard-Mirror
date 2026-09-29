@@ -27,7 +27,7 @@ function Inscription() {
       const { data } = await api.post("/auth/signup", { email, password, name });
       console.log(data);
       setUserSession(data);
-      navigate('/')
+      navigate('/dashboard', {replace : true})
     } catch (e) {
       const message = axios.isAxiosError(e)
         ? e.response?.data?.message ?? e.message
