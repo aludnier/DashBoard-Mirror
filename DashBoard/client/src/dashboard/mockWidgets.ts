@@ -48,6 +48,7 @@ export const mockWidgetInstances: WidgetInstance[] = [
 
 // Same content for every mock widget: enough to see how a list card looks.
 export const mockWidgetData: WidgetData = {
+  kind: 'list',
   items: [
     { id: '1', title: 'Fix login redirect', subtitle: '#42 by octocat', url: 'https://github.com' },
     { id: '2', title: 'Add weather widget', subtitle: '#41 by monalisa', url: 'https://github.com' },

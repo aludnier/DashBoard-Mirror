@@ -10,7 +10,7 @@ import {
 } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Navigate, replace, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import GoogleMenu from '../components/GoogleMenu'

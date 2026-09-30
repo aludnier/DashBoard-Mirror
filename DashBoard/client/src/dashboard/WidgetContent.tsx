@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { apiErrorMessage, getUserSession } from '../client'
 import { fetchWidgetData } from './api'
-import type { WidgetData, WidgetDataList, WidgetInstance } from './types'
+import type { WidgetDataList, WidgetDataPlaylists, WidgetInstance } from './types'
 
 interface WidgetContentProps {
   instance: WidgetInstance
 }
 
 function WidgetContent({ instance }: WidgetContentProps) {
-  const [data, setData] = useState<WidgetDataList | null>(null)
+  const [data, setData] = useState<WidgetDataList | WidgetDataPlaylists | null>(null)
   const [error, setError] = useState<string | null>(null)
   const userId = getUserSession()?.id
   const { id: instanceId, refreshRateSeconds } = instance
