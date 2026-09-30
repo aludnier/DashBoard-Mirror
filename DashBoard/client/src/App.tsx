@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom'
+import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { clearUserSession, getUserSession, type UserSession } from './client'
 import './App.css'
 import Inscription from './authPages/Inscription'

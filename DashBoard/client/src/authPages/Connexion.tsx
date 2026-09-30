@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./authStyle.css"
 import { api, setUserSession } from "../client"
 import axios from "axios"
-import { Link, replace, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function Connexion() {
   const [email, setEmail] = useState<string>("")

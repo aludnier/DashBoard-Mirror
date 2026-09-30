@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getUserSession } from '../client'
 import { fetchWidgetData } from '../dashboard/api'
-import type { WidgetData, WidgetInstance } from '../dashboard/types'
+import type { WidgetInstance } from '../dashboard/types'
 
 type YoutubeGoogleWidgetProps = {
   instance: WidgetInstance
