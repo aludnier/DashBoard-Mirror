@@ -2,11 +2,11 @@
 
 Technical documentation for the Dashboard project: architecture, testing, project structure and development workflow.
 
-> 📦 Installation, setup and build instructions are in the [public documentation](./README.md#installation--setup).
+> Installation, setup and build instructions are in the [public documentation](./README.md#installation--setup).
 
-> 📖 Looking for the project overview, features and use cases? See the **[Public Documentation (README)](./README.md)**.
+> Looking for the project overview, features and use cases? See the **[Public Documentation (README)](./README.md)**.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [System Architecture](#system-architecture)
 - [Testing](#testing)
@@ -17,7 +17,7 @@ Technical documentation for the Dashboard project: architecture, testing, projec
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 This project follows **Hexagonal Architecture** (Ports & Adapters) on the backend, ensuring separation of concerns between business logic, infrastructure, and external integrations.
 
@@ -71,7 +71,7 @@ See [HEXAGONAL_ARCHITECTURE.md](./server/HEXAGONAL_ARCHITECTURE.md) for detailed
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 cd server
@@ -83,7 +83,7 @@ npm run test:e2e      # Run end-to-end tests
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 DashBoard/
@@ -187,7 +187,7 @@ DashBoard/
 
 ---
 
-## 💡 Key Use Cases — Related Code
+## Key Use Cases — Related Code
 
 The user-facing steps of each use case are described in the [public documentation](./README.md#key-use-cases). This section lists the code behind each one.
 
@@ -219,7 +219,7 @@ The user-facing steps of each use case are described in the [public documentatio
 
 ---
 
-## 👨‍💻 Development
+## Development
 
 ### Code Quality
 
@@ -277,7 +277,7 @@ This uses environment variable `VITE_MOCK_WIDGETS=true` to skip API calls.
 
 ---
 
-## 📞 Support & Contribution
+## Support & Contribution
 
 For issues, questions, or contributions:
 1. Open an issue describing the problem or feature request

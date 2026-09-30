@@ -4,13 +4,13 @@ Comparative study made by the team to choose the technology stack of the Dashboa
 
 Each option is scored from **1 to 5** on every criterion. Each criterion has a **weight from 1 to 3** (3 = most important). The weighted total is the sum of `score × weight` (maximum possible: **65**).
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Back End](#back-end)
 - [Front End](#front-end)
 - [Sensitivity Check](#sensitivity-check)
 - [Conclusion](#conclusion)
-- [Limitations & Notes](#limitations--notes)
+- [Criteria Explained](#Criteria-Explained)
 
 ---
 
@@ -66,13 +66,15 @@ The Result stay the same, but the gap between Node and Go shrinks to 3 points.
 
 ---
 
-## Limitations & Notes
+## Criteria Explained
 
-- **Languages vs frameworks:** the Back End table compares languages, while the final choice is a framework (NestJS). A comparison of frameworks (e.g. NestJS, Gin, Laravel, Spring Boot) would be more precise.
-- **"Experience" vs "Learning value":** the two criteria pull in opposite directions (one rewards familiarity, the other novelty). "Learning value" could be defined more precisely, for example as career value or new skills gained.
-- **Low-discrimination criteria:** on the Front End, "Docker deployment convenience" and "Suitability for real-time data refresh" give almost the same scores to every option (all frameworks build to static files). The real-time criterion has a weight of 3 but barely separates the options.
-- **Real-time requirement:** the client re-fetches widget data at a `refreshRateSeconds` interval (polling), which is less demanding than true push-based real-time. This may make the low scores of PHP (2) and Java (3) on real-time suitability harsher than they should be.
-- **Debatable scores:** Java's real-time score (3) and PHP's ecosystem score (3) could be argued higher, given Java's concurrency strengths and PHP's Composer/Packagist and Laravel ecosystem. The original scores were kept as submitted.
-- **Combined criterion:** "Ecosystem quality" merges three things (available packages, third-party integrations, widget libraries) that do not always move together.
-- **Architecture support is not scored:** NestJS's support for hexagonal architecture is mentioned in the conclusion but is not a criterion in the table. It is a framework-level advantage (other frameworks such as Spring Boot also support this architecture well), so it supports the choice of NestJS rather than Node against the other languages. A dedicated "Architecture support" criterion would make the comparison fairer.
-- **Criteria not covered:** type safety and TypeScript sharing between client and server, ORM quality (Prisma), OAuth library support, testing tools, and community size. With Node leading Go by 7 points, adding any of these could change the Back End ranking.
+| Criterion | Weight | Why this criterion |
+|---|:---:|---|
+| Docker deployment convenience | 2 | The project is deployed with Docker / docker-compose, so the stack should be easy to containerize (image size, build simplicity, runtime requirements). |
+| Suitability for real-time data refresh | 3 | The core of the project is widgets that refresh their data regularly, so the stack must handle frequent, concurrent requests well. |
+| Ecosystem quality: available packages, third-party integrations, widget libraries | 3 | The project relies on OAuth providers, external APIs (GitHub, Google, YouTube) and drag-and-drop / widget libraries. A rich ecosystem saves development time. |
+| Experience | 2 | The team's existing knowledge reduces risk and speeds up development within a limited project time. |
+| Documentation / long term | 1 | Good documentation and a stable, maintained technology make the project easier to maintain. It has the lowest weight because all the compared options are mature. |
+| Learning value | 2 | The project is also a learning exercise, so a technology that is useful to learn and relevant in the job market is a plus. |
+
+**Weights:** 3 = critical for the project's core features, 2 = important, 1 = nice to have.
