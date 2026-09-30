@@ -2,9 +2,9 @@
 
 A full-stack web application that allows users to authenticate, subscribe to external services, and build personalized dashboards with customizable widgets. Featuring OAuth integration (GitHub, Google), real-time data aggregation, and a responsive drag-and-drop UI.
 
-> 👨‍💻 Looking for architecture, testing, project structure or contribution guidelines? See the **[Developer Documentation](./DashBoard/DEVELOPMENT.md)**.
+> Looking for architecture, testing, project structure or contribution guidelines? See the **[Developer Documentation](./DashBoard/DEVELOPMENT.md)**.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features & Services](#features--services)
 - [Technologies](#technologies)
@@ -15,7 +15,7 @@ A full-stack web application that allows users to authenticate, subscribe to ext
 
 ---
 
-## ✨ Features & Services
+## Features & Services
 
 ### Core Features
 
@@ -100,7 +100,9 @@ User
 
 ---
 
-## 📦 Installation & Setup
+> for more details about the project stack choices, see the **[Stack comparaison study](./DashBoard/STACK_COMPARAISON.md)**.
+
+## Installation & Setup
 
 ### Prerequisites
 
@@ -204,7 +206,7 @@ Services will be available at:
 
 ---
 
-## 🚀 Build & Run
+## Build & Run
 
 ### Development
 
@@ -244,7 +246,7 @@ npm run start:prod
 
 ---
 
-## 💡 Key Use Cases
+## Key Use Cases
 
 ### 1. User Registration & Authentication
 1. User navigates to `/signup` or `/login`
@@ -279,7 +281,7 @@ npm run start:prod
 
 ---
 
-## 📞 Support & Contribution
+## Support & Contribution
 
 For issues, questions, or contributions:
 1. Open an issue describing the problem or feature request
