@@ -18,17 +18,16 @@ function WidgetContent({ instance }: WidgetContentProps) {
     if (!userId) return
     let cancelled = false
 
-    // An arrow function, not `function load()`: TypeScript only keeps the
-    // `userId` null check inside closures that aren't hoisted.
     const load = () => {
       fetchWidgetData(userId, instanceId)
         .then((result) => {
           if (cancelled) return
-          if (result.kind !== 'list') {
-            throw new Error('Unexpected widget payload')
+          if (result.kind === 'list' || result.kind === 'playlists') {
+            setData(result)
+            setError(null)
+            return
           }
-          setData(result)
-          setError(null)
+          throw new Error('Unexpected widget payload')
         })
         .catch((err) => {
           if (!cancelled) setError(apiErrorMessage(err, 'Could not load this widget.'))
@@ -43,29 +42,49 @@ function WidgetContent({ instance }: WidgetContentProps) {
     }
   }, [userId, instanceId, refreshRateSeconds])
 
-  // A failed refresh keeps showing the last good data instead of an error.
   if (error && !data)
     return <p className="widget-content-error">{error}</p>
 
   if (!data)
     return <p>Loading...</p>
 
-  if (data.items.length === 0)
+  if (data.kind === 'list') {
+    if (data.items.length === 0)
+      return <p>Nothing to show.</p>
+
+    return (
+      <ul className="widget-list">
+        {data.items.map((item) => (
+          <li key={item.id} className="widget-list-item">
+            {item.url ? (
+              <a href={item.url} target="_blank" rel="noreferrer">{item.title}</a>
+            ) : (
+              <span>{item.title}</span>
+            )}
+            {item.subtitle && <span className="widget-list-subtitle">{item.subtitle}</span>}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  if (data.playlists.length === 0)
     return <p>Nothing to show.</p>
 
   return (
-    <ul className="widget-list">
-      {data.items.map((item) => (
-        <li key={item.id} className="widget-list-item">
-          {item.url ? (
-            <a href={item.url} target="_blank" rel="noreferrer">{item.title}</a>
-          ) : (
-            <span>{item.title}</span>
-          )}
-          {item.subtitle && <span className="widget-list-subtitle">{item.subtitle}</span>}
-        </li>
+    <div className="widget-playlists">
+      {data.playlists.map((playlist) => (
+        <div key={playlist.id} className="widget-playlist-item">
+          <a href={`https://www.youtube.com/playlist?list=${playlist.id}`} target="_blank" rel="noreferrer">
+            {playlist.thumbnailUrl && (
+              <img src={playlist.thumbnailUrl} alt={playlist.title} className="widget-playlist-thumb" />
+            )}
+            <span>{playlist.title}</span>
+          </a>
+          {playlist.description && <p className="widget-playlist-description">{playlist.description}</p>}
+        </div>
       ))}
-    </ul>
+    </div>
   )
 }
 

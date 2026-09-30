@@ -13,6 +13,7 @@ import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordi
 import { Navigate, replace, useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
+import GoogleMenu from '../components/GoogleMenu'
 import { getUserSession } from '../client'
 import { createWidgetInstance, fetchWidgetInstances } from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
@@ -149,6 +150,7 @@ function Dashboard({onLogout} : DashboardProps) {
     <div className="dashboard-layout">
       <NavBar brandTo="/dashboard">
         <GithubMenu onAddWidget={handleAddWidget} />
+        <GoogleMenu onAddWidget={handleAddWidget} />
         <ThemeButton/>
         <button type="button" onClick={handleLogout}>Log out</button>
       </NavBar>
