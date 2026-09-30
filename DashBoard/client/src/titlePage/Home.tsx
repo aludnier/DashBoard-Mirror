@@ -1,8 +1,6 @@
-import { Link, Navigate, useNavigate, useNavigation } from 'react-router-dom'
-import NavBar from '../components/NavBar'
-import GithubMenu from '../components/GithubMenu'
+import { Navigate } from 'react-router-dom'
 import './titleStyle.css'
-import { getUserSession, type UserSession } from '../client'
+import type { UserSession } from '../client'
 
 type Props = {
   user: UserSession | null
