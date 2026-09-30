@@ -32,9 +32,10 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
     maxResults: 25,
   },
     })
+
     return {
         kind: 'playlists',
-        playlists: (data??[]).map((p : any) => ({
+        playlists: data.items.map((p : any) => ({
             id: p.id,
             title: p.snippet.title,
             description: p.snippet.description || undefined,
