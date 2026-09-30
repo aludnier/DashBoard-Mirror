@@ -8,15 +8,9 @@ import { response } from "express";
 export class GoogleOauthAdapter implements ProviderPort {
   async authenticate(params: Record<string, string>): Promise<Identity> {
     const callId = Math.random().toString(36).slice(2, 8);
-    console.log(`[${callId}] params:`, params);
-    
     const { code } = params;
-    console.log(`[${callId}] code:`, code);
 
   try {
-      console.log(process.env.GOOGLE_API_SECRET)
-      console.log(process.env.GOOGLE_CLIENT_ID)
-      console.log(process.env.GOOGLE_REDIRECT_URI)
       const res = await axios.post(
         "https://oauth2.googleapis.com/token",
         new URLSearchParams({
@@ -30,7 +24,6 @@ export class GoogleOauthAdapter implements ProviderPort {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       );
-      console.log(res.data)
     
       const { access_token, refresh_token, expires_in, id_token } = res.data;
     
@@ -53,8 +46,6 @@ export class GoogleOauthAdapter implements ProviderPort {
 
 
   async fetchWidgetData(userId: String, widgetSlug: string, token : string | null): Promise<WidgetData | null> {
-    console.log('[ADAPTER] ' + token)
-
     const { data } = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
       headers: { Authorization: `Bearer ${token}` },
       params: {
@@ -63,7 +54,7 @@ export class GoogleOauthAdapter implements ProviderPort {
     maxResults: 25,
   },
     })
-    console.log("[GOOGLE] : ", data)
+
     return new YtPlaylistsWidgetData(data)
   }
 }

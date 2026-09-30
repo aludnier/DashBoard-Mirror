@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {
   WidgetDataError,
+  WidgetDataList,
   type WidgetData,
   type WidgetDataProviderPort,
 } from '../../../domain/port/widget-data.provider.js'
@@ -46,7 +47,9 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
       params: { state: 'open', per_page: limit },
     })
 
-    return { items: data.map(toListItem) }
+    return {
+      kind: 'list',
+      items: data.map(toListItem) } as WidgetDataList
   }
 
   private async fetchIssues(repo: string, limit: number, state: string, accessToken: string): Promise<WidgetData> {
@@ -56,7 +59,9 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
     })
 
     // GitHub's issues endpoint also returns pull requests; the PR widget covers those.
-    return { items: data.filter((issue) => !issue.pull_request).map(toListItem) }
+    return {
+      kind: 'list',
+      items: data.filter((issue) => !issue.pull_request).map(toListItem) } as WidgetDataList
   }
 }
 

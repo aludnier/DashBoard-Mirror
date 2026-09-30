@@ -7,10 +7,12 @@ import { PrismaWidgetRepository } from '../extern/database/prisma-widget.reposit
 import { WidgetDataService } from '../../domain/useCases/widget-data.service.js'
 import { WIDGET_DATA_PROVIDERS, type WidgetDataProviders } from '../../domain/port/widget-data.provider.js'
 import { GithubWidgetAdapter } from '../extern/providers/github-widget.adapter.js'
+import { GoogleWidgetAdapter } from '../extern/providers/google-widget.adapter.js'
 
 // One entry per service that has widgets. Keys are Service.slug values.
 const widgetDataProviders: WidgetDataProviders = {
   github: new GithubWidgetAdapter(),
+  google: new GoogleWidgetAdapter(),
 }
 
 @Module({

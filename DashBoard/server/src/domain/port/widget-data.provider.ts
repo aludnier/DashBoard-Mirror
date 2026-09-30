@@ -1,6 +1,7 @@
 // One row of a list widget. Every list-style widget (pull requests, issues,
 // and later emails or games) returns this same shape, so the client needs a
 // single component to display all of them.
+
 export interface WidgetListItem {
   id: string
   title: string
@@ -8,11 +9,32 @@ export interface WidgetListItem {
   url?: string
 }
 
-export interface WidgetData {
+export interface WidgetDataList {
+  kind: 'list'
   items: WidgetListItem[]
 }
 
-// Implemented once per service (GitHub, Google, ...) in adapters/extern/providers.
+export interface WidgetDataPlaylists {
+  kind: 'playlists'
+  playlists: {
+    id: string
+    title: string
+    description?: string
+    thumbnailUrl?: string
+  }[]
+}
+
+export interface WidgetDataRecord {
+  kind: 'record'
+  data: Record<string, unknown>
+}
+
+export type WidgetData =
+  | WidgetDataList
+  | WidgetDataPlaylists
+  | WidgetDataRecord
+
+  // Implemented once per service (GitHub, Google, ...) in adapters/extern/providers.
 export interface WidgetDataProviderPort {
   fetch(widgetSlug: string, config: Record<string, unknown>, accessToken: string): Promise<WidgetData>
 }

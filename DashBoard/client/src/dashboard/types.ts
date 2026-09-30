@@ -39,6 +39,27 @@ export interface WidgetListItem {
   url?: string
 }
 
-export interface WidgetData {
+export interface WidgetDataList {
+  kind: 'list'
   items: WidgetListItem[]
 }
+
+export interface WidgetDataPlaylists {
+  kind: 'playlists'
+  playlists: {
+    id: string
+    title: string
+    description?: string
+    thumbnailUrl?: string
+  }[]
+}
+
+export interface WidgetDataRecord {
+  kind: 'record'
+  data: Record<string, unknown>
+}
+
+export type WidgetData =
+  | WidgetDataList
+  | WidgetDataPlaylists
+  | WidgetDataRecord

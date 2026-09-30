@@ -137,6 +137,13 @@ async function main() {
     ],
   })
 
+  await upsertWidgetDefinition(google.id, {
+    slug: 'yt-playlists',
+    name: 'Youtube Playlists',
+    description: 'Your Created playlist on youtube',
+    params: []
+  })
+
   const steam = await prisma.service.upsert({
     where: { slug: 'steam' },
     update: { name: 'Steam', description: 'Steam account integration' },

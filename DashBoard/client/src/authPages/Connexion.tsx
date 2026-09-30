@@ -14,12 +14,9 @@ function Connexion() {
     e.preventDefault()
     setError("")
 
-    console.log("Try to connect : \n" + email + "\n" + password)
-
     try {
       const { data } = await api.post("/auth/login", { email, password })
       setUserSession(data)
-      console.log(data)
       navigate('/dashboard', {replace : true})
     } catch (e) {
       const message = axios.isAxiosError(e)

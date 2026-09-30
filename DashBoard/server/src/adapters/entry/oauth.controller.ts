@@ -8,7 +8,6 @@ export class OauthController {
 
     @Post(':provider/:id')
     registerServiceOauth(@Param('provider') provider : ProviderEnum, @Param('id') userId : string, @Body() body : Record<string, string>) {
-        console.log(body)
         const dto : ProviderDto = { ProviderName : provider, data : body }
         return this.providerService.authentificate(userId, dto)
     }

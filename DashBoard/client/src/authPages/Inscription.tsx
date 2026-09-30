@@ -25,7 +25,6 @@ function Inscription() {
     }
     try {
       const { data } = await api.post("/auth/signup", { email, password, name });
-      console.log(data);
       setUserSession(data);
       navigate('/dashboard', {replace : true})
     } catch (e) {
