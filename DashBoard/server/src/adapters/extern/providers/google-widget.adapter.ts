@@ -22,7 +22,6 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
   }
 
   private async fetchYoutubePlaylists(token: string): Promise<WidgetData>{
-    console.log('[ADAPTER] ' + token)
 
     const { data } = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
       headers: { Authorization: `Bearer ${token}` },

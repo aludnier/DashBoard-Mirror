@@ -14,7 +14,6 @@ export class AuthUseCase {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const data: CreateUserData = { email, passwordHash, name };
-    console.log(data)
     const user = await this.users.create(data);
 
     return user;

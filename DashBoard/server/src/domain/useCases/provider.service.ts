@@ -14,7 +14,6 @@ export class ProviderService {
 
     async authentificate(userId : string, providerDto : ProviderDto) {
         const provider : ProviderPort = this.providerResolver.resolve(providerDto.ProviderName)
-        console.log(providerDto.data)
         const identity = await provider.authenticate(providerDto.data)
 
         await this.subscriptionRepository.upsert(userId, identity)
@@ -25,9 +24,7 @@ export class ProviderService {
         const provider : ProviderPort = this.providerResolver.resolve(widgetDto.provider)
         const token : string | null = await this.subscriptionRepository.getToken(widgetDto.userId, widgetDto.provider)
         
-        console.log(token)
         const response : WidgetData = await provider.fetchWidgetData(widgetDto.userId, widgetDto.slug, token) ?? {}
-        console.log(response)
         return response
     }
 }
