@@ -20,11 +20,4 @@ export class ProviderService {
         return { userId, ProviderDto }
     }
 
-    async fetchWidgetData(widgetDto : WidgetDto) {
-        const provider : ProviderPort = this.providerResolver.resolve(widgetDto.provider)
-        const token : string | null = await this.subscriptionRepository.getToken(widgetDto.userId, widgetDto.provider)
-        
-        const response : WidgetData = await provider.fetchWidgetData(widgetDto.userId, widgetDto.slug, token) ?? {}
-        return response
-    }
 }
