@@ -8,6 +8,9 @@ import { WidgetDataService } from '../../domain/useCases/widget-data.service.js'
 import { WIDGET_DATA_PROVIDERS, type WidgetDataProviders } from '../../domain/port/widget-data.provider.js'
 import { GithubWidgetAdapter } from '../extern/providers/github-widget.adapter.js'
 import { GoogleWidgetAdapter } from '../extern/providers/google-widget.adapter.js'
+import { ProviderSolverAdapter } from '../extern/provider-solver.adapter.js'
+import { SUB_REPOSITORY } from '../../domain/port/subscription.repository.js'
+import { PrismaSubscriptionRepository } from '../extern/database/prisma-subscription.repository.js'
 
 // One entry per service that has widgets. Keys are Service.slug values.
 const widgetDataProviders: WidgetDataProviders = {
@@ -19,10 +22,12 @@ const widgetDataProviders: WidgetDataProviders = {
   imports: [PrismaModule],
   controllers: [WidgetInstanceController],
   providers: [
+    ProviderSolverAdapter,
     WidgetInstanceService,
     WidgetDataService,
     { provide: WIDGET_DATA_PROVIDERS, useValue: widgetDataProviders },
     { provide: WIDGET_REPOSITORY, useClass: PrismaWidgetRepository },
+    { provide: SUB_REPOSITORY, useClass: PrismaSubscriptionRepository},
   ],
 
 })

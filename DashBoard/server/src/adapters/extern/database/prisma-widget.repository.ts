@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from './prisma.service.js'
 import type {
   NewWidgetInstance,
@@ -7,6 +7,9 @@ import type {
   WidgetInstanceInfo,
   WidgetRepositoryPort,
 } from '../../../domain/port/widget.repository.js'
+import { ProviderSolverAdapter } from '../provider-solver.adapter.js'
+import { Identity } from '../../../dto/oauth.dto.js'
+import {SUB_REPOSITORY, type SubscriptionRepositoryPort } from '../../../domain/port/subscription.repository.js'
 
 // Shared by every query that returns WidgetInstanceInfo, so they stay identical.
 const INSTANCE_INCLUDE = {
@@ -39,7 +42,11 @@ function toInstanceInfo(instance: InstanceRow): WidgetInstanceInfo {
 
 @Injectable()
 export class PrismaWidgetRepository implements WidgetRepositoryPort {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly providerResolve: ProviderSolverAdapter,
+    @Inject(SUB_REPOSITORY) private readonly subscriptionRepo: SubscriptionRepositoryPort,
+  ) {}
 
   async findByUserId(userId: string): Promise<WidgetInstanceInfo[]> {
     const instances = await this.prisma.widgetInstance.findMany({
@@ -63,6 +70,39 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
 		})
 
 		if (!instance) return null
+
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: instance.subscriptionId },
+    })
+
+    if (subscription?.tokenExpiresAt && Date.now() > subscription.tokenExpiresAt.getTime()) {
+      const service = await this.prisma.service.findUnique({ where: { id: subscription.serviceId } })
+      if (!service) return null
+
+      const provider = this.providerResolve.resolve(service.slug)
+      const newTokenIdentity: Identity | null = await provider.refreshToken(subscription.refreshToken)
+
+      if (newTokenIdentity) {
+        await this.subscriptionRepo.upsert(userId, newTokenIdentity)
+
+        const refreshInstance = await this.prisma.widgetInstance.findFirst({
+          where: { id: instanceId, userId },
+          include: {
+            widgetDefinition: { select: { slug: true, service: { select: { slug: true } } } },
+            subscription: { select: { accessToken: true } },
+          },
+        })
+
+        if (!refreshInstance) return null
+
+        return {
+          widgetSlug: refreshInstance.widgetDefinition.slug,
+          serviceSlug: refreshInstance.widgetDefinition.service.slug,
+          config: refreshInstance.config as Record<string, unknown>,
+          accessToken: refreshInstance.subscription.accessToken,
+        }
+      }
+    }
 
 		return {
 			widgetSlug: instance.widgetDefinition.slug,
