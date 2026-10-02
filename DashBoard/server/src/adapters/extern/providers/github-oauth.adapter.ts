@@ -44,7 +44,61 @@ export class GithubOauthAdapter implements ProviderPort {
     }
   }
 
-    async fetchWidgetData(userId: String, widgetSlug: string, token : string | null): Promise<WidgetData | null> {
-      return Promise.resolve({ slug : 'Youtube', data : {id : '1', name : "test"}});
+  async refreshToken(token : string | null) : Promise<Identity | null> {
+      if (!token) return null;
+      try {
+        const res = await axios.post(
+          "https://github.com/login/oauth/access_token",
+          new URLSearchParams({
+            grant_type: "refresh_token",
+            client_id: process.env.GITHUB_CLIENT_ID!,
+            client_secret: process.env.GITHUB_CLIENT_SECRET!,
+            refresh_token: token,
+          }),
+          { headers: { Accept: "application/json" } },
+        );
+        
+        if (res.data.error) {
+          throw new Error(`GitHub refresh failed: ${res.data.error_description ?? res.data.error}`);
+        }
+        
+        const { access_token, expires_in, refresh_token: newRefreshToken } = res.data;
+        if (!newRefreshToken) throw new Error("GitHub did not return a refresh token");
+
+        const { data: user } = await axios.get('https://api.github.com/user', {
+          headers: { Authorization: `Bearer ${access_token}` },
+        });
+
+        let email = user.email;
+        if (!email) {
+          try {
+            const { data: emails } = await axios.get('https://api.github.com/user/emails', {
+              headers: { Authorization: `Bearer ${access_token}` },
+            });
+            const primary = Array.isArray(emails) ? emails.find((e: any) => e.primary) || emails[0] : undefined;
+            email = primary?.email;
+          } catch (_) {
+          }
+        }
+
+        const externalId = String(user.id ?? "");
+        const displayName = user.login ?? user.name ?? undefined;
+
+        return new Identity(
+          'github',
+          externalId,
+          email ?? undefined,
+          displayName,
+          access_token,
+          newRefreshToken ?? token,
+          expires_in ? new Date(Date.now() + expires_in * 1000) : undefined,
+        );
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Google refresh token error:", error.response?.data);
+        }
+        throw error;
+      }
     }
+
 }

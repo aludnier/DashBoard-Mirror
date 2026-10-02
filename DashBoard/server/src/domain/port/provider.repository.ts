@@ -51,7 +51,7 @@ export type WidgetData =
 
 export interface ProviderPort {
   authenticate(params: Record<string, string>): Promise<Identity>
-  fetchWidgetData(userId : String, widgetSlug : string, token : string | null) : Promise<WidgetData | null>
+ refreshToken(token : string | null) : Promise<Identity | null>
 }
 
 export const PROVIDER_REPOSITORY = Symbol('PROVIDER_REPOSITORY')

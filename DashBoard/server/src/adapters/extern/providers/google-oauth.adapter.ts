@@ -6,6 +6,7 @@ import { response } from "express";
 
 @Injectable()
 export class GoogleOauthAdapter implements ProviderPort {
+
   async authenticate(params: Record<string, string>): Promise<Identity> {
     const callId = Math.random().toString(36).slice(2, 8);
     const { code } = params;
@@ -44,17 +45,38 @@ export class GoogleOauthAdapter implements ProviderPort {
   }
   }
 
+  async refreshToken(token : string | null) : Promise<Identity | null> {
+      if (!token) return null;
+      try {
+        const res = await axios.post(
+          "https://oauth2.googleapis.com/token",
+          new URLSearchParams({
+            grant_type: "refresh_token",
+            client_id: process.env.GOOGLE_CLIENT_ID!,
+            client_secret: process.env.GOOGLE_API_SECRET!,
+            refresh_token: token,
+          }),
+          {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          }
+        );
 
-  async fetchWidgetData(userId: String, widgetSlug: string, token : string | null): Promise<WidgetData | null> {
-    const { data } = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
-      headers: { Authorization: `Bearer ${token}` },
-      params: {
-    part: 'snippet,contentDetails',
-    mine: true,
-    maxResults: 25,
-  },
-    })
+        const { access_token, refresh_token: newRefreshToken, expires_in, id_token } = res.data;
 
-    return new YtPlaylistsWidgetData(data)
-  }
+        return new Identity(
+          'google',
+          "",
+          "",
+          "",
+          access_token,
+          newRefreshToken ?? token,
+          new Date(Date.now() + (expires_in || 0) * 1000),
+        );
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Google refresh token error:", error.response?.data);
+        }
+        throw error;
+      }
+    }
 }
