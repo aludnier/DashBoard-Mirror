@@ -15,7 +15,7 @@ export class Identity {
 export enum ProviderEnum {
     GOOGLE = "google",
     GITHUB = "github",
-    STEAM = "steam"
+    DISCORD = "discord"
 }
 
 export class ProviderDto {

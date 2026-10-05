@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { apiErrorMessage, getUserSession } from '../client'
 import { fetchWidgetData } from './api'
-import type { WidgetDataList, WidgetDataPlaylists, WidgetInstance } from './types'
+import { type WidgetData, type WidgetInstance } from './types'
+import YoutubeWidget from '../widgets/youtubeWidget'
 
 interface WidgetContentProps {
   instance: WidgetInstance
 }
 
 function WidgetContent({ instance }: WidgetContentProps) {
-  const [data, setData] = useState<WidgetDataList | WidgetDataPlaylists | null>(null)
+  const [data, setData] = useState<WidgetData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const userId = getUserSession()?.id
   const { id: instanceId, refreshRateSeconds } = instance
@@ -22,12 +23,8 @@ function WidgetContent({ instance }: WidgetContentProps) {
       fetchWidgetData(userId, instanceId)
         .then((result) => {
           if (cancelled) return
-          if (result.kind === 'list' || result.kind === 'playlists') {
-            setData(result)
-            setError(null)
-            return
-          }
-          throw new Error('Unexpected widget payload')
+          setData(result)
+          setError(null)
         })
         .catch((err) => {
           if (!cancelled) setError(apiErrorMessage(err, 'Could not load this widget.'))
@@ -48,6 +45,15 @@ function WidgetContent({ instance }: WidgetContentProps) {
   if (!data)
     return <p>Loading...</p>
 
+  // Render YouTube playlists widget
+  if (data.kind === 'playlists') {
+    if (data.playlists.length === 0)
+      return <p>Nothing to show.</p>
+
+    return <YoutubeWidget data={data} />
+  }
+
+  // Render generic list widget
   if (data.kind === 'list') {
     if (data.items.length === 0)
       return <p>Nothing to show.</p>
@@ -68,24 +74,40 @@ function WidgetContent({ instance }: WidgetContentProps) {
     )
   }
 
-  if (data.playlists.length === 0)
-    return <p>Nothing to show.</p>
+  // Render guilds/Discords widget
+  if (data.kind === 'guilds') {
+    if (data.guilds.length === 0)
+      return <p>Nothing to show.</p>
 
-  return (
-    <div className="widget-playlists">
-      {data.playlists.map((playlist) => (
-        <div key={playlist.id} className="widget-playlist-item">
-          <a href={`https://www.youtube.com/playlist?list=${playlist.id}`} target="_blank" rel="noreferrer">
-            {playlist.thumbnailUrl && (
-              <img src={playlist.thumbnailUrl} alt={playlist.title} className="widget-playlist-thumb" />
+    return (
+      <div className="widget-guilds">
+        {data.guilds.map((guild) => (
+          <div key={guild.id} className="widget-guild-item">
+            {guild.iconUrl && (
+              <img src={guild.iconUrl} alt={guild.name} className="widget-guild-icon" />
             )}
-            <span>{playlist.title}</span>
-          </a>
-          {playlist.description && <p className="widget-playlist-description">{playlist.description}</p>}
-        </div>
-      ))}
-    </div>
-  )
+            <div className="widget-guild-info">
+              <h4>{guild.name}</h4>
+              <p className="widget-guild-stats">
+                {guild.memberOnline} / {guild.memberCounter} online
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Render generic record widget
+  if (data.kind === 'record') {
+    return (
+      <div className="widget-record">
+        <pre>{JSON.stringify(data.data, null, 2)}</pre>
+      </div>
+    )
+  }
+
+  return <p>Unknown widget type.</p>
 }
 
 export default WidgetContent

@@ -1,0 +1,104 @@
+@import '../colors.css';
+
+.discord-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-bar .discord-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 50%;
+}
+
+.nav-bar .discord-menu-trigger:hover,
+.nav-bar .discord-menu-trigger[aria-expanded='true'] {
+  background: var(--bg-light-purple);
+  opacity: 1;
+}
+
+.discord-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  width: 300px;
+  max-width: calc(100vw - 2.5rem);
+  padding: 1rem;
+  box-sizing: border-box;
+  background: var(--bg-white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-bar .discord-menu-connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: #5865F2;
+  color: white;
+  border: 1.5px solid transparent;
+}
+
+.nav-bar .discord-menu-connect svg {
+  width: 18px;
+  height: 18px;
+}
+
+.discord-menu-heading {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.discord-menu-widgets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.discord-menu-widget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--border-extralight);
+}
+
+.discord-menu-widget-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.discord-menu-widget-description {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.nav-bar .discord-menu-add {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.discord-menu-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
