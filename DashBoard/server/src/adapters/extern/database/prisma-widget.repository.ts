@@ -160,4 +160,24 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
     return toInstanceInfo(instance)
   }
 
+  async updateRefreshRate(
+    userId: string,
+    instanceId: string,
+    refreshRateSeconds: number
+  ): Promise<WidgetInstanceInfo | null> {
+    const {count} = await this.prisma.widgetInstance.updateMany({
+      where: { id: instanceId, userId },
+      data: { refreshRateSeconds },
+    })
+
+    if (count === 0)
+      return null
+
+    const instance = await this.prisma.widgetInstance.findUniqueOrThrow({
+      where: { id: instanceId },
+      include: INSTANCE_INCLUDE,
+    })
+
+    return toInstanceInfo(instance)
+  }
 }
