@@ -59,7 +59,7 @@ export interface WidgetRepositoryPort {
   // null when no widget definition has this id.
   findCreationContext(userId: string, widgetDefinitionId: string): Promise<WidgetCreationContext | null>
   create(data: NewWidgetInstance): Promise<WidgetInstanceInfo>
-
+  updateRefreshRate(userId: string, instanceId: string, refreshRateSeconds: number): Promise<WidgetInstanceInfo | null>
 }
 
 export const WIDGET_REPOSITORY = Symbol('WIDGET_REPOSITORY')
