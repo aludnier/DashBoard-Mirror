@@ -1,21 +1,20 @@
 import { useState, type FormEvent } from 'react'
 import { apiErrorMessage } from '../client'
 import type { WidgetDefinition } from '../dashboard/types'
+import { MAX_REFRESH_RATE_SECONDS, MIN_REFRESH_RATE_SECONDS } from '../dashboard/refreshRate'
 
 interface AddWidgetFormProps {
   definition: WidgetDefinition
-  // Rejects with the server's error, which the form then shows.
-  onSubmit: (config: Record<string, string | number>) => Promise<void>
+  onSubmit: (config: Record<string, string | number>, refreshRateSeconds: number) => Promise<void>
   onCancel: () => void
 }
 
-// Builds one input per WidgetParam, so any widget type gets a form without
-// widget-specific code.
+
 function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
-  // Inputs always hold strings; they're converted when submitting.
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(definition.params.map((param) => [param.key, param.defaultValue ?? ''])),
   )
+  const [refreshRate, setRefreshRate] = useState(() => String(definition.defaultRefreshRate))
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -33,7 +32,7 @@ function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
 
     setIsSubmitting(true)
     setError(null)
-    onSubmit(config)
+    onSubmit(config, Number(refreshRate))
       .catch((err) => {
         setError(apiErrorMessage(err, 'Could not add this widget.'))
         setIsSubmitting(false)
@@ -59,6 +58,19 @@ function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
           />
         </label>
       ))}
+
+      <label className="add-widget-form-field">
+        <span>Refresh every (seconds) *</span>
+        <input
+          type="number"
+          min={MIN_REFRESH_RATE_SECONDS}
+          max={MAX_REFRESH_RATE_SECONDS}
+          step={1}
+          required
+          value={refreshRate}
+          onChange={(event) => setRefreshRate(event.target.value)}
+        />
+      </label>
 
       {error && <p className="add-widget-form-error">{error}</p>}
 

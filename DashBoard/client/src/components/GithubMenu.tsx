@@ -8,7 +8,11 @@ import './githubMenu.css'
 interface GithubMenuProps {
   // Without it, the list is a preview with no "Add" buttons. Should reject
   // with the server's error so the form can show it.
-  onAddWidget?: (definition: WidgetDefinition, config: Record<string, string | number>) => Promise<void>
+  onAddWidget?: (
+    definition: WidgetDefinition,
+    config: Record<string, string | number>,
+    refreshRateSeconds: number,
+  ) => Promise<void>
 }
 
 function GithubMark() {
@@ -79,8 +83,8 @@ function GithubMenu({ onAddWidget }: GithubMenuProps) {
           // A new key per widget type resets the form's state when switching.
           key={selectedDefinition.id}
           definition={selectedDefinition}
-          onSubmit={async (config) => {
-            await onAddWidget(selectedDefinition, config)
+          onSubmit={async (config, refreshRateSeconds) => {
+            await onAddWidget(selectedDefinition, config, refreshRateSeconds)
             setSelectedDefinition(null)
             setIsOpen(false)
           }}

@@ -6,7 +6,11 @@ import AddWidgetForm from './AddWidgetForm'
 import './googleMenu.css'
 
 interface GoogleMenuProps {
-  onAddWidget?: (definition: WidgetDefinition, config: Record<string, string | number>) => Promise<void>
+  onAddWidget?: (
+    definition: WidgetDefinition,
+    config: Record<string, string | number>,
+    refreshRateSeconds: number,
+  ) => Promise<void>
 }
 
 function GoogleMark() {
@@ -73,8 +77,8 @@ function GoogleMenu({ onAddWidget }: GoogleMenuProps) {
         <AddWidgetForm
           key={selectedDefinition.id}
           definition={selectedDefinition}
-          onSubmit={async (config) => {
-            await onAddWidget(selectedDefinition, config)
+          onSubmit={async (config, refreshRateSeconds) => {
+            await onAddWidget(selectedDefinition, config, refreshRateSeconds)
             setSelectedDefinition(null)
             setIsOpen(false)
           }}

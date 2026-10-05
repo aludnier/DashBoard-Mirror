@@ -5,9 +5,10 @@ import WidgetCard from './WidgetCard'
 
 interface SortableWidgetProps {
   instance: WidgetInstance
+  onRefreshRateChange: (seconds: number) => Promise<void>
 }
 
-function SortableWidget({ instance }: SortableWidgetProps) {
+function SortableWidget({ instance, onRefreshRateChange }: SortableWidgetProps) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
     useSortable({ id: instance.id })
 
@@ -24,6 +25,7 @@ function SortableWidget({ instance }: SortableWidgetProps) {
     >
       <WidgetCard
         instance={instance}
+        onRefreshRateChange={onRefreshRateChange}
         handleRef={setActivatorNodeRef}
         handleAttributes={attributes}
         handleListeners={listeners}

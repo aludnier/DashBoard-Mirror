@@ -80,6 +80,66 @@
   cursor: grab;
   touch-action: manipulation;
 }
+
+.widget-refresh-button {
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.widget-refresh-button:hover {
+  background: var(--bg-light-purple);
+}
+
+.widget-refresh-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+.widget-refresh-form input {
+  width: 5rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--border-input);
+  border-radius: 6px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+
+/* Hide the number input's up/down arrows (Chrome, Edge, Safari). */
+.widget-refresh-form input::-webkit-outer-spin-button,
+.widget-refresh-form input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Same for Firefox. */
+.widget-refresh-form input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.widget-refresh-form button {
+  padding: 0.15rem 0.45rem;
+  font-size: 0.8rem;
+}
+
+/* Full width so it wraps below the input instead of squeezing the header. */
+.widget-refresh-error {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--error-dark);
+  text-align: right;
+}
+
 .widget-card-handle:active { cursor: grabbing; }
 
 .widget-card-body {

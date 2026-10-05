@@ -15,7 +15,7 @@ import NavBar from '../components/NavBar'
 import GithubMenu from '../components/GithubMenu'
 import GoogleMenu from '../components/GoogleMenu'
 import { getUserSession } from '../client'
-import { createWidgetInstance, fetchWidgetInstances } from './api'
+import { createWidgetInstance, fetchWidgetInstances, updateWidgetRefreshRate } from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
@@ -25,15 +25,14 @@ import ThemeButton from '../components/darkThemeButton'
 type DashboardGridProps = {
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
+  onRefreshRateChange: (instanceId: string, seconds: number) => Promise<void>
 }
 
-function DashboardGrid({ instances, onReorder }: DashboardGridProps) {
+function DashboardGrid({ instances, onReorder, onRefreshRateChange }: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    // Long-press on touch, so a normal swipe over the handle still scrolls the page.
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
-    // Tab to a handle, Space to pick up, arrow keys to move, Space to drop.
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
@@ -51,6 +50,7 @@ function DashboardGrid({ instances, onReorder }: DashboardGridProps) {
             <SortableWidget
               key={instance.id}
               instance={instance}
+              onRefreshRateChange={(seconds) => onRefreshRateChange(instance.id, seconds)}
             />
           ))}
         </div>
@@ -112,10 +112,23 @@ function Dashboard({onLogout} : DashboardProps) {
     return <Navigate to="/Connexion" replace />
   }
 
+  const handleRefreshRateChange = async (instanceId: string, refreshRateSeconds: number) => {
+    const saved = await updateWidgetRefreshRate(userId, instanceId, refreshRateSeconds)
+    setInstances((current) =>
+      current.map((instance) =>
+        instance.id === instanceId ? { ...instance, refreshRateSeconds: saved } : instance,
+      ),
+    )
+  }
+
   // A const arrow function after the check above, so TypeScript knows userId
   // is a string here (a hoisted `function` would lose that).
-  const handleAddWidget = async (definition: WidgetDefinition, config: Record<string, string | number>) => {
-    const created = await createWidgetInstance(userId, definition.id, config)
+  const handleAddWidget = async (
+    definition: WidgetDefinition,
+    config: Record<string, string | number>,
+    refreshRateSeconds: number,
+  ) => {
+    const created = await createWidgetInstance(userId, definition.id, config, refreshRateSeconds)
     // The server returns the full instance, so the card appears without refetching.
     setInstances((current) => [...current, created])
   }
@@ -137,6 +150,7 @@ function Dashboard({onLogout} : DashboardProps) {
       <DashboardGrid
         instances={instances}
         onReorder={handleReorder}
+        onRefreshRateChange={handleRefreshRateChange}
       />
     )
   }

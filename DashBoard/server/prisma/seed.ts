@@ -27,14 +27,14 @@ async function upsertWidgetDefinition(serviceId: string, widget: WidgetSeed) {
     update: {
       name: widget.name,
       description: widget.description,
-      defaultRefreshRate: widget.defaultRefreshRate ?? 300,
+      defaultRefreshRate: widget.defaultRefreshRate ?? 20,
     },
     create: {
       serviceId,
       slug: widget.slug,
       name: widget.name,
       description: widget.description,
-      defaultRefreshRate: widget.defaultRefreshRate ?? 300,
+      defaultRefreshRate: widget.defaultRefreshRate ?? 20,
     },
   })
 
