@@ -11,11 +11,13 @@ import { GoogleWidgetAdapter } from '../extern/providers/google-widget.adapter.j
 import { ProviderSolverAdapter } from '../extern/provider-solver.adapter.js'
 import { SUB_REPOSITORY } from '../../domain/port/subscription.repository.js'
 import { PrismaSubscriptionRepository } from '../extern/database/prisma-subscription.repository.js'
+import { DiscordWidgetAdapter } from '../extern/providers/discord-widget.adapter.js'
 
 // One entry per service that has widgets. Keys are Service.slug values.
 const widgetDataProviders: WidgetDataProviders = {
   github: new GithubWidgetAdapter(),
   google: new GoogleWidgetAdapter(),
+  discord: new DiscordWidgetAdapter(),
 }
 
 @Module({
