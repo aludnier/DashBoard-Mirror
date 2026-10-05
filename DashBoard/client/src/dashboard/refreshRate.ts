@@ -1,0 +1,2 @@
+export const MIN_REFRESH_RATE_SECONDS = 10
+export const MAX_REFRESH_RATE_SECONDS = 60 * 60 * 24
