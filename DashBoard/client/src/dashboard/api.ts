@@ -32,7 +32,7 @@ export async function createWidgetInstance(
       id: `mock-${crypto.randomUUID()}`,
       widgetDefinitionId,
       config,
-      refreshRateSeconds: 300,
+      refreshRateSeconds: 20,
       position: 0,
       width: 1,
       height: 1,
