@@ -7,6 +7,7 @@ import {
 } from '../port/widget.repository.js'
 import type { WidgetDefinitionParams } from '../port/catalog.repository.js'
 import { WidgetDataError } from '../port/widget-data.provider.js'
+import { MAX } from 'class-validator'
 
 @Injectable()
 export class WidgetInstanceService {
@@ -20,6 +21,7 @@ export class WidgetInstanceService {
     userId: string,
     widgetDefinitionId: string,
     config: Record<string, unknown>,
+    refreshRateSeconds?: number
   ): Promise<WidgetInstanceInfo> {
     const context = await this.widgetRepository.findCreationContext(userId, widgetDefinitionId)
     if (!context)
@@ -35,7 +37,8 @@ export class WidgetInstanceService {
       subscriptionId: context.subscriptionId,
       widgetDefinitionId,
       config: validateConfig(context.params, config),
-      refreshRateSeconds: context.defaultRefreshRate,
+      refreshRateSeconds:
+        refreshRateSeconds === undefined ? context.defaultRefreshRate : validateRefreshRate(refreshRateSeconds),
       position: context.nextPosition,
     })
   }
@@ -71,4 +74,16 @@ function validateConfig(params: WidgetDefinitionParams[], input: Record<string, 
   }
 
   return config
+}
+
+const MIN_REFRESH_RATE_SECONDS = 10
+const MAX_REFRESH_RATE_SECONDS = 60 * 60 * 24
+
+function validateRefreshRate(seconds: number): number{
+  if (!Number.isInteger(seconds) || seconds < MIN_REFRESH_RATE_SECONDS || seconds > MAX_REFRESH_RATE_SECONDS)
+    throw new WidgetDataError(
+      `Refresh rate must be a whole number between ${MIN_REFRESH_RATE_SECONDS} and ${MAX_REFRESH_RATE_SECONDS} seconds`,
+      `bad-config`,
+    )
+    return seconds
 }
