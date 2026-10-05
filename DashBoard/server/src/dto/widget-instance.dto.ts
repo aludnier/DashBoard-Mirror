@@ -1,4 +1,4 @@
-import { IsObject, IsString } from 'class-validator';
+import { isIn, IsInt, IsObject, IsOptional, IsString } from 'class-validator';
 
 // Body of POST /users/:id/widget-instances. Only the shape is checked here;
 // whether config matches the widget's params is checked in the domain.
@@ -8,4 +8,8 @@ export class CreateWidgetInstanceDto {
 
   @IsObject()
   config: Record<string, unknown>;
+
+  @IsOptional()
+  @IsInt()
+  refreshRateSeconds?: number;
 }
