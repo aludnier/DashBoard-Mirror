@@ -42,6 +42,21 @@ export class WidgetInstanceService {
       position: context.nextPosition,
     })
   }
+
+  async updateRefreshRate(
+    userId: string,
+    instanceId: string,
+    refreshRateSeconds: number,
+  ): Promise<WidgetInstanceInfo> {
+    const updated = await this.widgetRepository.updateRefreshRate(
+      userId,
+      instanceId,
+      validateRefreshRate(refreshRateSeconds),
+    )
+    if (!updated)
+      throw new WidgetDataError('Widget not found', 'not-found')
+    return updated
+  }
 }
 
 // Checks the user's settings against the widget's WidgetParam rows: required

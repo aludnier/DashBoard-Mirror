@@ -13,3 +13,9 @@ export class CreateWidgetInstanceDto {
   @IsInt()
   refreshRateSeconds?: number;
 }
+
+// Body of PATCH /users/:id/widget-instances/:instanceId.
+export class UpdateWidgetInstanceDto {
+  @IsInt()
+  refreshRateSeconds: number;
+}

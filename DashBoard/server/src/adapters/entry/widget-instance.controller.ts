@@ -7,6 +7,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   ValidationPipe,
 } from '@nestjs/common'
@@ -15,7 +16,7 @@ import { WidgetDataService } from '../../domain/useCases/widget-data.service.js'
 import type { WidgetInstanceInfo } from '../../domain/port/widget.repository.js'
 import { WidgetDataError, type WidgetData } from '../../domain/port/widget-data.provider.js'
 // A value import, not `import type`: ValidationPipe needs the class at runtime.
-import { CreateWidgetInstanceDto } from '../../dto/widget-instance.dto.js'
+import { CreateWidgetInstanceDto, UpdateWidgetInstanceDto } from '../../dto/widget-instance.dto.js'
 
 // Same convention as POST /oauth/:provider/:id: the client sends the user id in
 // the URL. Anyone who knows an id can read that user's widgets, so replace this
@@ -45,6 +46,19 @@ export class WidgetInstanceController {
         body.config,
         body.refreshRateSeconds,
       )
+    } catch (error) {
+      throw toHttpException(error)
+    }
+  }
+
+  @Patch(':instanceId')
+  async updateWidgetInstance(
+    @Param('id') userId: string,
+    @Param('instanceId') instanceId: string,
+    @Body(new ValidationPipe({ whitelist: true })) body: UpdateWidgetInstanceDto,
+  ): Promise<WidgetInstanceInfo> {
+    try {
+      return await this.widgetInstanceService.updateRefreshRate(userId, instanceId, body.refreshRateSeconds)
     } catch (error) {
       throw toHttpException(error)
     }
