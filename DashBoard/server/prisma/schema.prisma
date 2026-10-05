@@ -45,7 +45,7 @@ model WidgetDefinition {
   name               String
   slug               String
   description        String?
-  defaultRefreshRate Int      @default(300)
+  defaultRefreshRate Int      @default(20)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -95,7 +95,7 @@ model WidgetInstance {
   subscriptionId     String
   widgetDefinitionId String
   config             Json
-  refreshRateSeconds Int      @default(300)
+  refreshRateSeconds Int      @default(20)
   position          Int      @default(0)
   width              Int      @default(1)
   height             Int      @default(1)
