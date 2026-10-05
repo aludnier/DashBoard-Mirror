@@ -14,6 +14,18 @@ export interface WidgetDataList {
   items: WidgetListItem[]
 }
 
+export interface WidgetDataGuilds {
+  kind: 'guilds',
+  guilds: {
+    id: string,
+    name: string,
+    iconUrl: string | null,
+    isAdmin: boolean,
+    memberCount: number
+    memberOnline: number
+  }[]
+}
+
 export interface WidgetDataPlaylists {
   kind: 'playlists'
   playlists: {
@@ -33,6 +45,7 @@ export type WidgetData =
   | WidgetDataList
   | WidgetDataPlaylists
   | WidgetDataRecord
+  | WidgetDataGuilds
 
   // Implemented once per service (GitHub, Google, ...) in adapters/extern/providers.
 export interface WidgetDataProviderPort {

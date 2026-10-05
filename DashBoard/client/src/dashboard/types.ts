@@ -44,6 +44,18 @@ export interface WidgetDataList {
   items: WidgetListItem[]
 }
 
+export interface WidgetDataGuilds {
+  kind: 'guilds',
+  guilds: {
+    id: string,
+    name: string,
+    iconUrl: string,
+    isAdmin: boolean,
+    memberCounter: number
+    memberOnline: number
+  }[]
+}
+
 export interface WidgetDataPlaylists {
   kind: 'playlists'
   playlists: {
@@ -63,3 +75,4 @@ export type WidgetData =
   | WidgetDataList
   | WidgetDataPlaylists
   | WidgetDataRecord
+  | WidgetDataGuilds
