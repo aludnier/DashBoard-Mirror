@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../src/generated/prisma/client.js'
+import { ParamType } from '../src/generated/prisma/client.js'
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL!)
 const prisma = new PrismaClient({ adapter })
@@ -8,7 +9,7 @@ const prisma = new PrismaClient({ adapter })
 type ParamSeed = {
   key: string
   label: string
-  type: 'STRING' | 'INTEGER'
+  type: ParamType
   required?: boolean
   defaultValue?: string
 }
@@ -141,25 +142,26 @@ async function main() {
     slug: 'yt-playlists',
     name: 'Youtube Playlists',
     description: 'Your Created playlist on youtube',
-    params: []
-  })
-
-  const steam = await prisma.service.upsert({
-    where: { slug: 'steam' },
-    update: { name: 'Steam', description: 'Steam account integration' },
-    create: { slug: 'steam', name: 'Steam', description: 'Steam account integration' },
-  })
-
-  await upsertWidgetDefinition(steam.id, {
-    slug: 'recent-games',
-    name: 'Recently Played',
-    description: 'Games played in the last two weeks',
     params: [
-      { key: 'limit', label: 'Max results', type: 'INTEGER', defaultValue: '5' },
+    ]
+  })
+
+  const discord = await prisma.service.upsert({
+    where: { slug: 'discord' },
+    update: { name: 'Discord', description: 'Discord account integration' },
+    create: { slug: 'discord', name: 'Discord', description: 'Discord account integration' },
+  })
+
+  await upsertWidgetDefinition(discord.id, {
+    slug: 'my-servers',
+    name: 'My Servers',
+    description: 'All your servers on discord',
+    params: [
+      { key: 'ownership', label: 'Server OwnerShip', type: 'ENUM', defaultValue: 'ALL'}
     ],
   })
 
-  await upsertWidgetDefinition(steam.id, {
+  await upsertWidgetDefinition(discord.id, {
     slug: 'player-status',
     name: 'Player Status',
     description: 'Online status and currently played game',

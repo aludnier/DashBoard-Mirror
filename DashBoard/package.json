@@ -12,8 +12,9 @@
     "dev:server": "npm run start:dev --workspace server/",
     "dev:client": "npm run dev --workspace client/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server:migrate" : "npx prisma migrate dev && npx prisma generate --workspace server/"
-  },
+    "server:seed": "npm --workspace server exec prisma db seed",
+    "server:migrate": "npm --workspace server exec prisma migrate dev && npm --workspace server exec prisma generate"
+    },
   "keywords": [],
   "author": "",
   "license": "ISC",
