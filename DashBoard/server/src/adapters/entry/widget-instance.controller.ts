@@ -39,7 +39,12 @@ export class WidgetInstanceController {
     @Body(new ValidationPipe({ whitelist: true })) body: CreateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
     try {
-      return await this.widgetInstanceService.create(userId, body.widgetDefinitionId, body.config)
+      return await this.widgetInstanceService.create(
+        userId,
+        body.widgetDefinitionId,
+        body.config,
+        body.refreshRateSeconds,
+      )
     } catch (error) {
       throw toHttpException(error)
     }
