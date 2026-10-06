@@ -4,16 +4,16 @@
   "description": "",
   "main": "index.js",
   "workspaces": [
-    "server",
-    "client"
+    "backend",
+    "frontend"
   ],
   "scripts": {
-    "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "npm run start:dev --workspace server/",
-    "dev:client": "npm run dev --workspace client/",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm run start:dev --workspace backend/",
+    "dev:frontend": "npm run dev --workspace frontend/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server:seed": "npm --workspace server exec prisma db seed",
-    "server:migrate": "npm --workspace server exec prisma migrate dev && npm --workspace server exec prisma generate"
+    "backend:seed": "npm --workspace backend exec prisma db seed",
+    "backend:migrate": "npm --workspace backend exec prisma migrate dev && npm --workspace backend exec prisma generate"
     },
   "keywords": [],
   "author": "",

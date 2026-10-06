@@ -3,4 +3,4 @@
 **/.git
 **/.env
 **/*.tsbuildinfo
-server/src/generated
+backend/src/generated
