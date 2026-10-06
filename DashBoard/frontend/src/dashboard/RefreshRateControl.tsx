@@ -1,5 +1,4 @@
-import { useState, type FormEvent } from 'react'
-import { apiErrorMessage } from '../client'
+import { useState} from 'react'
 import { MAX_REFRESH_RATE_SECONDS, MIN_REFRESH_RATE_SECONDS } from './refreshRate'
 
 interface RefreshRateControlProps {
