@@ -3,11 +3,11 @@ FROM node:24-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY server/package.json ./server/
-RUN npm ci --workspace server
+COPY backend/package.json ./backend/
+RUN npm ci --workspace backend
 
-COPY server/ ./server/
-WORKDIR /app/server
+COPY backend/ ./backend/
+WORKDIR /app/backend
 RUN npx prisma generate
 RUN npm run build
 
@@ -17,13 +17,13 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./
-COPY server/package.json ./server/
-RUN npm ci --workspace server --omit=dev
+COPY backend/package.json ./backend/
+RUN npm ci --workspace backend --omit=dev
 
-COPY --from=build /app/server/dist ./server/dist
-COPY --from=build /app/server/prisma ./server/prisma
-COPY --from=build /app/server/prisma.config.ts ./server/prisma.config.ts
+COPY --from=build /app/backend/dist ./backend/dist
+COPY --from=build /app/backend/prisma ./backend/prisma
+COPY --from=build /app/backend/prisma.config.ts ./backend/prisma.config.ts
 
-WORKDIR /app/server
+WORKDIR /app/backend
 EXPOSE 8080
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
