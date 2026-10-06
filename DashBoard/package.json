@@ -13,8 +13,11 @@
     "dev:frontend": "npm run dev --workspace frontend/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend:seed": "npm --workspace backend exec prisma db seed",
-    "backend:migrate": "npm --workspace backend exec prisma migrate dev && npm --workspace backend exec prisma generate"
-    },
+    "backend:migrate": "npm --workspace backend exec prisma migrate dev && npm --workspace backend exec prisma generate",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:migrate": "docker compose run --rm migrate"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
