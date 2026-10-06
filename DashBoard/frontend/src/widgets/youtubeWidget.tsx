@@ -1,5 +1,5 @@
 import type { WidgetDataPlaylists } from '../dashboard/types'
-import '../widgets/youtubeWidget.css'
+import './youtubeWidget.css'
 
 type YoutubeWidgetProps = {
   data: WidgetDataPlaylists
@@ -11,6 +11,9 @@ function YoutubeWidget({ data }: YoutubeWidgetProps) {
       {data.playlists.map((playlist) => (
         <div key={playlist.id} className="playlist">
           <h3>
+          {playlist.thumbnailUrl && (
+            <img src={playlist.thumbnailUrl} alt={playlist.title} />
+          )}
             <a
               target="_blank"
               rel="noreferrer"
@@ -20,9 +23,6 @@ function YoutubeWidget({ data }: YoutubeWidgetProps) {
             </a>
           </h3>
 
-          {playlist.thumbnailUrl && (
-            <img src={playlist.thumbnailUrl} alt={playlist.title} />
-          )}
 
           {playlist.description && <p>{playlist.description}</p>}
         </div>
