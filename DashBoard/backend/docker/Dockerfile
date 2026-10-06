@@ -26,4 +26,4 @@ COPY --from=build /app/backend/prisma.config.ts ./backend/prisma.config.ts
 
 WORKDIR /app/backend
 EXPOSE 8080
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["node", "dist/main.js"]
