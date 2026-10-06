@@ -3,8 +3,8 @@ name: CI
 
 on:
     push:
-        branches:
-            - main
+      branches-ignore:
+        - "ga-ignore-*"
     pull_request:
         branches:
             - main
@@ -13,16 +13,40 @@ env:
     MIRROR_URL : "git@github.com:EpitechPGE3-2026/G-WEB-500-PAR-5-1-dashboard-12.git"
 
 jobs:
-    mirror_push:
-        if: github.repository == 'aludnier/DashBoard-Mirror'
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: "actions/checkout@v4"
-              with:
-                fetch-depth: 0
-            - name: Push to Epitech Repository
-              uses: pixta-dev/repository-mirroring-action@v1
-              with:
-                target_repo_url: ${{ env.MIRROR_URL }}
-                ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+  build_project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: DashBoard/package-lock.json
+
+      - name: Install dependencies
+        working-directory: DashBoard
+        run: npm install
+
+      - name: Build Project docker compose
+        working-directory: DashBoard
+        run: docker compose build
+
+
+  mirror_push:
+    if: github.repository == 'aludnier/DashBoard-Mirror'
+    needs: [build_project]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout Code
+          uses: "actions/checkout@v4"
+          with:
+            fetch-depth: 0
+        - name: Push to Epitech Repository
+          uses: pixta-dev/repository-mirroring-action@v1
+          with:
+            target_repo_url: ${{ env.MIRROR_URL }}
+            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
