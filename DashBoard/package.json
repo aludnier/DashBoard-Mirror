@@ -8,7 +8,7 @@
     "frontend"
   ],
   "scripts": {
-    "dev": "concurrently -n backend,frontend -c blue,green \"npm:dev:backens\" \"npm:dev:frontend\"",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm:dev:backend\" \"npm:dev:frontend\"",
     "dev:backend": "npm run start:dev --workspace backend/",
     "dev:frontend": "npm run dev --workspace frontend/",
     "test": "echo \"Error: no test specified\" && exit 1",
