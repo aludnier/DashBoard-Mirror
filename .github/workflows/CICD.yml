@@ -31,7 +31,7 @@ jobs:
         working-directory: DashBoard
         run: npm install
 
-      - name: Build backend
+      - name: Build Project docker compose
         working-directory: DashBoard
         run: docker compose build
 
