@@ -1,7 +1,8 @@
 /* Centralized Color System - Edit colors here to change them throughout the app */
 :root {
   /* Primary Colors */
-  --primary-purple: #6a11cb;
+  --primary-purple: #b466e9;
+  --secondary-purple: #5a0fcb;
   --primary-dark: #2d2d2d;
 
   /* Backgrounds */
@@ -43,6 +44,9 @@
 
   /* Transitions */
   --transition-fast: 0.2s;
+  --transition-medium: 0.7s;
+  --transition-slow: 1.2s;
+
 }
 
 :root[data-theme="dark"] {
@@ -80,4 +84,59 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* High-contrast theme: paste below your existing :root[data-theme="dark"] block.
+   Text and key UI colors target WCAG AAA (7:1) on the black backgrounds.
+   Shadows are replaced by solid outlines, since shadows disappear on black. */
+:root[data-theme="high-contrast"] {
+  /* Primary Colors */
+  --primary-purple: #d0a8ff;
+  --secondary-purple: #e6ccff; /* hover/active: lighter, not darker, on black */
+  --primary-dark: #ffffff;
+
+  /* Backgrounds */
+  --bg-white: #000000;
+  --bg-page: #000000;
+  --bg-light-purple: #1c0b36;
+  --bg-light-gray: #0d0d0d;
+
+  /* Borders: clearly visible, white where they define interactive controls */
+  --border-light: #ffffff;
+  --border-subtle: #b3b3b3;
+  --border-extralight: #8a8a8a;
+  --border-input: #ffffff;
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #f2f2f2;
+  --text-muted: #d9d9d9;
+  --text-subtle: #d9d9d9;
+  --text-label: #ffffff;
+  --text-white: #000000; /* used for text on primary-colored surfaces, which are now light */
+
+  /* Status Colors: also pair these with an icon or text, never color alone */
+  --success-text: #6bff9a;
+  --success-bg: #00240f;
+  --error-text: #ff9c9c;
+  --error-bg: #3a0000;
+  --error-dark: #ff7a7a;
+
+  /* Shadows -> outlines */
+  --shadow-sm: 0 0 0 1px #ffffff;
+  --shadow-md: 0 0 0 2px #ffffff;
+  --shadow-lg: 0 0 0 2px #ffffff, 0 0 0 5px #000000;
+  --shadow-purple: 0 0 0 2px #d0a8ff;
+  --shadow-purple-focus: 0 0 0 3px #ffe600; /* yellow focus ring stands out on everything */
+}
+
+/* Optional: stronger, more consistent focus indicator for this theme */
+:root[data-theme="high-contrast"] :focus-visible {
+  outline: 3px solid #ffe600;
+  outline-offset: 2px;
+}
+
+/* Optional: links are always underlined so they don't rely on color */
+:root[data-theme="high-contrast"] a {
+  text-decoration: underline;
 }
