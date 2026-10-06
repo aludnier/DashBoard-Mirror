@@ -1,34 +1,131 @@
-@import '../colors.css';
-
-.youtube-widget {
-    padding: 20px;
-}
+/* YouTube playlists widget
+   Uses the app's centralized color tokens, so light/dark theming
+   (:root[data-theme="dark"]) works automatically. */
 
 .playlists {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  max-height: 100%;
 }
 
+/* One playlist = thumbnail on the left, title + description on the right.
+   The h3 is flattened (display: contents) so its img and link join the grid. */
 .playlist {
-    display: flex;
-    gap: 12px;
-    padding: 10px;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  padding: 14px 12px 12px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast) ease;
 }
 
-.playlist img {
-    width: 120px;
-    height: 68px;
-    object-fit: cover;
-    border-radius: 6px;
+.playlist + .playlist::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: var(--border-extralight);
+}
+
+.playlist:hover,
+.playlist:focus-within {
+  background: var(--bg-light-gray);
 }
 
 .playlist h3 {
-    margin: 0 0 5px;
+  display: contents;
+  margin: 0;
+}
+
+/* Thumbnail with two offset layers behind it, like a stack of videos.
+   This is what marks it as a playlist rather than a single video. */
+.playlist img {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 104px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 8px 14px 0 0;
+  border-radius: 6px;
+  background: var(--bg-light-purple);
+  box-shadow:
+    0 -0px 0 -2px var(--border-light),
+    0 -0px 0 -4px var(--border-subtle);
+  transition: box-shadow var(--transition-fast) ease;
+}
+
+.playlist:hover img,
+.playlist:focus-within img {
+  box-shadow:
+    0 -5px 0 -2px var(--primary-purple),
+    0 -10px 2px -4px var(--secondary-purple);
+}
+
+/* Title link; the ::after makes the whole row clickable */
+.playlist h3 a {
+  grid-column: 2;
+  grid-row: 1;
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.playlist h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.playlist:hover h3 a {
+  color: var(--primary-purple);
+}
+
+.playlist h3 a:focus-visible {
+  outline: none;
+}
+
+.playlist:has(a:focus-visible) {
+  outline: 2px solid var(--primary-purple);
+  outline-offset: -2px;
 }
 
 .playlist p {
-    margin: 0 0 5px;
+  grid-column: 2;
+  grid-row: 2;
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Narrow widgets: shrink the thumbnail */
+@media (max-width: 380px) {
+  .playlist img {
+    width: 80px;
+    margin-right: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playlist,
+  .playlist img {
+    transition: none;
+  }
 }

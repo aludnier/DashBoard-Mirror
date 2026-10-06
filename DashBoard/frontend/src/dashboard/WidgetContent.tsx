@@ -3,6 +3,7 @@ import { apiErrorMessage, getUserSession } from '../client'
 import { fetchWidgetData } from './api'
 import { type WidgetData, type WidgetInstance } from './types'
 import YoutubeWidget from '../widgets/youtubeWidget'
+import DiscordServerWidget from '../widgets/DiscordServerWidget'
 
 interface WidgetContentProps {
   instance: WidgetInstance
@@ -80,21 +81,7 @@ function WidgetContent({ instance }: WidgetContentProps) {
       return <p>Nothing to show.</p>
 
     return (
-      <div className="widget-guilds">
-        {data.guilds.map((guild) => (
-          <div key={guild.id} className="widget-guild-item">
-            {guild.iconUrl && (
-              <img src={guild.iconUrl} alt={guild.name} className="widget-guild-icon" />
-            )}
-            <div className="widget-guild-info">
-              <h4>{guild.name}</h4>
-              <p className="widget-guild-stats">
-                {guild.memberOnline} / {guild.memberCounter} online
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <DiscordServerWidget data={data}/>
     )
   }
 

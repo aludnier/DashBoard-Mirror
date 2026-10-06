@@ -1,5 +1,4 @@
-import { useState, type FormEvent } from 'react'
-import { apiErrorMessage } from '../client'
+import { useState} from 'react'
 import { MAX_REFRESH_RATE_SECONDS, MIN_REFRESH_RATE_SECONDS } from './refreshRate'
 
 interface RefreshRateControlProps {
@@ -17,8 +16,7 @@ function RefreshRateControl({ seconds, onChange }: RefreshRateControlProps) {
     setError(null)
   }
 
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault()
+  function handleSubmit() {
     if (draft === null) return
 
     const next = Number(draft)
@@ -31,7 +29,7 @@ function RefreshRateControl({ seconds, onChange }: RefreshRateControlProps) {
     setError(null)
     onChange(next)
       .then(close)
-      .catch((err) => setError(apiErrorMessage(err, 'Could not save the refresh rate.')))
+      .catch((_) => setError("Please set Refresh rate by at least 10 seconds"))
       .finally(() => setIsSaving(false))
   }
 
@@ -49,7 +47,7 @@ function RefreshRateControl({ seconds, onChange }: RefreshRateControlProps) {
   }
 
   return (
-    <form className="widget-refresh-form" onSubmit={handleSubmit}>
+    <>
       <input
         type="number"
         aria-label="Refresh every (seconds)"
@@ -63,16 +61,12 @@ function RefreshRateControl({ seconds, onChange }: RefreshRateControlProps) {
         onChange={(event) => setDraft(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === 'Escape') close()
+          if (event.key === 'Enter') handleSubmit()
         }}
+        onBlur={handleSubmit}
       />
-      <button type="submit" disabled={isSaving}>
-        {isSaving ? '...' : 'Save'}
-      </button>
-      <button type="button" aria-label="Cancel" onClick={close}>
-        ✕
-      </button>
       {error && <p className="widget-refresh-error">{error}</p>}
-    </form>
+    </>
   )
 }
 

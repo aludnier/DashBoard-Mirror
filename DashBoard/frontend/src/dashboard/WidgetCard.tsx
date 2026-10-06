@@ -16,13 +16,8 @@ interface WidgetCardProps {
   handleListeners?: Sortable['listeners']
 }
 
-function WidgetCard({
-  instance,
-  onRefreshRateChange,
-  handleRef,
-  handleAttributes,
-  handleListeners,
-}: WidgetCardProps) {
+
+function WidgetCard({ instance, onRefreshRateChange, handleRef, handleAttributes, handleListeners }: WidgetCardProps) {
   return (
     <div className="widget-card">
       <div className="widget-card-header">

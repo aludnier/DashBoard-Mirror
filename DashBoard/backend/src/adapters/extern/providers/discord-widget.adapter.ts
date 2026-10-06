@@ -38,8 +38,8 @@ export class DiscordWidgetAdapter implements WidgetDataProviderPort {
         ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png`
         : null,
       isAdmin: (BigInt(g.permissions) & 0x8n) === 0x8n,
-      memeberCount: g.approximate_presence_count,
-      memberOnline: g.approximate_member_count,
+      memeberCount: g.approximate_member_count,
+      memberOnline: g.approximate_presence_count,
     }))
   
     return { kind: 'guilds', guilds : guilds } as WidgetDataGuilds

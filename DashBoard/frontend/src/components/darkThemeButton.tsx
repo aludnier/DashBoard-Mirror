@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
+import "./darkThemeButton.css"
 
 function ThemeButton() {
     type theme = 'dark' | 'light'
@@ -11,8 +12,8 @@ function ThemeButton() {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     })
 
-    function handleThemeChange() {
-        setCurrTheme((currtheme === 'dark') ? 'light' : 'dark')
+    function handleThemeChange(e : ChangeEvent<HTMLSelectElement, HTMLSelectElement>) {
+        setCurrTheme(e.target.value as theme)
     }
 
     useEffect(() => {
@@ -21,7 +22,12 @@ function ThemeButton() {
     }, [currtheme])
 
     return (
-        <button onClick={handleThemeChange}>Change Theme</button>
+        <select className="theme-select" onChange={handleThemeChange} value={currtheme}>
+            <option value='light'>light Theme</option>
+            <option value='dark'>dark Theme</option>
+            <option value='high-contrast'>High Contrast</option>
+
+        </select>
         )
 }
 
