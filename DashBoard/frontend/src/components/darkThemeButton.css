@@ -1,0 +1,48 @@
+@import "../colors.css";
+
+.theme-select {
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-select:hover {
+  border-color: var(--primary-purple);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-select:focus {
+  outline: none;
+  border-color: var(--primary-purple);
+  box-shadow: var(--shadow-purple-focus);
+}
+
+.theme-select option {
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  padding: 8px;
+}
+
+.theme-select option:hover {
+  background-color: var(--bg-light-purple);
+  color: var(--text-primary);
+}
+
+/* Dark theme (data-theme="dark") */
+:root[data-theme="dark"] .theme-select {
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  border-color: var(--border-input);
+}
+
+:root[data-theme="dark"] .theme-select option {
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+}
