@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: DashBoard
-        run: npm ci
+        run: npm install
 
       - name: Build backend
         working-directory: DashBoard
