@@ -24,13 +24,11 @@ export class DiscordWidgetAdapter implements WidgetDataProviderPort {
   }
 
   private async fetchUserGuilds(accessToken : string): Promise<WidgetData> {
-    console.log(accessToken)
     const { data } = await axios.get("https://discord.com/api/v10/users/@me/guilds", {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: { with_counts: true },
     })
 
-    console.log("[DISCORD] mapping..")
     const guilds = data.map((g: any) => ({
       id: g.id,
       name: g.name,
