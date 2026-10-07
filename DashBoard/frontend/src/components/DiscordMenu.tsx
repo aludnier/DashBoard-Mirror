@@ -8,7 +8,7 @@ import './discordMenu.css'
 interface DiscordMenuProps {
   onAddWidget?: (
     definition: WidgetDefinition,
-    config: Record<string, string | number>,
+    config: Record<string, string | number | boolean>,
     refreshRateSeconds: number,
   ) => Promise<void>
 }

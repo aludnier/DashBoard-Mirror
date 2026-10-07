@@ -60,8 +60,8 @@ export class WidgetInstanceService {
 }
 
 // Checks the user's settings against the widget's WidgetParam rows: required
-// params must be present, INTEGER params must be whole numbers, missing
-// optional params get their default, and unknown keys are dropped.
+// params must be present, INTEGER params must be whole numbers, BOOLEAN params must be boolean,
+// missing optional params get their default, and unknown keys are dropped.
 function validateConfig(params: WidgetDefinitionParams[], input: Record<string, unknown>): WidgetConfig {
   const config: WidgetConfig = {}
 
@@ -81,7 +81,27 @@ function validateConfig(params: WidgetDefinitionParams[], input: Record<string, 
       if (!Number.isInteger(number))
         throw new WidgetDataError(`"${param.label}" must be a whole number`, 'bad-config')
       config[param.key] = number
+    } else if (param.type === 'BOOLEAN') {
+      if (typeof value === 'boolean') {
+        config[param.key] = value
+      } else if (typeof value === 'string') {
+        const lower = value.toLowerCase()
+        if (lower === 'true' || lower === '1') {
+          config[param.key] = true
+        } else if (lower === 'false' || lower === '0') {
+          config[param.key] = false
+        } else {
+          throw new WidgetDataError(`"${param.label}" must be true or false`, 'bad-config')
+        }
+      } else {
+        throw new WidgetDataError(`"${param.label}" must be a boolean`, 'bad-config')
+      }
+    } else if (param.type === 'ENUM') {
+      if (typeof value !== 'string')
+        throw new WidgetDataError(`"${param.label}" must be text`, 'bad-config')
+      config[param.key] = value.trim()
     } else {
+      // STRING type and default
       if (typeof value !== 'string')
         throw new WidgetDataError(`"${param.label}" must be text`, 'bad-config')
       config[param.key] = value.trim()

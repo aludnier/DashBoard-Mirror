@@ -20,7 +20,7 @@ export async function fetchWidgetInstances(userId: string): Promise<WidgetInstan
 export async function createWidgetInstance(
   userId: string,
   widgetDefinitionId: string,
-  config: Record<string, string | number>,
+  config: Record<string, string | number | boolean>,
   refreshRateSeconds: number,
 ): Promise<WidgetInstance> {
   if (USE_MOCK_WIDGETS) {

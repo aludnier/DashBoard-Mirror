@@ -126,7 +126,7 @@ function Dashboard({onLogout} : DashboardProps) {
   // is a string here (a hoisted `function` would lose that).
   const handleAddWidget = async (
     definition: WidgetDefinition,
-    config: Record<string, string | number>,
+    config: Record<string, string | number | boolean>,
     refreshRateSeconds: number,
   ) => {
     const created = await createWidgetInstance(userId, definition.id, config, refreshRateSeconds)

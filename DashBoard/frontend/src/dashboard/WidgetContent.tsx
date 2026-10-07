@@ -4,6 +4,7 @@ import { fetchWidgetData } from './api'
 import { type WidgetData, type WidgetInstance } from './types'
 import YoutubeWidget from '../widgets/youtubeWidget'
 import DiscordServerWidget from '../widgets/DiscordServerWidget'
+import EmailsWidget from '../widgets/EmailsWidget'
 
 interface WidgetContentProps {
   instance: WidgetInstance
@@ -72,6 +73,14 @@ function WidgetContent({ instance }: WidgetContentProps) {
           </li>
         ))}
       </ul>
+    )
+  }
+
+  if (data.kind === 'emails') {
+    if (data.emails.length === 0)
+      return <p>Nothing to show.</p>
+    return (
+      <EmailsWidget data={data}/>
     )
   }
 

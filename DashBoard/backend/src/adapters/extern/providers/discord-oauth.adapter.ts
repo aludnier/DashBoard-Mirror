@@ -12,11 +12,6 @@ export class DiscordOauthAdapter implements ProviderPort {
     const client_secret = process.env.DISCORD_CLIENT_SECRET!;
     const redirect_uri = process.env.DISCORD_REDIRECT_URI!;
 
-    console.log("[DISCORD]: code - ", code)
-    console.log("[DISCORD]: ID - ", client_id)
-    console.log("[DISCORD]: Secret - ", client_secret)
-    console.log("[DISCORD]: URI - ", redirect_uri )
-
     try {
       const formData = new URLSearchParams({
         client_id: client_id,

@@ -20,7 +20,7 @@ export interface WidgetInstance {
 export interface WidgetParamDefinition {
   key: string
   label: string
-  type: 'STRING' | 'INTEGER'
+  type: 'STRING' | 'INTEGER' | 'ENUM' | 'BOOLEAN'
   required: boolean
   defaultValue: string | null
 }
@@ -56,6 +56,17 @@ export interface WidgetDataGuilds {
   }[]
 }
 
+export interface WidgetDataEmails {
+  kind: 'emails'
+  emails: {
+    id : string
+    title : string
+    sender : string
+    date : string
+    url : string
+  }[]
+}
+
 export interface WidgetDataPlaylists {
   kind: 'playlists'
   playlists: {
@@ -76,3 +87,4 @@ export type WidgetData =
   | WidgetDataPlaylists
   | WidgetDataRecord
   | WidgetDataGuilds
+  | WidgetDataEmails

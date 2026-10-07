@@ -10,7 +10,7 @@ interface GithubMenuProps {
   // with the server's error so the form can show it.
   onAddWidget?: (
     definition: WidgetDefinition,
-    config: Record<string, string | number>,
+    config: Record<string, string | number | boolean>,
     refreshRateSeconds: number,
   ) => Promise<void>
 }
