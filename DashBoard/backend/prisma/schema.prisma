@@ -11,6 +11,7 @@ enum ParamType {
   STRING
   INTEGER
   ENUM
+  BOOLEAN
 }
 
 model User {

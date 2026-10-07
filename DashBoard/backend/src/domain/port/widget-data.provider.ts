@@ -36,6 +36,17 @@ export interface WidgetDataPlaylists {
   }[]
 }
 
+export interface WidgetDataEmails {
+  kind: 'emails'
+  emails: {
+    id : string
+    title : string
+    sender : string
+    date : string
+    url : string
+  }[]
+}
+
 export interface WidgetDataRecord {
   kind: 'record'
   data: Record<string, unknown>
@@ -46,6 +57,7 @@ export type WidgetData =
   | WidgetDataPlaylists
   | WidgetDataRecord
   | WidgetDataGuilds
+  | WidgetDataEmails
 
   // Implemented once per service (GitHub, Google, ...) in adapters/extern/providers.
 export interface WidgetDataProviderPort {

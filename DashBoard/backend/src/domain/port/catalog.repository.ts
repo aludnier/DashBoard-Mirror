@@ -1,6 +1,6 @@
 export type CatalogParam = {
   name: string
-  type: 'integer' | 'string'
+  type: 'integer' | 'string' | 'boolean'
 }
 
 export type CatalogWidget = {
@@ -16,7 +16,7 @@ export type CatalogService = {
 export type WidgetDefinitionParams = {
   key: string
   label: string
-  type: 'STRING' | 'INTEGER' | 'ENUM'
+  type: 'STRING' | 'INTEGER' | 'ENUM' | 'BOOLEAN'
   required: boolean
   defaultValue: string | null
 }

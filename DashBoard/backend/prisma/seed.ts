@@ -134,7 +134,7 @@ async function main() {
     description: 'Most recent emails from your inbox',
     params: [
       { key: 'limit', label: 'Max results', type: 'INTEGER', defaultValue: '5' },
-      { key: 'label', label: 'Gmail label filter', type: 'STRING', defaultValue: 'INBOX' },
+      { key: 'unread', label: 'Unread Only', type: 'BOOLEAN', defaultValue: 'false' },
     ],
   })
 
@@ -157,7 +157,7 @@ async function main() {
     name: 'My Servers',
     description: 'All your servers on discord',
     params: [
-      { key: 'ownership', label: 'Server OwnerShip', type: 'ENUM', defaultValue: 'ALL'}
+      { key: 'ownership', label: 'Server OwnerShip', type: 'ENUM', defaultValue: 'all,Admin'}
     ],
   })
 

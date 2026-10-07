@@ -30,7 +30,7 @@ export interface WidgetDataSource {
 }
 
 // A widget's settings after validation: every value is a string or a number.
-export type WidgetConfig = Record<string, string | number>
+export type WidgetConfig = Record<string, string | number | boolean>
 
 // What the domain needs to know before creating a widget instance.
 export interface WidgetCreationContext {

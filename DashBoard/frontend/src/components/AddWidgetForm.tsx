@@ -5,14 +5,20 @@ import { MAX_REFRESH_RATE_SECONDS, MIN_REFRESH_RATE_SECONDS } from '../dashboard
 
 interface AddWidgetFormProps {
   definition: WidgetDefinition
-  onSubmit: (config: Record<string, string | number>, refreshRateSeconds: number) => Promise<void>
+  onSubmit: (config: Record<string, string | number | boolean>, refreshRateSeconds: number) => Promise<void>
   onCancel: () => void
 }
 
-
 function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
-  const [values, setValues] = useState<Record<string, string>>(() =>
-    Object.fromEntries(definition.params.map((param) => [param.key, param.defaultValue ?? ''])),
+  const [values, setValues] = useState<Record<string, string | boolean>>(() =>
+    Object.fromEntries(
+      definition.params.map((param) => {
+        if (param.type === 'BOOLEAN') {
+          return [param.key, param.defaultValue === 'true']
+        }
+        return [param.key, param.defaultValue ?? '']
+      }),
+    ),
   )
   const [refreshRate, setRefreshRate] = useState(() => String(definition.defaultRefreshRate))
   const [error, setError] = useState<string | null>(null)
@@ -22,12 +28,18 @@ function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
     // Without this the browser would reload the page to "submit" the form.
     event.preventDefault()
 
-    const config: Record<string, string | number> = {}
+    const config: Record<string, string | number | boolean> = {}
     for (const param of definition.params) {
-      const value = values[param.key].trim()
-      // Leave empty fields out: the server fills in defaults and reports missing required ones.
-      if (value !== '')
-        config[param.key] = param.type === 'INTEGER' ? Number(value) : value
+      const value = values[param.key]
+
+      if (param.type === 'BOOLEAN') {
+        config[param.key] = Boolean(value)
+      } else if (typeof value === 'string') {
+        const trimmed = value.trim()
+        if (trimmed !== '') {
+          config[param.key] = param.type === 'INTEGER' ? Number(trimmed) : trimmed
+        }
+      }
     }
 
     setIsSubmitting(true)
@@ -37,6 +49,58 @@ function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
         setError(apiErrorMessage(err, 'Could not add this widget.'))
         setIsSubmitting(false)
       })
+  }
+
+  function renderParamField(param: any) {
+    const value = values[param.key]
+
+    switch (param.type) {
+      case 'INTEGER':
+        return (
+          <input
+            type="number"
+            step={1}
+            required={param.required}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(event) => setValues({ ...values, [param.key]: event.target.value })}
+          />
+        )
+
+      case 'BOOLEAN':
+        return (
+          <input
+            type="checkbox"
+            checked={Boolean(value)}
+            onChange={(event) => setValues({ ...values, [param.key]: event.target.checked })}
+          />
+        )
+
+      case 'ENUM':
+        const options = param.defaultValue?.split(',').map((o: string) => o.trim()) ?? []
+        return (
+          <select
+            required={param.required}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(event) => setValues({ ...values, [param.key]: event.target.value })}
+          >
+            {options.map((option: string) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        )
+
+        default:
+        return (
+          <input
+            type="text"
+            required={param.required}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(event) => setValues({ ...values, [param.key]: event.target.value })}
+          />
+        )
+    }
   }
 
   return (
@@ -49,13 +113,7 @@ function AddWidgetForm({ definition, onSubmit, onCancel }: AddWidgetFormProps) {
             {param.label}
             {param.required && ' *'}
           </span>
-          <input
-            type={param.type === 'INTEGER' ? 'number' : 'text'}
-            step={param.type === 'INTEGER' ? 1 : undefined}
-            required={param.required}
-            value={values[param.key]}
-            onChange={(event) => setValues({ ...values, [param.key]: event.target.value })}
-          />
+          {renderParamField(param)}
         </label>
       ))}
 
