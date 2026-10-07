@@ -8,7 +8,7 @@ import './googleMenu.css'
 interface GoogleMenuProps {
   onAddWidget?: (
     definition: WidgetDefinition,
-    config: Record<string, string | number>,
+    config: Record<string, string | number | boolean>,
     refreshRateSeconds: number,
   ) => Promise<void>
 }
