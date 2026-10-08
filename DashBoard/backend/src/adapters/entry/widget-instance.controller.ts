@@ -4,7 +4,10 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Patch,
@@ -59,6 +62,19 @@ export class WidgetInstanceController {
   ): Promise<WidgetInstanceInfo> {
     try {
       return await this.widgetInstanceService.updateRefreshRate(userId, instanceId, body.refreshRateSeconds)
+    } catch (error) {
+      throw toHttpException(error)
+    }
+  }
+
+  @Delete(':instanceId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteWidgetInstance(
+    @Param('id') userId: string,
+    @Param('instanceId') instanceId: string,
+  ): Promise<void> {
+    try {
+      await this.widgetInstanceService.delete(userId, instanceId)
     } catch (error) {
       throw toHttpException(error)
     }
