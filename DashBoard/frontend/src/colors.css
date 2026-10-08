@@ -2,11 +2,12 @@
 :root {
   /* Primary Colors */
   --primary-purple: #b466e9;
-  --secondary-purple: #5a0fcb;
+  --secondary-purple: #700fcb;
   --primary-dark: #2d2d2d;
 
   /* Backgrounds */
   --bg-white: #ffffff;
+  --bg-sub-menu: #261748;
   --bg-page: #f5f5f7;
   --bg-light-purple: #ebe7f3;
   --bg-light-gray: #faf9fc;
@@ -16,6 +17,7 @@
   --border-subtle: #e2e2e6;
   --border-extralight: #eeeaf3;
   --border-input: #ccc;
+  --border-menu: #41116b;
 
   /* Text Colors */
   --text-primary: #2d2d2d;
@@ -56,11 +58,13 @@
 
 :root[data-theme="dark"] {
   /* Primary Colors */
-  --primary-purple: #a56bff;
+  --primary-purple: #9a5df6;
+  --secondary-purple: #5a0fcb;
   --primary-dark: #e8e8ec;
 
   /* Backgrounds */
   --bg-white: #1e1e24;
+  --bg-sub-menu: #261748;
   --bg-page: #121216;
   --bg-light-purple: #2a2540;
   --bg-light-gray: #191920;
@@ -70,6 +74,7 @@
   --border-subtle: #2c2c34;
   --border-extralight: #2a2733;
   --border-input: #454550;
+  --border-menu: #150c6b;
 
   /* Text Colors */
   --text-primary: #e8e8ec;
@@ -107,6 +112,7 @@
 
   /* Backgrounds */
   --bg-white: #000000;
+  --bg-sub-menu: #000000;
   --bg-page: #000000;
   --bg-light-purple: #1c0b36;
   --bg-light-gray: #0d0d0d;
@@ -116,6 +122,7 @@
   --border-subtle: #b3b3b3;
   --border-extralight: #8a8a8a;
   --border-input: #ffffff;
+  --border-menu: #ffe600;
 
   /* Text Colors */
   --text-primary: #ffffff;
