@@ -55,3 +55,32 @@ export const mockWidgetData: WidgetData = {
     { id: '3', title: 'Update README', subtitle: '#40 by octocat' },
   ],
 }
+
+export const mockGithubData: WidgetData = {
+  kind: 'github',
+  type: 'pull-request',
+  items: [
+    {
+      id: '1', number: 42, title: 'Fix login redirect', url: 'https://github.com',
+      state: 'open', author: 'octocat', createdAt: new Date(Date.now() - 3 * 86_400_000).toISOString(),
+      labels: [{ name: 'bug', color: 'd73a4a' }, { name: 'frontend', color: 'bfd4f2' }],
+      comments: 3,
+    },
+    {
+      id: '2', number: 41, title: 'Add weather widget', url: 'https://github.com',
+      state: 'draft', author: 'monalisa', createdAt: new Date(Date.now() - 5 * 3_600_000).toISOString(),
+      labels: [{ name: 'enhancement', color: 'a2eeef' }],
+    },
+    {
+      id: '3', number: 40, title: 'Update README with setup instructions for docker compose', url: 'https://github.com',
+      state: 'merged', author: 'octocat', createdAt: new Date(Date.now() - 40 * 86_400_000).toISOString(),
+      labels: [{ name: 'documentation', color: '0075ca' }, { name: 'good first issue', color: '7057ff' }],
+      comments: 1,
+    },
+    {
+      id: '4', number: 39, title: 'Try a grid layout library', url: 'https://github.com',
+      state: 'closed', author: 'hubot', createdAt: new Date(Date.now() - 400 * 86_400_000).toISOString(),
+      labels: [{ name: 'wontfix', color: 'ffffff' }],
+    },
+  ],
+}

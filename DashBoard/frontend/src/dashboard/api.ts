@@ -1,6 +1,6 @@
 import { api } from '../client'
 import type { WidgetData, WidgetDefinition, WidgetInstance } from './types'
-import { mockWidgetData, mockWidgetInstances } from './mockWidgets'
+import { mockGithubData, mockWidgetData, mockWidgetInstances } from './mockWidgets'
 
 // Opt-in only: start the dev server with VITE_MOCK_WIDGETS=true. Vite inlines
 // this at build time, so a normal build (e.g. the Docker image) never uses mocks.
@@ -73,7 +73,7 @@ export async function saveWidgetOrder(orderedIds: string[]): Promise<void> {
 export async function fetchWidgetData(userId: string, instanceId: string): Promise<WidgetData> {
   if (USE_MOCK_WIDGETS) {
     await new Promise((resolve) => setTimeout(resolve, 300))
-    return mockWidgetData
+    return instanceId === 'mock-github-repos' ? mockGithubData : mockWidgetData
   }
 
   const response = await api.get<WidgetData>(`/users/${userId}/widget-instances/${instanceId}/data`)
