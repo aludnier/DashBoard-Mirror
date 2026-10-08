@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {
+  WidgetDataCalendar,
   WidgetDataEmails,
   WidgetDataError,
   WidgetDataPlaylists,
@@ -16,6 +17,8 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
             return await this.fetchYoutubePlaylists(accessToken);
         case 'latest-emails':
             return await this.fetchLatestEmails(accessToken, config.limit as number, config.unread as boolean);
+        case 'calendar-today':
+            return await this.fetchCalendar(accessToken, config.daysAhead as number)
         default:
           throw new WidgetDataError(`Unknown Google widget "${widgetSlug}"`, 'bad-config')
       }
@@ -89,6 +92,33 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
       emails,
     } as WidgetDataEmails
   }
+
+  private async fetchCalendar(token : string, days : number) : Promise<WidgetDataCalendar> {
+    const { data } = await axios.get("https://www.googleapis.com/calendar/v3/calendars/primary/events",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          timeMin: new Date().toISOString(),
+          timeMax: new Date(Date.now() + (days * 24 * 3600 * 1000)).toISOString(),
+          singleEvents: true,
+          orderBy: "startTime",
+        },
+      },
+    )
+
+    return {
+      kind: "calendar",
+      events: data.items?.map((event: any) => ({
+        id: event.id,
+        title: event.summary || 'No title',
+        description: event.description,
+        location: event.location,
+        startTime: event.start.dateTime || event.start.date,
+        endTime: event.end.dateTime || event.end.date,
+        linkUrl: event.htmlLink,
+      })) || []
+    } as WidgetDataCalendar
+  }
 }
 
 // Turn Google's HTTP errors into messages the dashboard can show.
@@ -102,7 +132,7 @@ function toWidgetDataError(error: unknown): unknown {
     case 403:
       return new WidgetDataError('Missing Google permission or API not enabled', 'provider-failed')
     default:
-      return new WidgetDataError('Could not reach Google, try again later', 'provider-failed')
+      return new WidgetDataError(`${error.response?.status} : Could not reach Google, try again later`, 'provider-failed')
   }
 }
 

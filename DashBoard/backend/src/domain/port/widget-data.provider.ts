@@ -55,6 +55,19 @@ export interface WidgetDataPlaylists {
   }[]
 }
 
+export interface WidgetDataCalendar {
+  kind : 'calendar'
+  events : {
+    id : string
+    title: string
+    description?: string
+    location?: string
+    startTime: string
+    endTime: string
+    linkUrl: string
+  }[]
+}
+
 export interface WidgetDataEmails {
   kind: 'emails'
   emails: {
@@ -77,6 +90,7 @@ export type WidgetData =
   | WidgetDataRecord
   | WidgetDataGuilds
   | WidgetDataEmails
+  | WidgetDataCalendar
   | WidgetDataGithub
 
 // Implemented once per service (GitHub, Google, ...) in adapters/extern/providers.
