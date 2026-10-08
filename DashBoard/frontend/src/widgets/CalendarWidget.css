@@ -1,16 +1,3 @@
-/* Uses your global theme variables, so light, dark and high-contrast
-   all work without extra rules. */
-.cal {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  width: 100%;
-  max-height: 100%;
-  overflow-y: auto;
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  line-height: 1.35;
-}
 
 .cal-day-head {
   display: flex;
@@ -50,7 +37,6 @@
   transition: background var(--transition-fast);
 }
 
-/* Beats the high-contrast rule that underlines every <a>; the title is underlined instead (see bottom). */
 :root .cal a.cal-event {
   text-decoration: none;
 }
@@ -108,7 +94,6 @@ a.cal-event:focus-visible {
   white-space: nowrap;
 }
 
-/* secondary-purple + text-white stays readable in all three themes */
 .cal-now {
   align-self: center;
   padding: 0.1rem 0.5rem;
@@ -136,7 +121,6 @@ a.cal-event:focus-visible {
   font-size: 0.85rem;
 }
 
-/* High contrast: links must not rely on color, so underline the title */
 :root[data-theme="high-contrast"] a.cal-event .cal-title {
   text-decoration: underline;
 }
