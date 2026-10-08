@@ -6,6 +6,7 @@ import YoutubeWidget from '../widgets/youtubeWidget'
 import DiscordServerWidget from '../widgets/DiscordServerWidget'
 import EmailsWidget from '../widgets/EmailsWidget'
 import CalendarWidget from '../widgets/CalendarWidget'
+import GithubWidget from '../widgets/GithubWidget'
 
 interface WidgetContentProps {
   instance: WidgetInstance
@@ -106,6 +107,13 @@ function WidgetContent({ instance }: WidgetContentProps) {
         <pre>{JSON.stringify(data.data, null, 2)}</pre>
       </div>
     )
+  }
+
+  if (data.kind === 'github') {
+    if (data.items.length === 0)
+      return <p>Nothing to show.</p>
+
+    return <GithubWidget data={data} />
   }
 
   return <p>Unknown widget type.</p>

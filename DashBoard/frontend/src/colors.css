@@ -47,6 +47,11 @@
   --transition-medium: 0.7s;
   --transition-slow: 1.2s;
 
+  /* Github PRs */
+  --gh-open: #1a7f37;
+  --gh-closed: #d1242f;
+  --gh-merged: #8250df;
+  --gh-draft: #59636e;
 }
 
 :root[data-theme="dark"] {
@@ -84,6 +89,11 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+
+  --gh-open: #3fb950;
+  --gh-closed: #f85149;
+  --gh-merged: #a371f7;
+  --gh-draft: #9198a1;
 }
 
 /* High-contrast theme: paste below your existing :root[data-theme="dark"] block.
@@ -128,6 +138,11 @@
   --shadow-lg: 0 0 0 2px #ffffff, 0 0 0 5px #000000;
   --shadow-purple: 0 0 0 2px #d0a8ff;
   --shadow-purple-focus: 0 0 0 3px #ffe600; /* yellow focus ring stands out on everything */
+
+  --gh-open: #6bff9a;
+  --gh-closed: #ff9c9c;
+  --gh-merged: #d0a8ff;
+  --gh-draft: #d9d9d9;
 }
 
 /* Optional: stronger, more consistent focus indicator for this theme */
