@@ -97,6 +97,26 @@
   background: var(--bg-light-purple);
 }
 
+.widget-card-remove {
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.widget-card-remove:hover:not(:disabled) {
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+
+.widget-card-remove:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
 .widget-refresh-form {
   display: flex;
   flex-wrap: wrap;

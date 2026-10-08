@@ -60,6 +60,8 @@ export interface WidgetRepositoryPort {
   findCreationContext(userId: string, widgetDefinitionId: string): Promise<WidgetCreationContext | null>
   create(data: NewWidgetInstance): Promise<WidgetInstanceInfo>
   updateRefreshRate(userId: string, instanceId: string, refreshRateSeconds: number): Promise<WidgetInstanceInfo | null>
+  // false when the instance doesn't exist or belongs to another user.
+  delete(userId: string, instanceId: string): Promise<boolean>
 }
 
 export const WIDGET_REPOSITORY = Symbol('WIDGET_REPOSITORY')

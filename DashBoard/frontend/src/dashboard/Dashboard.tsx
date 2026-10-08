@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   DndContext,
   KeyboardSensor,
+  MeasuringStrategy,
   MouseSensor,
   TouchSensor,
   closestCenter,
@@ -16,20 +17,30 @@ import GithubMenu from '../components/GithubMenu'
 import GoogleMenu from '../components/GoogleMenu'
 import DiscordMenu from '../components/DiscordMenu'
 import { getUserSession } from '../client'
-import { createWidgetInstance, fetchWidgetInstances, updateWidgetRefreshRate } from './api'
+import {
+  createWidgetInstance,
+  deleteWidgetInstance,
+  fetchWidgetInstances,
+  updateWidgetRefreshRate
+} from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
 import EmptyState from './EmptyState'
 import './dashboardStyle.css'
 import ThemeButton from '../components/darkThemeButton'
 
+// Rects are normally measured only while dragging. Removing a widget needs
+// each card's position from before the removal, so measure them always.
+const measuring = { droppable: { strategy: MeasuringStrategy.Always } }
+
 type DashboardGridProps = {
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
   onRefreshRateChange: (instanceId: string, seconds: number) => Promise<void>
+  onRemove: (instanceId: string) => Promise<void>
 }
 
-function DashboardGrid({ instances, onReorder, onRefreshRateChange }: DashboardGridProps) {
+function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove }: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -43,7 +54,7 @@ function DashboardGrid({ instances, onReorder, onRefreshRateChange }: DashboardG
   }
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} measuring={measuring} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       {/* Items must be in the same order as they're rendered below. */}
       <SortableContext items={instances} strategy={rectSortingStrategy}>
         <div className="dashboard-grid">
@@ -52,6 +63,7 @@ function DashboardGrid({ instances, onReorder, onRefreshRateChange }: DashboardG
               key={instance.id}
               instance={instance}
               onRefreshRateChange={(seconds) => onRefreshRateChange(instance.id, seconds)}
+              onRemove={() => onRemove(instance.id)}
             />
           ))}
         </div>
@@ -122,8 +134,11 @@ function Dashboard({onLogout} : DashboardProps) {
     )
   }
 
-  // A const arrow function after the check above, so TypeScript knows userId
-  // is a string here (a hoisted `function` would lose that).
+  const handleRemoveWidget = async (instanceId: string) => {
+    await deleteWidgetInstance(userId, instanceId)
+    setInstances((current) => current.filter((instance) => instance.id !== instanceId))
+  }
+
   const handleAddWidget = async (
     definition: WidgetDefinition,
     config: Record<string, string | number | boolean>,
@@ -152,6 +167,7 @@ function Dashboard({onLogout} : DashboardProps) {
         instances={instances}
         onReorder={handleReorder}
         onRefreshRateChange={handleRefreshRateChange}
+        onRemove={handleRemoveWidget}
       />
     )
   }

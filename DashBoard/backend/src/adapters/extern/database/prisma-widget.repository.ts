@@ -180,4 +180,11 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
 
     return toInstanceInfo(instance)
   }
+
+  async delete(userId: string, instanceId: string): Promise<boolean> {
+    const { count } = await this.prisma.widgetInstance.deleteMany({
+      where: { id: instanceId, userId },
+    })
+    return count > 0
+  }
 }

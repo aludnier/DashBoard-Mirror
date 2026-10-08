@@ -59,6 +59,15 @@ export async function updateWidgetRefreshRate(
   return response.data.refreshRateSeconds
 }
 
+export async function deleteWidgetInstance(userId: string, instanceId: string): Promise<void> {
+  if (USE_MOCK_WIDGETS) {
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    return
+  }
+
+  await api.delete(`/users/${userId}/widget-instances/${instanceId}`)
+}
+
 export async function fetchWidgetDefinitions(serviceSlug: string): Promise<WidgetDefinition[]> {
   const response = await api.get<WidgetDefinition[]>(`/services/${serviceSlug}/widget-definitions`)
   return response.data
