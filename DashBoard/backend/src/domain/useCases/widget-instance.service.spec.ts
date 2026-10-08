@@ -42,6 +42,7 @@ function makeRepository() {
       async (_userId: string, _instanceId: string, seconds: number): Promise<WidgetInstanceInfo | null> =>
         toInfo(seconds),
     ),
+    delete: vi.fn(async () => true),
   } satisfies WidgetRepositoryPort
 }
 
@@ -96,4 +97,18 @@ describe('WidgetInstanceService', () => {
       expect(repository.updateRefreshRate).not.toHaveBeenCalled()
     })
   })
+
+  describe('delete', () => {
+    it("deletes the user's widget", async () => {
+      await service.delete(USER_ID, INSTANCE_ID)
+      expect(repository.delete).toHaveBeenCalledWith(USER_ID, INSTANCE_ID)
+    })
+
+    it("reports not-found when the widget doesn't exist or isn't the user's", async () => {
+      repository.delete.mockResolvedValueOnce(false)
+      await expect(service.delete(USER_ID, 'other'))
+        .rejects.toMatchObject({ reason: 'not-found' })
+    })
+  })
+
 })

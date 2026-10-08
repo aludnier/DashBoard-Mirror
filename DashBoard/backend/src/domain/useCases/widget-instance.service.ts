@@ -57,6 +57,12 @@ export class WidgetInstanceService {
       throw new WidgetDataError('Widget not found', 'not-found')
     return updated
   }
+
+  async delete(userId: string, instanceId: string): Promise<void> {
+    const deleted = await this.widgetRepository.delete(userId, instanceId)
+    if (!deleted)
+      throw new WidgetDataError('Widget not found', 'not-found')
+  }
 }
 
 // Checks the user's settings against the widget's WidgetParam rows: required
