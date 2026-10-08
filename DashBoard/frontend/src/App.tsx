@@ -11,7 +11,6 @@ import ProtectedRoute from './components/protectedRoutes'
 
 function App() {
   const [user, setUser] = useState<UserSession | null>(null)
-  // const navigate = useNavigate()
 
   useEffect(() => {
     const storedUser = getUserSession()
