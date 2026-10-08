@@ -5,6 +5,7 @@ import { type WidgetData, type WidgetInstance } from './types'
 import YoutubeWidget from '../widgets/youtubeWidget'
 import DiscordServerWidget from '../widgets/DiscordServerWidget'
 import EmailsWidget from '../widgets/EmailsWidget'
+import CalendarWidget from '../widgets/CalendarWidget'
 
 interface WidgetContentProps {
   instance: WidgetInstance
@@ -82,6 +83,10 @@ function WidgetContent({ instance }: WidgetContentProps) {
     return (
       <EmailsWidget data={data}/>
     )
+  }
+
+  if (data.kind === 'calendar') {
+      return  <CalendarWidget data={data}/>
   }
 
   // Render guilds/Discords widget
