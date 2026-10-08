@@ -1,0 +1,63 @@
+.gh-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gh-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-extralight);
+  transition: background var(--transition-fast);
+}
+.gh-row:last-child { border-bottom: none; }
+.gh-row:hover { background: var(--bg-light-gray); }
+
+.gh-state { flex: none; padding-top: 2px; display: flex; }
+.gh-state--open   { color: var(--gh-open); }
+.gh-state--closed { color: var(--gh-closed); }
+.gh-state--merged { color: var(--gh-merged); }
+.gh-state--draft  { color: var(--gh-draft); }
+
+.gh-main { flex: 1; min-width: 0; }
+
+.gh-title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.gh-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  margin-right: 4px;
+}
+.gh-title:hover { color: var(--primary-purple); text-decoration: underline; }
+
+.gh-label {
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  border-radius: 2em;
+  white-space: nowrap;
+}
+
+.gh-meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.gh-comments {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
