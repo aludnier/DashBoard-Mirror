@@ -1,6 +1,8 @@
 import axios from 'axios'
 import {
+  GithubItem,
   WidgetDataError,
+  WidgetDataGithub,
   WidgetDataList,
   type WidgetData,
   type WidgetDataProviderPort,
@@ -14,12 +16,17 @@ interface GithubPullRequest {
   number: number
   title: string
   html_url: string
-  user: { login: string } | null
+  state: 'open' | 'closed'
+  created_at: string
+  user: { login: string; avatar_url: string } | null
+  labels: { name: string; color: string }[]
+  draft?: boolean
+  merged_at?: string | null
 }
 
 interface GithubIssue extends GithubPullRequest {
-  // Present only when the "issue" is actually a pull request.
   pull_request?: unknown
+  comments: number
 }
 
 export class GithubWidgetAdapter implements WidgetDataProviderPort {
@@ -48,8 +55,10 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
     })
 
     return {
-      kind: 'list',
-      items: data.map(toListItem) } as WidgetDataList
+      kind: 'github',
+      type: 'pull-request',
+      items: data.map(toGithubItem),
+    }
   }
 
   private async fetchIssues(repo: string, limit: number, state: string, accessToken: string): Promise<WidgetData> {
@@ -58,10 +67,10 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
       params: { state, per_page: limit },
     })
 
-    // GitHub's issues endpoint also returns pull requests; the PR widget covers those.
     return {
-      kind: 'list',
-      items: data.filter((issue) => !issue.pull_request).map(toListItem) } as WidgetDataList
+      kind: 'github',
+      type: 'issue',
+      items: data.filter((issue) => !issue.pull_request).map(toGithubItem) }
   }
 }
 
@@ -73,14 +82,22 @@ function githubHeaders(accessToken: string) {
   }
 }
 
-function toListItem(item: GithubPullRequest) {
+function toGithubItem(item: GithubIssue | GithubPullRequest): GithubItem {
+  const state = item.merged_at ? 'merged' : item.draft ? 'draft' : item.state
   return {
     id: String(item.id),
+    number: item.number,
     title: item.title,
-    subtitle: `#${item.number} by ${item.user?.login ?? 'unknown'}`,
     url: item.html_url,
+    state,
+    author: item.user?.login ?? 'ghost',  // GitHub shows deleted users as "ghost"
+    authorAvatarUrl: item.user?.avatar_url,
+    createdAt: item.created_at,
+    labels: item.labels.map((l) => ({ name: l.name, color: l.color })),
+    comments: 'comments' in item ? item.comments : undefined,
   }
 }
+
 
 // config comes from the database as untyped JSON, so check it before building a URL with it.
 function parseRepo(value: unknown): string {
