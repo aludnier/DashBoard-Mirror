@@ -2,7 +2,7 @@
 
 Technical documentation for the Dashboard project: architecture, testing, project structure and development workflow.
 
-> Installation, setup and build instructions are in the [public documentation](./README.md#installation--setup).
+> Installation, setup and build instructions are in the [public documentation](./README.md#installation--run).
 
 > Looking for the project overview, features and use cases? See the **[Public Documentation (README)](./README.md)**.
 
@@ -24,57 +24,64 @@ This project follows **Hexagonal Architecture** (Ports & Adapters) on the backen
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   React Client                      │
-│  (./client) — UI, OAuth flows, widget rendering    │
+│  (./frontend) — UI, OAuth flows, widget rendering │
 └──────────────────────┬──────────────────────────────┘
                        │ HTTP/REST
                        ▼
 ┌─────────────────────────────────────────────────────┐
-│              NestJS Backend (./server)              │
+│              NestJS Backend (./backend)             │
 ├─────────────────────────────────────────────────────┤
 │ Inbound Adapters (Controllers)                      │
-│  ├─ auth.controller.ts (login/register)            │
-│  ├─ oauth.controller.ts (OAuth callbacks)          │
-│  ├─ widget-instance.controller.ts                  │
-│  └─ provider.controller.ts                         │
+│  ├─ app.controller.ts                              │
+│  ├─ auth.controller.ts                              │
+│  ├─ oauth.controller.ts                             │
+│  ├─ services.controller.ts                          │
+│  ├─ widget-instance.controller.ts                   │
+│  └─ provider.controller.ts                          │
 ├─────────────────────────────────────────────────────┤
 │ Domain / Use Cases (Business Logic)                 │
-│  ├─ auth.use-case.ts                               │
-│  ├─ widget-instance.service.ts                     │
+│  ├─ app.service.ts                                  │
+│  ├─ about.service.ts                                │
+│  ├─ auth.use-case.ts                                │
+│  ├─ provider.service.ts                             │
 │  ├─ widget-catalog.service.ts                      │
-│  └─ provider.service.ts                            │
+│  ├─ widget-instance.service.ts                     │
+│  ├─ widget-data.service.ts                          │
+│  └─ ...                                             │
 ├─────────────────────────────────────────────────────┤
 │ Ports (Interfaces)                                 │
-│  ├─ user.repository.ts                             │
-│  ├─ widget.repository.ts                           │
-│  ├─ subscription.repository.ts                     │
-│  └─ widget-data.provider.ts                        │
+│  ├─ catalog.repository.ts                           │
+│  ├─ provider.repository.ts                          │
+│  ├─ subscription.repository.ts                      │
+│  ├─ user.repository.ts                              │
+│  ├─ widget.repository.ts                            │
+│  ├─ widget-data.provider.ts                         │
+│  └─ ...                                             │
 ├─────────────────────────────────────────────────────┤
 │ Outbound Adapters                                  │
-│  ├─ Prisma Database Adapters                       │
-│  │   ├─ prisma-user.repository.ts                  │
-│  │   ├─ prisma-widget.repository.ts                │
-│  │   └─ prisma-subscription.repository.ts          │
-│  └─ OAuth Provider Adapters                        │
-│      ├─ github-oauth.adapter.ts                    │
-│      └─ google-oauth.adapter.ts                    │
+│  ├─ prisma/* repository implementations             │
+│  ├─ provider-solver.adapter.ts                     │
+│  ├─ github-oauth.adapter.ts                        │
+│  ├─ google-oauth.adapter.ts                        │
+│  └─ ...                                             │
 └─────────────────────────────────────────────────────┘
                        │
                        ▼
         ┌──────────────────────────────┐
-        │      MySQL Database          │
-        │  (users, subscriptions,      │
-        │   widgets, widget instances) │
+        │      MariaDB / MySQL        │
+        │  users, subscriptions,      │
+        │   widgets, widget instances  │
         └──────────────────────────────┘
 ```
 
-See [HEXAGONAL_ARCHITECTURE.md](./server/HEXAGONAL_ARCHITECTURE.md) for detailed explanation and code examples.
+See [backend/HEXAGONAL_ARCHITECTURE.md](./backend/HEXAGONAL_ARCHITECTURE.md) for a deeper explanation and code examples.
 
 ---
 
 ## Testing
 
 ```bash
-cd server
+cd backend
 npm run test           # Run unit tests once
 npm run test:watch    # Run tests in watch mode
 npm run test:cov      # Run with coverage report
@@ -89,100 +96,72 @@ npm run test:e2e      # Run end-to-end tests
 DashBoard/
 ├── README.md                           # Public documentation
 ├── DEVELOPMENT.md                      # This file
-├── HEXAGONAL_ARCHITECTURE.md           # Architecture deep dive
 ├── docker-compose.yml                  # Docker services definition
-├── package.json                        # Root monorepo config
+├── package.json                        # Root monorepo config / workspaces
 │
-├── client/                             # Frontend (React + TypeScript + Vite)
+├── backend/                            # NestJS backend
 │   ├── package.json
-│   ├── vite.config.ts                  # Vite config
+│   ├── nest-cli.json
 │   ├── tsconfig.json
-│   ├── index.html                      # Entry HTML
+│   ├── tsconfig.build.json
+│   ├── prisma.config.ts
+│   ├── vitest.config.ts
+│   ├── vitest.config.e2e.ts
+│   ├── README.md
 │   ├── src/
-│   │   ├── main.tsx                    # React root
-│   │   ├── App.tsx                     # Main app component
-│   │   ├── client.ts                   # Axios HTTP client
-│   │   ├── authPages/                  # Login/registration pages
-│   │   ├── components/                 # Shared UI components (NavBar, etc.)
-│   │   ├── dashboard/                  # Dashboard view & widget management
-│   │   │   ├── Dashboard.tsx           # Main dashboard container
-│   │   │   ├── SortableWidget.tsx      # Drag-and-drop widget wrapper
-│   │   │   ├── WidgetCard.tsx          # Widget display card
-│   │   │   ├── WidgetContent.tsx       # Widget content area
-│   │   │   ├── api.ts                  # Dashboard API calls
-│   │   │   └── types.ts                # TypeScript interfaces
-│   │   ├── oauth/                      # OAuth flow handling
-│   │   └── widgets/                    # Widget implementations
-│   │       └── youtubeWidget.tsx       # YouTube widget example
-│   └── docker/
-│       ├── Dockerfile                  # Client Docker image
-│       └── nginx.conf                  # Nginx reverse proxy config
+│   │   ├── app.module.ts
+│   │   ├── main.ts
+│   │   ├── adapters/
+│   │   │   ├── entry/
+│   │   │   │   ├── app.controller.ts
+│   │   │   │   ├── auth.controller.ts
+│   │   │   │   ├── oauth.controller.ts
+│   │   │   │   ├── services.controller.ts
+│   │   │   │   ├── widget-instance.controller.ts
+│   │   │   │   └── ...
+│   │   │   └── extern/
+│   │   ├── domain/
+│   │   │   ├── port/
+│   │   │   ├── useCases/
+│   │   │   └── ...
+│   │   ├── dto/
+│   │   │   ├── auth.dto.ts
+│   │   │   ├── oauth.dto.ts
+│   │   │   ├── widget-instance.dto.ts
+│   │   │   └── widget.dto.ts
+│   │   └── generated/
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   ├── seed.ts
+│   │   └── migrations/
+│   ├── docker/
+│   │   └── Dockerfile
+│   └── test/
+│       └── app.e2e-spec.ts
 │
-└── server/                             # Backend (NestJS + Prisma + MySQL)
-    ├── package.json
-    ├── tsconfig.json
-    ├── nest-cli.json                   # NestJS CLI config
-    ├── prisma.config.ts                # Prisma config override
-    ├── vitest.config.ts                # Vitest (testing) config
-    ├── src/
-    │   ├── main.ts                     # Server entry point
-    │   ├── app.module.ts               # NestJS root module
-    │   │
-    │   ├── adapters/                   # Hexagonal Architecture - Adapters
-    │   │   ├── entry/                  # Inbound adapters (controllers)
-    │   │   │   ├── auth.controller.ts           # /auth/* endpoints
-    │   │   │   ├── oauth.controller.ts          # /oauth/* endpoints
-    │   │   │   ├── widget-instance.controller.ts # /widgets/* endpoints
-    │   │   │   └── provider.controller.ts       # /providers/* endpoints
-    │   │   │
-    │   │   └── extern/                 # Outbound adapters (implementations)
-    │   │       ├── database/           # Prisma repository implementations
-    │   │       │   ├── prisma-user.repository.ts
-    │   │       │   ├── prisma-widget.repository.ts
-    │   │       │   ├── prisma-subscription.repository.ts
-    │   │       │   └── prisma.module.ts
-    │   │       └── providers/          # External API adapters
-    │   │           ├── github-oauth.adapter.ts
-    │   │           └── google-oauth.adapter.ts
-    │   │
-    │   ├── domain/                     # Business logic (core/hexagon)
-    │   │   ├── port/                   # Port interfaces (contracts)
-    │   │   │   ├── user.repository.ts
-    │   │   │   ├── widget.repository.ts
-    │   │   │   ├── subscription.repository.ts
-    │   │   │   └── widget-data.provider.ts
-    │   │   │
-    │   │   └── useCases/               # Application services
-    │   │       ├── auth.use-case.ts
-    │   │       ├── widget-instance.service.ts
-    │   │       ├── widget-catalog.service.ts
-    │   │       ├── provider.service.ts
-    │   │       └── about.service.ts
-    │   │
-    │   ├── dto/                        # Data Transfer Objects
-    │   │   ├── auth.dto.ts
-    │   │   ├── oauth.dto.ts
-    │   │   ├── widget-instance.dto.ts
-    │   │   └── widget.dto.ts
-    │   │
-    │   └── generated/                  # Auto-generated (Prisma client)
-    │       └── prisma/                 # Prisma client type definitions
-    │
-    ├── prisma/                         # Database schema & migrations
-    │   ├── schema.prisma               # Database models
-    │   ├── seed.ts                     # Database seed script
-    │   └── migrations/                 # Migration history
-    │       ├── 20260915210644_init/
-    │       ├── 20260916000000_add_email_verification_fields/
-    │       ├── 20260924091402_change_name_in_user_table/
-    │       ├── 20260924093428_make_user_name_not_nullable/
-    │       └── 20260928162519_replace_xy_with_position/
-    │
-    ├── test/                          # E2E tests
-    │   └── app.e2e-spec.ts
-    │
-    └── docker/
-        └── Dockerfile                  # Server Docker image
+├── frontend/                          # React + Vite frontend
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── index.html
+│   ├── eslint.config.js
+│   ├── nginx.conf
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   ├── client.ts
+│   │   ├── colors.css
+│   │   ├── authPages/
+│   │   ├── components/
+│   │   ├── dashboard/
+│   │   ├── oauth/
+│   │   ├── titlePage/
+│   │   └── widgets/
+│   └── docker/
+│       ├── Dockerfile
+│       └── nginx.conf
+│
+└── .gitignore
 ```
 
 ---
@@ -194,50 +173,61 @@ The user-facing steps of each use case are described in the [public documentatio
 ### 1. User Registration & Authentication
 
 **Related code:**
-- Frontend: [client/src/authPages/](client/src/authPages/)
-- Backend: [server/src/adapters/entry/auth.controller.ts](server/src/adapters/entry/auth.controller.ts)
-- Use case: [server/src/domain/useCases/auth.use-case.ts](server/src/domain/useCases/auth.use-case.ts)
+- Frontend: [frontend/src/authPages/](./frontend/src/authPages/)
+- Backend: [backend/src/adapters/entry/auth.controller.ts](./backend/src/adapters/entry/auth.controller.ts)
+- Use case: [backend/src/domain/useCases/auth.use-case.ts](./backend/src/domain/useCases/auth.use-case.ts)
 
 ### 2. Connect External Service (OAuth)
 
 **Related code:**
-- OAuth handlers: [server/src/adapters/extern/providers/](server/src/adapters/extern/providers/)
-- Subscription service: [server/src/domain/useCases/provider.service.ts](server/src/domain/useCases/provider.service.ts)
+- OAuth entry controller: [backend/src/adapters/entry/oauth.controller.ts](./backend/src/adapters/entry/oauth.controller.ts)
+- Service: [backend/src/domain/useCases/provider.service.ts](./backend/src/domain/useCases/provider.service.ts)
+- External adapters: [backend/src/adapters/extern/](./backend/src/adapters/extern/)
 
 ### 3. Create & Configure Widget
 
 **Related code:**
-- Frontend: [client/src/dashboard/](client/src/dashboard/)
-- Backend: [server/src/adapters/entry/widget-instance.controller.ts](server/src/adapters/entry/widget-instance.controller.ts)
-- Service: [server/src/domain/useCases/widget-instance.service.ts](server/src/domain/useCases/widget-instance.service.ts)
+- Frontend: [frontend/src/dashboard/](./frontend/src/dashboard/)
+- Backend: [backend/src/adapters/entry/widget-instance.controller.ts](./backend/src/adapters/entry/widget-instance.controller.ts)
+- Service: [backend/src/domain/useCases/widget-instance.service.ts](./backend/src/domain/useCases/widget-instance.service.ts)
 
 ### 4. Fetch Widget Data
 
 **Related code:**
-- Widget data service: [server/src/domain/useCases/widget-data.service.ts](server/src/domain/useCases/widget-data.service.ts)
-- Widget port: [server/src/domain/port/widget-data.provider.ts](server/src/domain/port/widget-data.provider.ts)
+- Widget data service: [backend/src/domain/useCases/widget-data.service.ts](./backend/src/domain/useCases/widget-data.service.ts)
+- Widget port: [backend/src/domain/port/widget-data.provider.ts](./backend/src/domain/port/widget-data.provider.ts)
 
 ---
 
 ## Development
+
+### API Documentation (Swagger)
+
+The backend exposes the Swagger UI at:
+
+```text
+http://localhost:8080/api
+```
+
+This is configured in `backend/src/main.ts` via `SwaggerModule.setup('api', app, documentFactory)`.
 
 ### Code Quality
 
 **Linting:**
 
 ```bash
-cd server
-npm run lint          # Run oxlint on server code
+cd backend
+npm run lint
 
-cd ../client
-npm run lint          # Run ESLint on client code
+cd ../frontend
+npm run lint
 ```
 
 **Formatting:**
 
 ```bash
-cd server
-npm run format        # Format code with Prettier
+cd backend
+npm run format
 ```
 
 ### Database Management
@@ -245,14 +235,14 @@ npm run format        # Format code with Prettier
 **Create a new migration:**
 
 ```bash
-cd server
+cd backend
 npx prisma migrate dev --name your_migration_name
 ```
 
 **View database in Prisma Studio:**
 
 ```bash
-cd server
+cd backend
 npx prisma studio
 ```
 
@@ -261,19 +251,31 @@ Opens a GUI at http://localhost:5555 to inspect/edit data.
 **Reset database** (development only):
 
 ```bash
-cd server
+cd backend
 npx prisma migrate reset
 ```
 
-### Running Mock Data
+### Start the app
 
-To run the client with mock widgets (no server required):
+From the repository root:
 
 ```bash
+npm install
+npm run dev
+```
+
+This starts the backend and frontend by using the workspace scripts defined in `package.json`.
+
+### Running Mock Data
+
+To run the frontend with mock widgets (without a live backend):
+
+```bash
+cd frontend
 npm run dev:mock
 ```
 
-This uses environment variable `VITE_MOCK_WIDGETS=true` to skip API calls.
+This uses `VITE_MOCK_WIDGETS=true` and skips API calls when the mock mode is enabled.
 
 ---
 
