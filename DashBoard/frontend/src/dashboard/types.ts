@@ -44,6 +44,25 @@ export interface WidgetDataList {
   items: WidgetListItem[]
 }
 
+export interface GithubItem {
+  id: string
+  number: number
+  title: string
+  url: string
+  state: 'open' | 'closed' | 'merged' | 'draft'
+  author: string
+  authorAvatarUrl?: string
+  createdAt: string
+  labels: { name: string; color: string }[]
+  comments?: number
+}
+
+export interface WidgetDataGithub {
+  kind: 'github'
+  type: 'pull-request' | 'issue'
+  items: GithubItem[]
+}
+
 export interface WidgetDataGuilds {
   kind: 'guilds',
   guilds: {
@@ -88,3 +107,4 @@ export type WidgetData =
   | WidgetDataRecord
   | WidgetDataGuilds
   | WidgetDataEmails
+  | WidgetDataGithub
