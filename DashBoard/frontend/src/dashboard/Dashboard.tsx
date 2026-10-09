@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   DndContext,
   KeyboardSensor,
@@ -22,8 +22,7 @@ import {
   deleteWidgetInstance,
   fetchWidgetInstances,
   updateWidgetInstance,
-  updateWidgetRefreshRate,
-  type WidgetUpdate
+  updateWidgetRefreshRate
 } from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
@@ -36,6 +35,7 @@ import ThemeButton from '../components/darkThemeButton'
 const measuring = { droppable: { strategy: MeasuringStrategy.Always } }
 
 type DashboardGridProps = {
+  userId: string
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
   onRefreshRateChange: (instanceId: WidgetInstance, seconds: number) => Promise<void>
@@ -43,14 +43,26 @@ type DashboardGridProps = {
   onInstanceResize: (id: string, width: number, height: number) => void
 }
 
-function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
+function DashboardGrid({ userId, instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
+  const instancesRef = useRef(instances)
+  instancesRef.current = instances
 
+  function handleResizeEnd(id: string) {
+    const instance = instancesRef.current.find((i) => i.id === id)
+    if (!instance) return
+    updateWidgetInstance(userId, id, {
+      refreshRate: instance.refreshRateSeconds,
+      width: Math.round(instance.width),
+      height: Math.round(instance.height),
+      position: instance.position,
+    }).catch((err) => console.error('Could not save widget size', err.response?.data))
+  }
   function resizeInstance(id: string, width : number, height : number) {
     onInstanceResize(id, width, height)
   }
@@ -72,6 +84,7 @@ function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove, on
               onRefreshRateChange={(seconds) => onRefreshRateChange(instance, seconds)}
               onRemove={() => onRemove(instance.id)}
               onResize={resizeInstance}
+              onResizeEnd={handleResizeEnd}
             />
           ))}
         </div>
@@ -126,13 +139,16 @@ function Dashboard({onLogout} : DashboardProps) {
     const reordered = arrayMove(instances, oldIndex, newIndex)
       .map((instance, index) => ({ ...instance, position: index }))
     setInstances(reordered)
-    instances.map(i => {
-      updateWidgetInstance(userId ?? "", i.id, {
-        refreshRate: i.refreshRateSeconds,
-        width: i.width,
-        heigth: i.height,
-        position: i.position
-      })
+    const previous = new Map(instances.map((i) => [i.id, i.position]))
+    reordered
+      .filter((i) => previous.get(i.id) !== i.position)
+      .forEach((i) => {
+        updateWidgetInstance(userId!, i.id, {
+          refreshRate: i.refreshRateSeconds,
+          width: i.width,
+          height: i.height,
+          position: i.position,
+        }).catch(() => setError('Could not save the new order.'))
     })
   }
 
@@ -168,17 +184,6 @@ function resizeInstance(id: string, width: number, height: number) {
   setInstances(prev =>
     prev.map(i => (i.id === id ? { ...i, width, height } : i))
   )
-  const updatedInstance = instances.find((i) => {
-    return i.id === id
-  })
-  if (!updatedInstance) return
-  updateWidgetInstance(userId ?? "", id, {
-    refreshRate : updatedInstance.refreshRateSeconds,
-    width : updatedInstance.width,
-    heigth : updatedInstance.height,
-    position : updatedInstance.position
-  }
-  )
 }
 
   function renderContent() {
@@ -196,6 +201,7 @@ function resizeInstance(id: string, width: number, height: number) {
 
     return (
       <DashboardGrid
+        userId={userId ?? ""}
         instances={instances}
         onReorder={handleReorder}
         onRefreshRateChange={handleRefreshRateChange}

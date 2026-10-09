@@ -14,6 +14,7 @@ export async function fetchWidgetInstances(userId: string): Promise<WidgetInstan
   }
 
   const response = await api.get<WidgetInstance[]>(`/users/${userId}/widget-instances`)
+  console.log(response.data)
   return response.data
 }
 
@@ -44,24 +45,20 @@ export async function createWidgetInstance(
 }
 
 export type WidgetUpdate = {
-  width : number
-  heigth : number
-  refreshRate : number
-  position : number
+  width: number
+  height: number
+  refreshRate: number
+  position: number
 }
 
-export async function updateWidgetInstance( userId: string, instanceId : string,
-  data: WidgetUpdate ) : Promise<void> {
-    const resfresh = data.refreshRate
-    const w = data.width
-    const h = data.heigth
-    const p = data.position
-    const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
-      resfresh,
-      w,
-      h,
-      p
-  })
+export async function updateWidgetInstance(userId: string, instanceId: string,
+  data: WidgetUpdate): Promise<void> {
+  const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
+      refreshRateSeconds: data.refreshRate,
+      width: data.width,
+      height: data.height,
+      position: data.position,
+    })
 }
 
 export async function updateWidgetRefreshRate(
@@ -74,15 +71,13 @@ export async function updateWidgetRefreshRate(
     return refreshRateSeconds
   }
 
-  const width = instance.width
-  const height = instance.height
-  const position = instance.position
+  console.log(instance)
   const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instance.id}`, {
-    refreshRateSeconds,
-    width,
-    height,
-    position
-  })
+      refreshRateSeconds: refreshRateSeconds,
+      width: instance.width,
+      height: instance.height,
+      position: instance.position,
+    })
   return response.data.refreshRateSeconds
 }
 
