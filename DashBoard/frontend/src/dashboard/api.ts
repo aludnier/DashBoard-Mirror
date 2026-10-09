@@ -53,7 +53,7 @@ export type WidgetUpdate = {
 
 export async function updateWidgetInstance(userId: string, instanceId: string,
   data: WidgetUpdate): Promise<void> {
-  const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
+  await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
       refreshRateSeconds: data.refreshRate,
       width: data.width,
       height: data.height,
