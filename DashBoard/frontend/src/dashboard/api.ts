@@ -43,9 +43,30 @@ export async function createWidgetInstance(
   return response.data
 }
 
+export type WidgetUpdate = {
+  width : number
+  heigth : number
+  refreshRate : number
+  position : number
+}
+
+export async function updateWidgetInstance( userId: string, instanceId : string,
+  data: WidgetUpdate ) : Promise<void> {
+    const resfresh = data.refreshRate
+    const w = data.width
+    const h = data.heigth
+    const p = data.position
+    const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
+      resfresh,
+      w,
+      h,
+      p
+  })
+}
+
 export async function updateWidgetRefreshRate(
   userId: string,
-  instanceId: string,
+  instance: WidgetInstance,
   refreshRateSeconds: number,
 ): Promise<number> {
   if (USE_MOCK_WIDGETS) {
@@ -53,8 +74,14 @@ export async function updateWidgetRefreshRate(
     return refreshRateSeconds
   }
 
-  const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
+  const width = instance.width
+  const height = instance.height
+  const position = instance.position
+  const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instance.id}`, {
     refreshRateSeconds,
+    width,
+    height,
+    position
   })
   return response.data.refreshRateSeconds
 }

@@ -8,6 +8,7 @@ import {
 import type { WidgetDefinitionParams } from '../port/catalog.repository.js'
 import { WidgetDataError } from '../port/widget-data.provider.js'
 import { MAX } from 'class-validator'
+import { UpdateWidgetInstanceDto } from '../../dto/widget-instance.dto.js'
 
 @Injectable()
 export class WidgetInstanceService {
@@ -43,15 +44,18 @@ export class WidgetInstanceService {
     })
   }
 
-  async updateRefreshRate(
+  async updateInstance(
     userId: string,
     instanceId: string,
-    refreshRateSeconds: number,
+    body: UpdateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
-    const updated = await this.widgetRepository.updateRefreshRate(
+    if (!validateRefreshRate(body.refreshRateSeconds)) {
+      throw new WidgetDataError("bad request body", 'bad-config')
+    }
+    const updated = await this.widgetRepository.updateData(
       userId,
       instanceId,
-      validateRefreshRate(refreshRateSeconds),
+      body
     )
     if (!updated)
       throw new WidgetDataError('Widget not found', 'not-found')

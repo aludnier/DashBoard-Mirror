@@ -1,3 +1,4 @@
+import { UpdateWidgetInstanceDto } from '../../dto/widget-instance.dto.js'
 import type { WidgetDefinitionParams } from './catalog.repository.js'
 
 export interface Widget {
@@ -59,7 +60,7 @@ export interface WidgetRepositoryPort {
   // null when no widget definition has this id.
   findCreationContext(userId: string, widgetDefinitionId: string): Promise<WidgetCreationContext | null>
   create(data: NewWidgetInstance): Promise<WidgetInstanceInfo>
-  updateRefreshRate(userId: string, instanceId: string, refreshRateSeconds: number): Promise<WidgetInstanceInfo | null>
+  updateData(userId: string, instanceId: string, data: UpdateWidgetInstanceDto): Promise<WidgetInstanceInfo | null>
   // false when the instance doesn't exist or belongs to another user.
   delete(userId: string, instanceId: string): Promise<boolean>
 }

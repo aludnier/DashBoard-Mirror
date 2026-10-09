@@ -64,7 +64,7 @@ export class WidgetInstanceController {
   }
 
   @Patch(':instanceId')
-  @ApiOperation({ summary: 'Update widget instance refresh rate' })
+  @ApiOperation({ summary: 'Update widget instance' })
   @ApiResponse({ status: 200, description: 'Widget instance updated' })
   @ApiResponse({ status: 400, description: 'Invalid update data' })
   @ApiResponse({ status: 404, description: 'Widget instance not found' })
@@ -74,7 +74,7 @@ export class WidgetInstanceController {
     @Body(new ValidationPipe({ whitelist: true })) body: UpdateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
     try {
-      return await this.widgetInstanceService.updateRefreshRate(userId, instanceId, body.refreshRateSeconds)
+      return await this.widgetInstanceService.updateInstance(userId, instanceId, body)
     } catch (error) {
       throw toHttpException(error)
     }
