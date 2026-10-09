@@ -21,7 +21,9 @@ import {
   createWidgetInstance,
   deleteWidgetInstance,
   fetchWidgetInstances,
-  updateWidgetRefreshRate
+  updateWidgetInstance,
+  updateWidgetRefreshRate,
+  type WidgetUpdate
 } from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
 import SortableWidget from './SortableWidget'
@@ -36,17 +38,22 @@ const measuring = { droppable: { strategy: MeasuringStrategy.Always } }
 type DashboardGridProps = {
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
-  onRefreshRateChange: (instanceId: string, seconds: number) => Promise<void>
+  onRefreshRateChange: (instanceId: WidgetInstance, seconds: number) => Promise<void>
   onRemove: (instanceId: string) => Promise<void>
+  onInstanceResize: (id: string, width: number, height: number) => void
 }
 
-function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove }: DashboardGridProps) {
+function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
+
+  function resizeInstance(id: string, width : number, height : number) {
+    onInstanceResize(id, width, height)
+  }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (over && active.id !== over.id)
@@ -62,8 +69,9 @@ function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove }: 
             <SortableWidget
               key={instance.id}
               instance={instance}
-              onRefreshRateChange={(seconds) => onRefreshRateChange(instance.id, seconds)}
+              onRefreshRateChange={(seconds) => onRefreshRateChange(instance, seconds)}
               onRemove={() => onRemove(instance.id)}
+              onResize={resizeInstance}
             />
           ))}
         </div>
@@ -118,18 +126,25 @@ function Dashboard({onLogout} : DashboardProps) {
     const reordered = arrayMove(instances, oldIndex, newIndex)
       .map((instance, index) => ({ ...instance, position: index }))
     setInstances(reordered)
-    // TODO(#11): saveWidgetOrder(reordered.map((instance) => instance.id))
+    instances.map(i => {
+      updateWidgetInstance(userId ?? "", i.id, {
+        refreshRate: i.refreshRateSeconds,
+        width: i.width,
+        heigth: i.height,
+        position: i.position
+      })
+    })
   }
 
   if (!userId) {
     return <Navigate to="/Connexion" replace />
   }
 
-  const handleRefreshRateChange = async (instanceId: string, refreshRateSeconds: number) => {
-    const saved = await updateWidgetRefreshRate(userId, instanceId, refreshRateSeconds)
+  const handleRefreshRateChange = async (instance: WidgetInstance, refreshRateSeconds: number) => {
+    const saved = await updateWidgetRefreshRate(userId, instance, refreshRateSeconds)
     setInstances((current) =>
-      current.map((instance) =>
-        instance.id === instanceId ? { ...instance, refreshRateSeconds: saved } : instance,
+      current.map((i) =>
+        i.id === instance.id ? { ...i, refreshRateSeconds: saved } : i,
       ),
     )
   }
@@ -148,6 +163,23 @@ function Dashboard({onLogout} : DashboardProps) {
     // The server returns the full instance, so the card appears without refetching.
     setInstances((current) => [...current, created])
   }
+
+function resizeInstance(id: string, width: number, height: number) {
+  setInstances(prev =>
+    prev.map(i => (i.id === id ? { ...i, width, height } : i))
+  )
+  const updatedInstance = instances.find((i) => {
+    return i.id === id
+  })
+  if (!updatedInstance) return
+  updateWidgetInstance(userId ?? "", id, {
+    refreshRate : updatedInstance.refreshRateSeconds,
+    width : updatedInstance.width,
+    heigth : updatedInstance.height,
+    position : updatedInstance.position
+  }
+  )
+}
 
   function renderContent() {
     if (isLoading) {
@@ -168,6 +200,7 @@ function Dashboard({onLogout} : DashboardProps) {
         onReorder={handleReorder}
         onRefreshRateChange={handleRefreshRateChange}
         onRemove={handleRemoveWidget}
+        onInstanceResize={resizeInstance}
       />
     )
   }
