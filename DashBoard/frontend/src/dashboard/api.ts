@@ -14,7 +14,6 @@ export async function fetchWidgetInstances(userId: string): Promise<WidgetInstan
   }
 
   const response = await api.get<WidgetInstance[]>(`/users/${userId}/widget-instances`)
-  console.log(response.data)
   return response.data
 }
 
@@ -71,7 +70,6 @@ export async function updateWidgetRefreshRate(
     return refreshRateSeconds
   }
 
-  console.log(instance)
   const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instance.id}`, {
       refreshRateSeconds: refreshRateSeconds,
       width: instance.width,
