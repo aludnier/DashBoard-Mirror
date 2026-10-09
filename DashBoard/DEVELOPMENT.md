@@ -281,6 +281,8 @@ This uses `VITE_MOCK_WIDGETS=true` and skips API calls when the mock mode is ena
 
 ## Support & Contribution
 
+> Check how to add new Services and widget [here](./ADDING_NEW_PROVIDER.md)
+
 For issues, questions, or contributions:
 1. Open an issue describing the problem or feature request
 2. Create a feature branch from `main`
