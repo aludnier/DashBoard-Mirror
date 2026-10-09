@@ -30,7 +30,7 @@ export class UpdateWidgetInstanceDto {
   
   @ApiProperty()
   @IsInt()
-  heigth: number;
+  height: number;
   
   @ApiProperty()
   @IsInt()

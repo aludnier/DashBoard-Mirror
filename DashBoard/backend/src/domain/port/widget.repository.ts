@@ -51,6 +51,8 @@ export interface NewWidgetInstance {
   config: WidgetConfig
   refreshRateSeconds: number
   position: number
+  width: number
+  height: number
 }
 
 export interface WidgetRepositoryPort {

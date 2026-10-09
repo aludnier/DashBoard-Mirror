@@ -170,7 +170,7 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
       where: { id: instanceId, userId },
       data: { 
         refreshRateSeconds : body.refreshRateSeconds,
-        height: body.heigth,
+        height: body.height,
         width: body.width,
         position: body.position
        },

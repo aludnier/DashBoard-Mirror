@@ -41,6 +41,8 @@ export class WidgetInstanceService {
       refreshRateSeconds:
         refreshRateSeconds === undefined ? context.defaultRefreshRate : validateRefreshRate(refreshRateSeconds),
       position: context.nextPosition,
+      width: 6,
+      height: 8
     })
   }
 
@@ -49,9 +51,7 @@ export class WidgetInstanceService {
     instanceId: string,
     body: UpdateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
-    if (!validateRefreshRate(body.refreshRateSeconds)) {
-      throw new WidgetDataError("bad request body", 'bad-config')
-    }
+    validateRefreshRate(body.refreshRateSeconds)
     const updated = await this.widgetRepository.updateData(
       userId,
       instanceId,
