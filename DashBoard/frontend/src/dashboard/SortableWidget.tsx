@@ -66,7 +66,7 @@ function SortableWidget({ instance, onRefreshRateChange, onRemove, onResize, onR
       onResize(
         instance.id,
         Math.min(colCount, Math.max(MIN_W, instanceW + dCols)),
-        Math.max(MIN_W, instanceH + dRows),
+        Math.max(MIN_H, instanceH + dRows),
       )
     }
 
