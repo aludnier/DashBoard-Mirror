@@ -23,4 +23,17 @@ export class UpdateWidgetInstanceDto {
   @ApiProperty()
   @IsInt()
   refreshRateSeconds: number;
+  
+  @ApiProperty()
+  @IsInt()
+  width: number;
+  
+  @ApiProperty()
+  @IsInt()
+  height: number;
+  
+  @ApiProperty()
+  @IsInt()
+  position : number;
+  
 }

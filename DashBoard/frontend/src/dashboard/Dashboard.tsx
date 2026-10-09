@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   DndContext,
   KeyboardSensor,
@@ -21,6 +21,7 @@ import {
   createWidgetInstance,
   deleteWidgetInstance,
   fetchWidgetInstances,
+  updateWidgetInstance,
   updateWidgetRefreshRate
 } from './api'
 import type { WidgetDefinition, WidgetInstance } from './types'
@@ -34,19 +35,37 @@ import ThemeButton from '../components/darkThemeButton'
 const measuring = { droppable: { strategy: MeasuringStrategy.Always } }
 
 type DashboardGridProps = {
+  userId: string
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
-  onRefreshRateChange: (instanceId: string, seconds: number) => Promise<void>
+  onRefreshRateChange: (instanceId: WidgetInstance, seconds: number) => Promise<void>
   onRemove: (instanceId: string) => Promise<void>
+  onInstanceResize: (id: string, width: number, height: number) => void
 }
 
-function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove }: DashboardGridProps) {
+function DashboardGrid({ userId, instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
+  const instancesRef = useRef(instances)
+  instancesRef.current = instances
+
+  function handleResizeEnd(id: string) {
+    const instance = instancesRef.current.find((i) => i.id === id)
+    if (!instance) return
+    updateWidgetInstance(userId, id, {
+      refreshRate: instance.refreshRateSeconds,
+      width: Math.round(instance.width),
+      height: Math.round(instance.height),
+      position: instance.position,
+    }).catch((err) => console.error('Could not save widget size', err.response?.data))
+  }
+  function resizeInstance(id: string, width : number, height : number) {
+    onInstanceResize(id, width, height)
+  }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (over && active.id !== over.id)
@@ -62,8 +81,10 @@ function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove }: 
             <SortableWidget
               key={instance.id}
               instance={instance}
-              onRefreshRateChange={(seconds) => onRefreshRateChange(instance.id, seconds)}
+              onRefreshRateChange={(seconds) => onRefreshRateChange(instance, seconds)}
               onRemove={() => onRemove(instance.id)}
+              onResize={resizeInstance}
+              onResizeEnd={handleResizeEnd}
             />
           ))}
         </div>
@@ -118,18 +139,28 @@ function Dashboard({onLogout} : DashboardProps) {
     const reordered = arrayMove(instances, oldIndex, newIndex)
       .map((instance, index) => ({ ...instance, position: index }))
     setInstances(reordered)
-    // TODO(#11): saveWidgetOrder(reordered.map((instance) => instance.id))
+    const previous = new Map(instances.map((i) => [i.id, i.position]))
+    reordered
+      .filter((i) => previous.get(i.id) !== i.position)
+      .forEach((i) => {
+        updateWidgetInstance(userId!, i.id, {
+          refreshRate: i.refreshRateSeconds,
+          width: i.width,
+          height: i.height,
+          position: i.position,
+        }).catch(() => setError('Could not save the new order.'))
+    })
   }
 
   if (!userId) {
     return <Navigate to="/Connexion" replace />
   }
 
-  const handleRefreshRateChange = async (instanceId: string, refreshRateSeconds: number) => {
-    const saved = await updateWidgetRefreshRate(userId, instanceId, refreshRateSeconds)
+  const handleRefreshRateChange = async (instance: WidgetInstance, refreshRateSeconds: number) => {
+    const saved = await updateWidgetRefreshRate(userId, instance, refreshRateSeconds)
     setInstances((current) =>
-      current.map((instance) =>
-        instance.id === instanceId ? { ...instance, refreshRateSeconds: saved } : instance,
+      current.map((i) =>
+        i.id === instance.id ? { ...i, refreshRateSeconds: saved } : i,
       ),
     )
   }
@@ -149,6 +180,12 @@ function Dashboard({onLogout} : DashboardProps) {
     setInstances((current) => [...current, created])
   }
 
+function resizeInstance(id: string, width: number, height: number) {
+  setInstances(prev =>
+    prev.map(i => (i.id === id ? { ...i, width, height } : i))
+  )
+}
+
   function renderContent() {
     if (isLoading) {
       return <div className="dashboard-status">Loading your dashboard...</div>
@@ -164,10 +201,12 @@ function Dashboard({onLogout} : DashboardProps) {
 
     return (
       <DashboardGrid
+        userId={userId ?? ""}
         instances={instances}
         onReorder={handleReorder}
         onRefreshRateChange={handleRefreshRateChange}
         onRemove={handleRemoveWidget}
+        onInstanceResize={resizeInstance}
       />
     )
   }
