@@ -60,7 +60,6 @@ export async function updateWidgetInstance(instanceId: string,
 }
 
 export async function updateWidgetRefreshRate(
-  userId: string,
   instance: WidgetInstance,
   refreshRateSeconds: number,
 ): Promise<number> {
@@ -69,7 +68,7 @@ export async function updateWidgetRefreshRate(
     return refreshRateSeconds
   }
 
-  const response = await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instance.id}`, {
+  const response = await api.patch<WidgetInstance>(`/users/widget-instances/${instance.id}`, {
       refreshRateSeconds: refreshRateSeconds,
       width: instance.width,
       height: instance.height,
