@@ -13,13 +13,27 @@ export const api = axios.create({
 })
 
 /* Runs before every request: attach the login token so protected routes
-   (JwtAuthGuard on the server) know who is calling.*/
+   (JwtAuthGuard on the server) know who is calling. */
 api.interceptors.request.use((config) => {
   const token = getUserSession()?.accessToken
   if (token)
     config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+/* Runs after every response and sends the user back to login if there is 401 */
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error)
+      && error.response?.status === 401
+      && error.config?.headers.Authorization) {
+      clearUserSession()
+      window.location.assign('/connexion')
+    }
+    return Promise.reject(error)
+  },
+)
 
 export function apiErrorMessage(error: unknown, fallback: string): string {
   if (!axios.isAxiosError(error))
