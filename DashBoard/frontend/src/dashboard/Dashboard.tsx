@@ -35,7 +35,6 @@ import ThemeButton from '../components/darkThemeButton'
 const measuring = { droppable: { strategy: MeasuringStrategy.Always } }
 
 type DashboardGridProps = {
-  userId: string
   instances: WidgetInstance[]
   onReorder: (activeId: string, overId: string) => void
   onRefreshRateChange: (instanceId: WidgetInstance, seconds: number) => Promise<void>
@@ -43,7 +42,7 @@ type DashboardGridProps = {
   onInstanceResize: (id: string, width: number, height: number) => void
 }
 
-function DashboardGrid({ userId, instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
+function DashboardGrid({ instances, onReorder, onRefreshRateChange, onRemove, onInstanceResize}: DashboardGridProps) {
   const sensors = useSensors(
     // A 5px threshold so a plain click on the handle doesn't count as a drag.
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -56,7 +55,7 @@ function DashboardGrid({ userId, instances, onReorder, onRefreshRateChange, onRe
   function handleResizeEnd(id: string) {
     const instance = instancesRef.current.find((i) => i.id === id)
     if (!instance) return
-    updateWidgetInstance(userId, id, {
+    updateWidgetInstance(id, {
       refreshRate: instance.refreshRateSeconds,
       width: Math.round(instance.width),
       height: Math.round(instance.height),
@@ -113,7 +112,7 @@ function Dashboard({onLogout} : DashboardProps) {
     if (!userId) return
     let cancelled = false
 
-    fetchWidgetInstances(userId)
+    fetchWidgetInstances()
       .then((data) => {
         if (!cancelled)
           setInstances([...data].sort((a, b) => a.position - b.position))
@@ -143,7 +142,7 @@ function Dashboard({onLogout} : DashboardProps) {
     reordered
       .filter((i) => previous.get(i.id) !== i.position)
       .forEach((i) => {
-        updateWidgetInstance(userId!, i.id, {
+        updateWidgetInstance(i.id, {
           refreshRate: i.refreshRateSeconds,
           width: i.width,
           height: i.height,
@@ -157,7 +156,7 @@ function Dashboard({onLogout} : DashboardProps) {
   }
 
   const handleRefreshRateChange = async (instance: WidgetInstance, refreshRateSeconds: number) => {
-    const saved = await updateWidgetRefreshRate(userId, instance, refreshRateSeconds)
+    const saved = await updateWidgetRefreshRate(instance, refreshRateSeconds)
     setInstances((current) =>
       current.map((i) =>
         i.id === instance.id ? { ...i, refreshRateSeconds: saved } : i,
@@ -166,7 +165,7 @@ function Dashboard({onLogout} : DashboardProps) {
   }
 
   const handleRemoveWidget = async (instanceId: string) => {
-    await deleteWidgetInstance(userId, instanceId)
+    await deleteWidgetInstance(instanceId)
     setInstances((current) => current.filter((instance) => instance.id !== instanceId))
   }
 
@@ -175,7 +174,7 @@ function Dashboard({onLogout} : DashboardProps) {
     config: Record<string, string | number | boolean>,
     refreshRateSeconds: number,
   ) => {
-    const created = await createWidgetInstance(userId, definition.id, config, refreshRateSeconds)
+    const created = await createWidgetInstance(definition.id, config, refreshRateSeconds)
     // The server returns the full instance, so the card appears without refetching.
     setInstances((current) => [...current, created])
   }
@@ -201,7 +200,6 @@ function resizeInstance(id: string, width: number, height: number) {
 
     return (
       <DashboardGrid
-        userId={userId ?? ""}
         instances={instances}
         onReorder={handleReorder}
         onRefreshRateChange={handleRefreshRateChange}
