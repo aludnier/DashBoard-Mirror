@@ -1,8 +1,10 @@
 // auth.controller.ts
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUseCase, type AuthResult } from '../../domain/useCases/auth.use-case.js';
 import { LoginDto, SignupDto } from '../../dto/auth.dto.js';
+import { JwtAuthGuard, type AuthenticatedUser } from './jwt-auth.guard.js';
+import { CurrentUser } from './current-user.decorator.js';
 
 @Controller('auth')
 export class AuthController {
@@ -22,5 +24,15 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   logInUser(@Body() dto: LoginDto): Promise<AuthResult> {
     return this.authService.logIn(dto.email, dto.password);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Return the user the access token belongs to' })
+  @ApiResponse({ status: 200, description: 'Token is valid' })
+  @ApiResponse({ status: 401, description: 'Missing, invalid or expired token' })
+  me(@CurrentUser() user: AuthenticatedUser): AuthenticatedUser {
+    return user;
   }
 }
