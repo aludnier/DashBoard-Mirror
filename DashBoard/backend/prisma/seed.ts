@@ -157,7 +157,6 @@ async function main() {
     name: 'My Servers',
     description: 'All your servers on discord',
     params: [
-      { key: 'ownership', label: 'Server OwnerShip', type: 'ENUM', defaultValue: 'all,Admin'}
     ],
   })
 
