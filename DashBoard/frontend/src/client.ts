@@ -3,6 +3,7 @@ import axios from 'axios'
 export type UserSession = {
   id: string
   email: string
+  accessToken: string
 }
 
 export const AUTH_STORAGE_KEY = 'dashboard_user'
@@ -11,9 +12,15 @@ export const api = axios.create({
   baseURL: 'http://localhost:8080',
 })
 
-// Nest answers errors as { statusCode, message }. `message` is a string for
-// errors we throw ("Connect your github account first") and an array of
-// strings when ValidationPipe rejects the request body.
+/* Runs before every request: attach the login token so protected routes
+   (JwtAuthGuard on the server) know who is calling.*/
+api.interceptors.request.use((config) => {
+  const token = getUserSession()?.accessToken
+  if (token)
+    config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
 export function apiErrorMessage(error: unknown, fallback: string): string {
   if (!axios.isAxiosError(error))
     return fallback
@@ -36,7 +43,13 @@ export const getUserSession = (): UserSession | null => {
   if (!rawUser) return null
 
   try {
-    return JSON.parse(rawUser) as UserSession
+    const session = JSON.parse(rawUser) as Partial<UserSession>
+    // Sessions saved before JWT have no token: treat them as logged out.
+    if (!session.id || !session.accessToken) {
+      localStorage.removeItem(AUTH_STORAGE_KEY)
+      return null
+    }
+    return session as UserSession
   } catch {
     localStorage.removeItem(AUTH_STORAGE_KEY)
     return null
