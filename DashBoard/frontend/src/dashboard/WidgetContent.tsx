@@ -24,7 +24,7 @@ function WidgetContent({ instance }: WidgetContentProps) {
     let cancelled = false
 
     const load = () => {
-      fetchWidgetData(userId, instanceId)
+      fetchWidgetData(instanceId)
         .then((result) => {
           if (cancelled) return
           setData(result)

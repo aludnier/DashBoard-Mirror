@@ -16,7 +16,7 @@ function Connexion() {
 
     try {
       const { data } = await api.post("/auth/login", { email, password })
-      setUserSession(data)
+      setUserSession({ ...data.user, accessToken: data.accessToken })
       navigate('/dashboard', {replace : true})
     } catch (e) {
       const message = axios.isAxiosError(e)
