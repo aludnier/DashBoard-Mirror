@@ -6,19 +6,18 @@ import { mockGithubData, mockWidgetData, mockWidgetInstances } from './mockWidge
 // this at build time, so a normal build (e.g. the Docker image) never uses mocks.
 const USE_MOCK_WIDGETS = import.meta.env.VITE_MOCK_WIDGETS === 'true'
 
-export async function fetchWidgetInstances(userId: string): Promise<WidgetInstance[]> {
+export async function fetchWidgetInstances(): Promise<WidgetInstance[]> {
   if (USE_MOCK_WIDGETS) {
     // Short delay so the "Loading your dashboard..." state is still visible.
     await new Promise((resolve) => setTimeout(resolve, 300))
     return mockWidgetInstances
   }
 
-  const response = await api.get<WidgetInstance[]>(`/users/${userId}/widget-instances`)
+  const response = await api.get<WidgetInstance[]>(`/users/widget-instances`)
   return response.data
 }
 
 export async function createWidgetInstance(
-  userId: string,
   widgetDefinitionId: string,
   config: Record<string, string | number | boolean>,
   refreshRateSeconds: number,
@@ -36,7 +35,7 @@ export async function createWidgetInstance(
     }
   }
 
-  const response = await api.post<WidgetInstance>(`/users/${userId}/widget-instances`, {
+  const response = await api.post<WidgetInstance>(`/users/widget-instances`, {
     widgetDefinitionId,
     config,
   })
@@ -50,9 +49,9 @@ export type WidgetUpdate = {
   position: number
 }
 
-export async function updateWidgetInstance(userId: string, instanceId: string,
+export async function updateWidgetInstance(instanceId: string,
   data: WidgetUpdate): Promise<void> {
-  await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
+  await api.patch<WidgetInstance>(`/users/widget-instances/${instanceId}`, {
       refreshRateSeconds: data.refreshRate,
       width: data.width,
       height: data.height,
@@ -79,13 +78,13 @@ export async function updateWidgetRefreshRate(
   return response.data.refreshRateSeconds
 }
 
-export async function deleteWidgetInstance(userId: string, instanceId: string): Promise<void> {
+export async function deleteWidgetInstance(instanceId: string): Promise<void> {
   if (USE_MOCK_WIDGETS) {
     await new Promise((resolve) => setTimeout(resolve, 300))
     return
   }
 
-  await api.delete(`/users/${userId}/widget-instances/${instanceId}`)
+  await api.delete(`/users/widget-instances/${instanceId}`)
 }
 
 export async function fetchWidgetDefinitions(serviceSlug: string): Promise<WidgetDefinition[]> {
@@ -99,12 +98,12 @@ export async function saveWidgetOrder(orderedIds: string[]): Promise<void> {
   await api.put('/widget-instances/order', { orderedIds })
 }
 
-export async function fetchWidgetData(userId: string, instanceId: string): Promise<WidgetData> {
+export async function fetchWidgetData(instanceId: string): Promise<WidgetData> {
   if (USE_MOCK_WIDGETS) {
     await new Promise((resolve) => setTimeout(resolve, 300))
     return instanceId === 'mock-github-repos' ? mockGithubData : mockWidgetData
   }
 
-  const response = await api.get<WidgetData>(`/users/${userId}/widget-instances/${instanceId}/data`)
+  const response = await api.get<WidgetData>(`/users/widget-instances/${instanceId}/data`)
   return response.data
 }
