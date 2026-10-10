@@ -48,15 +48,18 @@ export type WidgetUpdate = {
   height: number
   refreshRate: number
   position: number
+  config?: Record<string, string | number | boolean>
 }
 
 export async function updateWidgetInstance(userId: string, instanceId: string,
   data: WidgetUpdate): Promise<void> {
+  console.log(data.config)
   await api.patch<WidgetInstance>(`/users/${userId}/widget-instances/${instanceId}`, {
       refreshRateSeconds: data.refreshRate,
       width: data.width,
       height: data.height,
       position: data.position,
+      config: data.config
     })
 }
 
