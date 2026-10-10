@@ -43,7 +43,7 @@ function OAuthCallback() {
       return;
     }
 
-    api.post(`/oauth/${provider}/${currUser.id}`, params)
+    api.post(`/oauth/${provider}`, params)
       .then(() => navigate("/dashboard"))
       .catch((e) => {
         console.error(e)
