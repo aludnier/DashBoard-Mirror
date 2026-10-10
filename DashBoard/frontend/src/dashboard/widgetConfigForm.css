@@ -1,0 +1,84 @@
+.widget-card-configure:hover {
+  background: var(--bg-light-purple);
+  color: var(--text-primary);
+}
+
+.widget-card-configure:focus-visible,
+.widget-card-remove:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.widget-config-popover {
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: min(80vh, 32rem);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-purple);
+}
+
+.widget-config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.widget-config-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.widget-config-empty {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: 0.9rem;
+}
+
+.widget-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.widget-config-field input:not([type='checkbox']) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--border-input);
+  border-radius: 6px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+}
+
+.widget-config-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.widget-config-actions button {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-light-gray);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.widget-config-actions button[type='submit'] {
+  border-color: var(--primary-purple);
+  background: var(--primary-purple);
+  color: var(--text-white);
+}
+
+.widget-config-actions button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
