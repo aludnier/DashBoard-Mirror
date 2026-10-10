@@ -93,8 +93,8 @@ function SortableWidget({ instance, onRefreshRateChange, onRemove, onResize, onR
         handleRef={setActivatorNodeRef}
         handleAttributes={attributes}
         handleListeners={listeners}
+        onResize={startResize}
       />
-      <div className="" onPointerDown={startResize}>test </div>
     </div>
   )
 }
