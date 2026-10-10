@@ -38,7 +38,6 @@ function WidgetCard({ instance, onRefreshRateChange, onRemove, handleRef, handle
   }
 
   function onConfigSubmit(configDraft : Record<string, ConfigValue> ) {
-      console.log("send config", configDraft)
       updateWidgetInstance(instance.id, {
         refreshRate: instance.refreshRateSeconds,
         height: instance.height,

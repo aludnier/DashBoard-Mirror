@@ -169,7 +169,6 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
     body: UpdateWidgetInstanceDto
   ): Promise<WidgetInstanceInfo | null> {
 
-    console.log("[PRISMA] update widget", body.config)
     const {count} = await this.prisma.widgetInstance.updateMany({
       where: { id: instanceId, userId },
       data: { 
