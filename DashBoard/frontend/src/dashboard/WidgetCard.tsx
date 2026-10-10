@@ -2,7 +2,9 @@ import type { useSortable } from '@dnd-kit/sortable'
 import type { WidgetInstance } from './types'
 import WidgetContent from './WidgetContent'
 import RefreshRateControl from './RefreshRateControl'
-import { useState } from 'react'
+import { useRef, useState} from 'react'
+import WidgetConfigForm, { type ConfigValue } from './widgetConfigForm'
+import { updateWidgetInstance } from './api'
 
 type Sortable = ReturnType<typeof useSortable>
 
@@ -22,7 +24,30 @@ interface WidgetCardProps {
 
 function WidgetCard({ instance, onRefreshRateChange, onRemove, handleRef, handleAttributes, handleListeners, onResize }: WidgetCardProps) {
   const [isRemoving, setIsRemoving] = useState(false)
+  const [isConfigOpen, setIsConfigOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
   const name = instance.widgetDefinition?.name ?? 'Widget'
+
+  function openConfigMenu() {
+    if (menuRef.current?.matches(':popover-open')) {
+      menuRef.current.hidePopover()
+      return
+    }
+  
+    menuRef.current?.showPopover()
+  }
+
+  function onConfigSubmit(configDraft : Record<string, ConfigValue> ) {
+      updateWidgetInstance(instance.id, {
+        refreshRate: instance.refreshRateSeconds,
+        height: instance.height,
+        width: instance.width,
+        position: instance.position,
+        config: configDraft
+      })
+      menuRef.current?.hidePopover()
+
+  }
 
   async function handleRemove() {
     if (!onRemove)
@@ -45,6 +70,33 @@ function WidgetCard({ instance, onRefreshRateChange, onRemove, handleRef, handle
         {onRefreshRateChange && (
           <RefreshRateControl seconds={instance.refreshRateSeconds} onChange={onRefreshRateChange} />
         )}
+        <button
+          type="button"
+          className="widget-card-configure"
+          aria-label={`Configure ${name}`}
+          title={`Configure ${name}`}
+          aria-expanded={isConfigOpen}
+          aria-controls={`widget-config-${instance.id}`}
+          onClick={openConfigMenu}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-gear-fill" viewBox="0 0 16 16">
+            <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+          </svg>
+        </button>
+        <div
+          ref={menuRef}
+          id={`widget-config-${instance.id}`}
+          className="widget-config-popover"
+          popover="auto"
+          onToggle={(event) => setIsConfigOpen(event.currentTarget.matches(':popover-open'))}
+        >
+          <WidgetConfigForm
+            widgetName={name}
+            instance={instance}
+            onSubmit={onConfigSubmit}
+            onCancel={() => menuRef.current?.hidePopover()}
+          />
+        </div>
         {handleAttributes && (
           <button
             type="button"

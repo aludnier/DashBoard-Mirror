@@ -47,6 +47,7 @@ export type WidgetUpdate = {
   height: number
   refreshRate: number
   position: number
+  config?: Record<string, string | number | boolean>
 }
 
 export async function updateWidgetInstance(instanceId: string,
@@ -56,6 +57,7 @@ export async function updateWidgetInstance(instanceId: string,
       width: data.width,
       height: data.height,
       position: data.position,
+      config: data.config
     })
 }
 
