@@ -11,6 +11,8 @@ import { ProviderSolverAdapter } from '../provider-solver.adapter.js'
 import { Identity } from '../../../dto/oauth.dto.js'
 import {SUB_REPOSITORY, type SubscriptionRepositoryPort } from '../../../domain/port/subscription.repository.js'
 import {  UpdateWidgetInstanceDto } from '../../../dto/widget-instance.dto.js'
+import { formToJSON } from 'axios'
+import { Prisma } from '../../../generated/prisma/client.js'
 
 // Shared by every query that returns WidgetInstanceInfo, so they stay identical.
 const INSTANCE_INCLUDE = {
@@ -166,13 +168,16 @@ export class PrismaWidgetRepository implements WidgetRepositoryPort {
     instanceId: string,
     body: UpdateWidgetInstanceDto
   ): Promise<WidgetInstanceInfo | null> {
+
+    console.log("[PRISMA] update widget", body.config)
     const {count} = await this.prisma.widgetInstance.updateMany({
       where: { id: instanceId, userId },
       data: { 
         refreshRateSeconds : body.refreshRateSeconds,
         height: body.height,
         width: body.width,
-        position: body.position
+        position: body.position,
+        config: body.config as Prisma.InputJsonObject | undefined
        },
     })
 

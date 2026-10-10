@@ -121,7 +121,7 @@ function validateConfig(params: WidgetDefinitionParams[], input: Record<string, 
   return config
 }
 
-const MIN_REFRESH_RATE_SECONDS = 10
+const MIN_REFRESH_RATE_SECONDS = 5
 const MAX_REFRESH_RATE_SECONDS = 60 * 60 * 24
 
 function validateRefreshRate(seconds: number): number{

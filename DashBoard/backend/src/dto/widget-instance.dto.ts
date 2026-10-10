@@ -36,4 +36,8 @@ export class UpdateWidgetInstanceDto {
   @IsInt()
   position : number;
   
+  @ApiProperty()
+  @IsOptional()
+  @IsObject()
+  config? : Record<string, unknown>
 }
