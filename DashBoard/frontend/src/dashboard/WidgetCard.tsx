@@ -5,7 +5,6 @@ import RefreshRateControl from './RefreshRateControl'
 import { useRef, useState} from 'react'
 import WidgetConfigForm, { type ConfigValue } from './widgetConfigForm'
 import { updateWidgetInstance } from './api'
-import { getUserSession } from '../client'
 
 type Sortable = ReturnType<typeof useSortable>
 
@@ -28,7 +27,6 @@ function WidgetCard({ instance, onRefreshRateChange, onRemove, handleRef, handle
   const [isConfigOpen, setIsConfigOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const name = instance.widgetDefinition?.name ?? 'Widget'
-  const user = getUserSession()
 
   function openConfigMenu() {
     if (menuRef.current?.matches(':popover-open')) {
@@ -41,7 +39,7 @@ function WidgetCard({ instance, onRefreshRateChange, onRemove, handleRef, handle
 
   function onConfigSubmit(configDraft : Record<string, ConfigValue> ) {
       console.log("send config", configDraft)
-      updateWidgetInstance(user?.id ?? "", instance.id, {
+      updateWidgetInstance(instance.id, {
         refreshRate: instance.refreshRateSeconds,
         height: instance.height,
         width: instance.width,
