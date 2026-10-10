@@ -20,14 +20,13 @@ import { WidgetInstanceService } from '../../domain/useCases/widget-instance.ser
 import { WidgetDataService } from '../../domain/useCases/widget-data.service.js'
 import type { WidgetInstanceInfo } from '../../domain/port/widget.repository.js'
 import { WidgetDataError, type WidgetData } from '../../domain/port/widget-data.provider.js'
-// A value import, not `import type`: ValidationPipe needs the class at runtime.
 import { CreateWidgetInstanceDto, UpdateWidgetInstanceDto } from '../../dto/widget-instance.dto.js'
+import { JwtAuthGuard, type AuthenticatedUser } from './jwt-auth.guard.js'
+import { CurrentUser } from './current-user.decorator.js'
 
-// Same convention as POST /oauth/:provider/:id: the client sends the user id in
-// the URL. Anyone who knows an id can read that user's widgets, so replace this
-// with a logged-in-user token once auth issues one.
 @ApiBearerAuth()
-@Controller('users/:id/widget-instances')
+@UseGuards(JwtAuthGuard)
+@Controller('users/widget-instances')
 export class WidgetInstanceController {
   constructor(
     private readonly widgetInstanceService: WidgetInstanceService,
@@ -37,8 +36,8 @@ export class WidgetInstanceController {
   @Get()
   @ApiOperation({ summary: 'List widget instances for a user' })
   @ApiResponse({ status: 200, description: 'List of widget instances for the user' })
-  listWidgetInstances(@Param('id') userId: string): Promise<WidgetInstanceInfo[]> {
-    return this.widgetInstanceService.listForUser(userId)
+  listWidgetInstances(@CurrentUser() user: AuthenticatedUser): Promise<WidgetInstanceInfo[]> {
+    return this.widgetInstanceService.listForUser(user.userId)
   }
 
   // whitelist: drop any body field the DTO doesn't declare.
@@ -48,12 +47,12 @@ export class WidgetInstanceController {
   @ApiResponse({ status: 400, description: 'Invalid widget instance data' })
   @ApiResponse({ status: 409, description: 'Widget instance conflict or provider not connected' })
   async createWidgetInstance(
-    @Param('id') userId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Body(new ValidationPipe({ whitelist: true })) body: CreateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
     try {
       return await this.widgetInstanceService.create(
-        userId,
+        user.userId,
         body.widgetDefinitionId,
         body.config,
         body.refreshRateSeconds,
@@ -69,12 +68,16 @@ export class WidgetInstanceController {
   @ApiResponse({ status: 400, description: 'Invalid update data' })
   @ApiResponse({ status: 404, description: 'Widget instance not found' })
   async updateWidgetInstance(
-    @Param('id') userId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('instanceId') instanceId: string,
     @Body(new ValidationPipe({ whitelist: true })) body: UpdateWidgetInstanceDto,
   ): Promise<WidgetInstanceInfo> {
     try {
-      return await this.widgetInstanceService.updateInstance(userId, instanceId, body)
+      return await this.widgetInstanceService.updateInstance(
+        user.userId,
+        instanceId,
+        body
+      )
     } catch (error) {
       throw toHttpException(error)
     }
@@ -83,11 +86,11 @@ export class WidgetInstanceController {
   @Delete(':instanceId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteWidgetInstance(
-    @Param('id') userId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('instanceId') instanceId: string,
   ): Promise<void> {
     try {
-      await this.widgetInstanceService.delete(userId, instanceId)
+      await this.widgetInstanceService.delete(user.userId, instanceId)
     } catch (error) {
       throw toHttpException(error)
     }
@@ -101,11 +104,11 @@ export class WidgetInstanceController {
   @ApiResponse({ status: 502, description: 'Provider failed to retrieve data' })
   @ApiResponse({ status: 400, description: 'Bad configuration for widget' })
   async getWidgetData(
-    @Param('id') userId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('instanceId') instanceId: string,
   ): Promise<WidgetData> {
     try {
-      return await this.widgetDataService.getData(userId, instanceId)
+      return await this.widgetDataService.getData(user.userId, instanceId)
     } catch (error) {
       throw toHttpException(error)
     }
