@@ -23,10 +23,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@nestjs/swagger": "^12.0.2",
-    "class-validator": "^0.15.1",
-    "concurrently": "^10.0.5",
-    "prisma": "^8.0.0-rc.15"
+    "concurrently": "^10.0.5"
   },
   "dependencies": {
     "axios": "^1.20.0",
