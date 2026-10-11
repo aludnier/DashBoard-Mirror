@@ -17,7 +17,15 @@ function DiscordServerWidget ({ data } : DiscordServerProps) {
               <img src={DISCORD_LOGO} alt={guild.name} className="widget-guild-icon" />
             }
             <div className="widget-guild-info">
-              <h4>{guild.name}</h4>
+              <h4>
+                <a
+                  href={`https://discord.com/channels/${guild.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {guild.name}
+                </a>
+              </h4>
               <p className="widget-guild-stats">
                 {guild.memberOnline} online
               </p>
