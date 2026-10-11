@@ -7,6 +7,8 @@ import { PrismaModule } from '../extern/database/prisma.module.js';
 import { AuthUseCase } from '../../domain/useCases/auth.use-case.js';
 import { USER_REPOSITORY } from  '../../domain/port/user.repository.js';
 import { PrismaUserRepository } from '../extern/database/prisma-user.repository.js';
+import { MAILER } from '../../domain/port/mailer.js';
+import { NodemailerMailerAdapter } from '../extern/mail/nodemailer-mailer.adapter.js';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { PrismaUserRepository } from '../extern/database/prisma-user.repository.
   providers: [
     AuthUseCase,
     { provide: USER_REPOSITORY, useClass: PrismaUserRepository },
+    { provide: MAILER, useClass: NodemailerMailerAdapter },
   ],
 })
 export class AuthModule {}
