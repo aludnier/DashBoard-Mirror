@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsHexadecimal,
+  IsString,
+  Length,
+  MinLength
+} from 'class-validator';
 
 export class SignupDto {
   @ApiProperty({description : "Name of new user.", example: "Alen"})
@@ -24,4 +30,17 @@ export class LoginDto {
   @ApiProperty({description: "Unhached password of the user", example: "password123"})
   @IsString()
   password: string;
+}
+
+export class VerifyEmailDto {
+  @ApiProperty({ description: 'Token from the verification link', example: '3f9a...e1c2 (64 hex chars)' })
+  @IsHexadecimal()
+  @Length(64, 64)
+  token: string;
+}
+
+export class ResendVerificationDto {
+  @ApiProperty({ description: 'Email of the unverified account', example: 'test@gmail.com' })
+  @IsEmail()
+  email: string;
 }
