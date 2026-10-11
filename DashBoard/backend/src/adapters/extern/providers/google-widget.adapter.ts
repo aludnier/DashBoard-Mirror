@@ -76,6 +76,7 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
         const from = headers.find((h: any) => h.name === 'From')?.value ?? 'Unknown sender'
         const subject = headers.find((h: any) => h.name === 'Subject')?.value ?? '(No subject)'
         const date = headers.find((h: any) => h.name === 'Date')?.value ?? ''
+        const isRead = !(msg.data.labelIds ?? []).includes('UNREAD')
 
         return {
           id: message.id,
@@ -83,6 +84,7 @@ export class GoogleWidgetAdapter implements WidgetDataProviderPort {
           sender: from,
           date: date,
           url: `https://mail.google.com/mail/u/0/#inbox/${message.id}`,
+          isRead: isRead
         }
       }),
     )

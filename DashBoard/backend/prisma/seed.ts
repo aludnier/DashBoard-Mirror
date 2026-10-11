@@ -160,13 +160,6 @@ async function main() {
     ],
   })
 
-  await upsertWidgetDefinition(discord.id, {
-    slug: 'player-status',
-    name: 'Player Status',
-    description: 'Online status and currently played game',
-    params: [],
-  })
-
   console.log('Seed complete.')
 }
 

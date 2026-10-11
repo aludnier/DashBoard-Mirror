@@ -57,6 +57,7 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
     return {
       kind: 'github',
       type: 'pull-request',
+      repoName: repo,
       items: data.map(toGithubItem),
     }
   }
@@ -67,9 +68,11 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
       params: { state, per_page: limit },
     })
 
+    console.log(data)
     return {
       kind: 'github',
       type: 'issue',
+      repoName: repo,
       items: data.filter((issue) => !issue.pull_request).map(toGithubItem) }
   }
 }

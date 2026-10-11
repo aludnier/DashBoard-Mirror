@@ -110,9 +110,6 @@ function WidgetContent({ instance }: WidgetContentProps) {
   }
 
   if (data.kind === 'github') {
-    if (data.items.length === 0)
-      return <p>Nothing to show.</p>
-
     return <GithubWidget data={data} />
   }
 

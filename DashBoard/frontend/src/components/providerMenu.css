@@ -16,6 +16,7 @@
 .provider-menu-connect:hover,
 .provider-menu-add:hover {
   opacity: 0.92;
+  background-color: var(--secondary-purple);
 }
 
 .provider-menu-trigger:active,
@@ -122,7 +123,7 @@
   font-weight: 600;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .provider-menu {
     position: static;
   }
@@ -146,6 +147,7 @@
 
 .add-widget-form-title {
   margin: 0;
+  margin-top: 10px;
   font-weight: 600;
   color: var(--text-primary);
 }

@@ -59,6 +59,7 @@ export const mockWidgetData: WidgetData = {
 export const mockGithubData: WidgetData = {
   kind: 'github',
   type: 'pull-request',
+  repoName: 'octocat/Hello-World',
   items: [
     {
       id: '1', number: 42, title: 'Fix login redirect', url: 'https://github.com',

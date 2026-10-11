@@ -87,6 +87,22 @@
   white-space: nowrap;
 }
 
+.widget-guild-info h4 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.widget-guild-info h4 a:hover {
+  color: var(--primary-purple);
+  text-decoration: underline;
+}
+
+.widget-guild-info h4 a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--primary-purple);
+  outline-offset: 2px;
+}
+
 /* "12 / 340 online" with Discord's green presence dot in front */
 .widget-guild-stats {
   display: flex;

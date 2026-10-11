@@ -30,6 +30,7 @@ export interface GithubItem {
 export interface WidgetDataGithub {
   kind: 'github'
   type: 'pull-request' | 'issue'
+  repoName: string
   items: GithubItem[]
 }
 
@@ -76,6 +77,7 @@ export interface WidgetDataEmails {
     sender : string
     date : string
     url : string
+    isRead : boolean
   }[]
 }
 

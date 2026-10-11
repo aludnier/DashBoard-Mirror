@@ -82,7 +82,7 @@ function Inscription() {
           Password
           <input type="password" placeholder="••••••••" onChange={HandlePassword} required/>
           {isPasswordValid ? null : <>
-            <p>password should contain { isPasswordValid.toString() }:</p>
+            <p>password should contain:</p>
             <ul>
               <li className={passwordConditionLen ? "valid" : "error"}>8 characters</li>
               <li className={passwordConditionUp ? "valid" : "error"}>1 Uppercase</li>
