@@ -55,7 +55,11 @@ function GithubWidget({ data }: GithubWidgetProps) {
   return (
     <>
     <a className='gh-heading' href={`https://github.com/${data.repoName}`} target='_blank'>{data.repoName}</a>
-    <ul className="gh-list">
+    { data.items.length === 0 ? 
+      <p>Nothing to show.</p>
+      :
+      
+      <ul className="gh-list">
       {data.items.map((item) => {
         const StateIcon = stateIcon(data.type, item.state)
         return (
@@ -94,6 +98,7 @@ function GithubWidget({ data }: GithubWidgetProps) {
         )
       })}
     </ul>
+    }
     </>
   )
 }
