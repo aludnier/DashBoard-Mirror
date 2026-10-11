@@ -57,6 +57,15 @@
   display: none;
 }
 
+.nav-menu-trigger svg {
+  transform: rotate(45deg);
+  transform-origin: center;
+  transition: transform var(--transition-medium);
+}
+
+.nav-menu-trigger svg.is-active {
+  transform: rotate(-180deg);
+}
 .nav-menu-panel {
   position: fixed;
   top: 78px;
