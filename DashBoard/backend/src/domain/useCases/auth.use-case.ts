@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { USER_REPOSITORY, type UserRepositoryPort, type CreateUserData, type User } from '../port/user.repository.js';
 
-export type PublicUser = Omit<User, 'passwordHash'>;
+export type PublicUser = Pick<User, 'id' | 'name' | 'email'>;
 
 // What the client gets back: never the password hash.
 export interface AuthResult {
