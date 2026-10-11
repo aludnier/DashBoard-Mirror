@@ -30,6 +30,7 @@ export interface GithubItem {
 export interface WidgetDataGithub {
   kind: 'github'
   type: 'pull-request' | 'issue'
+  repoName: string
   items: GithubItem[]
 }
 
