@@ -32,7 +32,14 @@ function EmailsWidget({ data }: EmailsWidgetProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <span className="email-sender">{senderName(email.sender)}</span>
+              <span className="email-sender">
+                {!email.isRead ? 
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" className="bi bi-circle-fill" viewBox="0 0 16 16">
+                  <circle cx="8" cy="8" r="8" color='lime'/>
+                </svg>
+                : <></>}
+                {senderName(email.sender)}
+                </span>
               <span className="email-title">{email.title || '(no subject)'}</span>
               <span className="email-date">{formatDate(email.date)}</span>
             </a>

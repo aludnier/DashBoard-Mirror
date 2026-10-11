@@ -45,9 +45,14 @@
   text-overflow: ellipsis;
 }
 
+.email-sender svg {
+  margin-right: 10px;
+}
+
+
 .email-title {
   grid-area: title;
-  font-size: 12px;        
+  font-size: 12px;
   color: var(--text-muted);
   overflow: hidden;
   white-space: nowrap;

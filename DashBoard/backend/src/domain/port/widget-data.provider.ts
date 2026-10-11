@@ -76,6 +76,7 @@ export interface WidgetDataEmails {
     sender : string
     date : string
     url : string
+    isRead : boolean
   }[]
 }
 
