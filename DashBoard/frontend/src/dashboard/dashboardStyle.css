@@ -28,6 +28,20 @@
   overflow-x: hidden;
 }
 
+.dashboard-logout {
+  margin-left: 10px;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dashboard-logout:hover {
+  background: var(--secondary-purple);
+}
+
 .widget-card {
   position: relative;
   height: 100%;
