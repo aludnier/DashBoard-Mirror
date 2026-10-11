@@ -106,7 +106,7 @@
   color: var(--text-white);
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .nav-bar .nav-buttons {
     display: none;
   }
@@ -125,7 +125,7 @@
   }
 }
 
-@media (min-width: 501px) {
+@media (min-width: 601px) {
   .nav-menu-trigger,
   .nav-menu-panel {
     display: none;
