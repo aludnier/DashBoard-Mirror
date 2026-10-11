@@ -5,6 +5,7 @@ import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
 
 function Inscription() {
+  const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [isPasswordValid, setPasswordValid] = useState<boolean>(false)
@@ -37,6 +38,10 @@ function Inscription() {
     setEmail(e.target.value)
   }
 
+  function HandleName(e : React.ChangeEvent<HTMLInputElement>) {
+    setName(e.target.value)
+  }
+
   function checkPasswordCondtion(password : string) : boolean{
     const len = password.length >= 8
     const up = /([A-Z])/.test(password)
@@ -63,6 +68,11 @@ function Inscription() {
         <h1>Inscription</h1>
         {error ?  <h2> { error } </h2> : null}
         <Link to={"/connexion"}>already have an account?</Link>
+        <label>
+          Name
+          <input type="text" placeholder="Entré un valeur" onChange={HandleName} required/>
+        </label>
+
         <label>
           Email
           <input type="email" placeholder="exemple@mail.com" onChange={HandleEmail} required/>
