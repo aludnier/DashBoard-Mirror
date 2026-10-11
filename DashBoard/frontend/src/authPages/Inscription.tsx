@@ -1,8 +1,9 @@
 import React, { useState } from "react"
 import "./authStyle.css"
-import { api, setUserSession } from "../client"
+import { api } from "../client"
 import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
+import ResendVerification from "./ResendVerification"
 
 function Inscription() {
   const [name, setName] = useState<string>("")
@@ -13,8 +14,8 @@ function Inscription() {
   const [passwordConditionUp, setPasswordConditionUp] = useState<boolean>(false)
   const [passwordConditionSpe, setPasswordConditionSpe] = useState<boolean>(false)
   const [error, setError] = useState<String>("")
-  const navigate = useNavigate()
   const specialChar = /[\s`!@#$%^&*()_+\-=\[\]{};:"|,./<>?~]/
+  const [registered, setRegistered] = useState<boolean>(false)
 
   async function SubmitInscription(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,9 +25,8 @@ function Inscription() {
       return
     }
     try {
-      const { data } = await api.post("/auth/signup", { email, password, name });
-      setUserSession({ ...data.user, accessToken: data.accessToken });
-      navigate('/dashboard', {replace : true})
+      await api.post("/auth/signup", { email, password, name });
+      setRegistered(true);
     } catch (e) {
       const message = axios.isAxiosError(e)
         ? e.response?.data?.message ?? e.message
@@ -60,6 +60,19 @@ function Inscription() {
 
     setPasswordValid(conditions)
     setPassword(tmp)
+  }
+
+  if (registered) {
+    return (
+      <div className="inscription-container">
+        <div className="inscription-form">
+          <h1>Check your inbox</h1>
+          <p>We sent a verification link to <strong>{email}</strong>. Click it to activate your account.</p>
+          <ResendVerification email={email} />
+          <Link to={"/connexion"}>Back to login</Link>
+        </div>
+      </div>
+    )
   }
 
   return (
