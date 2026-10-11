@@ -17,6 +17,13 @@ services:
       timeout: 5s
       retries: 10
 
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+    - "8025:8025"   # web inbox
+    - "1025:1025"   # STMP server
+
   migrate:
     build:
       context: .
@@ -46,9 +53,15 @@ services:
       DATABASE_NAME: dashboard
       DATABASE_URL: mysql://dashboard_user:dashboard_pass@db:3306/dashboard
       PORT: 8080
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      FRONTEND_URL: http://localhost:5173
     depends_on:
       migrate:
         condition: service_completed_successfully
+      mailpit:
+        condition: service_started
 
   client:
     build:
