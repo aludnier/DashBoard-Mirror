@@ -17,4 +17,22 @@ export class PrismaUserRepository implements UserRepositoryPort {
   create(data: CreateUserData) {
     return this.prisma.user.create({ data });
   }
+
+  findByVerificationToken(token: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { verificationToken: token } });
+  }
+
+  markEmailVerified(id: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { id },
+      data: { emailVerified: true, verificationToken: null, verificationTokenExpires: null },
+    });
+  }
+
+  setVerificationToken(id: string, token: string, expires: Date): Promise<User> {
+    return this.prisma.user.update({
+      where: { id },
+      data: { verificationToken: token, verificationTokenExpires: expires },
+    });
+  }
 }
