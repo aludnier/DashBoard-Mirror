@@ -68,7 +68,6 @@ export class GithubWidgetAdapter implements WidgetDataProviderPort {
       params: { state, per_page: limit },
     })
 
-    console.log(data)
     return {
       kind: 'github',
       type: 'issue',
