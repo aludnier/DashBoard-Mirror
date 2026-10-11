@@ -3,16 +3,19 @@ import "./authStyle.css"
 import { api, setUserSession } from "../client"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
+import ResendVerification from "./ResendVerification"
 
 function Connexion() {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string>("")
   const navigate = useNavigate()
+  const [needsVerification, setNeedsVerification] = useState<boolean>(false)
 
   async function SubmitConnexion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError("")
+    setNeedsVerification(axios.isAxiosError(e) && e.response?.status === 403)
 
     try {
       const { data } = await api.post("/auth/login", { email, password })
@@ -22,6 +25,7 @@ function Connexion() {
       const message = axios.isAxiosError(e)
         ? e.response?.data?.message ?? e.message
         : "Something went wrong"
+      setNeedsVerification(axios.isAxiosError(e) && e.response?.status === 403)
       setError(message)
     }
   }
@@ -39,6 +43,7 @@ function Connexion() {
       <form className="inscription-form" onSubmit={SubmitConnexion}>
         <h1>Connexion</h1>
         {error ? <h2>{error}</h2> : null}
+        {needsVerification ? <ResendVerification email={email} /> : null}
 
         <label>
           Email
