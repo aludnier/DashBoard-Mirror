@@ -8,6 +8,7 @@ import Home from './titlePage/Home'
 import OauthRouter from './oauthRouter'
 import Dashboard from './dashboard/Dashboard'
 import ProtectedRoute from './components/protectedRoutes'
+import VerifyEmail from './authPages/VerifyEmail'
 
 function App() {
   const [user, setUser] = useState<UserSession | null>(null)
@@ -30,6 +31,7 @@ function App() {
         <Route path='/' element={<Home user={user} onLogout={handleLogout} />} />
         <Route path='/inscription' element={<Inscription />} />
         <Route path='/connexion' element={<Connection />} />
+        <Route path='/verify' element={<VerifyEmail />} />
         <Route element={<ProtectedRoute />}>
           <Route path='/oauth/*' element={<OauthRouter />} />
           <Route path='/dashboard' element={<Dashboard  onLogout={handleLogout}/>} />
